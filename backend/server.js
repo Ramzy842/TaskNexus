@@ -271,5 +271,3 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-
-// DB pass: 5UxtdwoZ7ji8WRMu
