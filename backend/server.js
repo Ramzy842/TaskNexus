@@ -1,10 +1,12 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const Task = require("./models/Task");
 app.use(express.json());
 const { body, validationResult } = require("express-validator");
-const { format } = require("date-fns");
+const formatTask = require("./utils/formatTask");
+
 var morgan = require("morgan");
 app.use(
     morgan(function (tokens, req, res) {
@@ -21,23 +23,11 @@ app.use(
     })
 );
 
+app.use(cors());
 app.get("/api/tasks", async (req, res) => {
     try {
         const tasks = await Task.find({});
-        const formattedTasks = tasks.map((task) => ({
-            ...task.toJSON(),
-            dueDate: {
-                raw: task.dueDate,
-                formatted: format(new Date(task.dueDate), "MM/dd/yyyy"),
-            },
-            createdAt: {
-                raw: task.createdAt,
-                formatted: format(
-                    new Date(task.createdAt),
-                    "MM/dd/yyyy hh:mm a"
-                ),
-            },
-        }));
+        const formattedTasks = tasks.map(formatTask);
         res.status(200).json({
             success: true,
             statusCode: 200,
@@ -61,20 +51,7 @@ app.get("/api/tasks/:id", async (req, res) => {
                 statusCode: 404,
                 message: "Task not found.",
             });
-        const formattedTask = {
-            ...task.toJSON(),
-            dueDate: {
-                raw: task.dueDate,
-                formatted: format(new Date(task.dueDate), "MM/dd/yyyy"),
-            },
-            createdAt: {
-                raw: task.createdAt,
-                formatted: format(
-                    new Date(task.createdAt),
-                    "MM/dd/yyyy hh:mm a"
-                ),
-            },
-        };
+        const formattedTask = formatTask(task);
         res.status(200).json({
             success: true,
             statusCode: 200,
@@ -120,9 +97,9 @@ app.post(
     async (req, res) => {
         const result = validationResult(req);
         if (!result.isEmpty())
-            return res.status(422).json({
+            return res.status(400).json({
                 success: false,
-                statusCode: 422,
+                statusCode: 400,
                 errors: result.array(),
             });
         try {
@@ -134,20 +111,7 @@ app.post(
                 dueDate,
             });
             const task = await newTask.save();
-            const formattedTask = {
-                ...task.toJSON(),
-                dueDate: {
-                    raw: task.dueDate,
-                    formatted: format(new Date(task.dueDate), "MM/dd/yyyy"),
-                },
-                createdAt: {
-                    raw: task.createdAt,
-                    formatted: format(
-                        new Date(task.createdAt),
-                        "MM/dd/yyyy hh:mm a"
-                    ),
-                },
-            };
+            const formattedTask = formatTask(task);
             res.status(201).json({
                 success: true,
                 statusCode: 201,
@@ -208,20 +172,7 @@ app.put(
                     message: "The task you are trying to update is not found.",
                 });
             }
-            const formattedTask = {
-                ...task.toJSON(),
-                dueDate: {
-                    raw: task.dueDate,
-                    formatted: format(new Date(task.dueDate), "MM/dd/yyyy"),
-                },
-                createdAt: {
-                    raw: task.createdAt,
-                    formatted: format(
-                        new Date(task.createdAt),
-                        "MM/dd/yyyy hh:mm a"
-                    ),
-                },
-            };
+            const formattedTask = formatTask(task);
             res.status(200).json({
                 success: true,
                 statusCode: 200,
@@ -242,7 +193,7 @@ app.delete("/api/tasks/:id", async (req, res) => {
         const task = await Task.findByIdAndDelete(req.params.id);
         if (!task)
             return res.status(404).json({
-                success: true,
+                success: false,
                 statusCode: 404,
                 message: "The task you are trying to delete is not found.",
             });
