@@ -11,6 +11,10 @@ const formatTask = (task) => {
             raw: task.createdAt,
             formatted: format(new Date(task.createdAt), "MM/dd/yyyy hh:mm a"),
         },
+        updatedAt: {
+            raw: task.updatedAt,
+            formatted: format(new Date(task.updatedAt), "MM/dd/yyyy hh:mm a"),
+        }
     };
 };
 

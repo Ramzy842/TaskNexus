@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
-
-const uri = process.env.MONGODB_URI;
+const { MONGODB_URI } = require("../utils/config");
 mongoose.set("strictQuery", false);
 
 mongoose
-    .connect(uri)
+    .connect(MONGODB_URI)
     .then(() => {
         console.log("Database connected successfully");
     })
@@ -12,31 +11,37 @@ mongoose
         console.error("Database connection error:", error.message);
     });
 
-const taskSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: true, // Validation: Title is mandatory
-        trim: true, // Remove leading/trailing whitespace
+const taskSchema = new mongoose.Schema(
+    {
+        title: {
+            type: String,
+            required: true, // Validation: Title is mandatory
+            trim: true, // Remove leading/trailing whitespace
+        },
+        description: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        status: {
+            type: String,
+            enum: ["To Do", "In Progress", "Completed"], // Restrict values
+            default: "To Do", // Default value
+        },
+        dueDate: {
+            type: Date,
+            required: true, // Ensure a due date is provided
+        },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
     },
-    description: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    status: {
-        type: String,
-        enum: ["To Do", "In Progress", "Completed"], // Restrict values
-        default: "To Do", // Default value
-    },
-    dueDate: {
-        type: Date,
-        required: true, // Ensure a due date is provided
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now, // Automatically set the creation date
-    },
-});
+    {
+        timestamps: true, // Adds createdAt and updatedAt fields
+    }
+);
 
 taskSchema.set("toJSON", {
     transform: (document, returnedObject) => {

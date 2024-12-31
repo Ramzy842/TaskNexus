@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
             lowercase: true, // Converts to lowercase before saving
             match: [/^\S+@\S+\.\S+$/, "Invalid email format"], // Email validation
         },
-        password: {
+        passwordHash: {
             type: String,
             required: function () {
                 return !this.googleId; // Password is required if Google ID is not present
@@ -30,6 +30,12 @@ const userSchema = new mongoose.Schema(
             type: String,
             unique: true, // Ensures no duplicate Google IDs
         },
+        tasks: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Task",
+            },
+        ],
     },
     {
         timestamps: true, // Adds createdAt and updatedAt fields
@@ -41,6 +47,7 @@ userSchema.set("toJSON", {
         returnedObject.id = returnedObject._id.toString();
         delete returnedObject._id;
         delete returnedObject.__v;
+        delete returnedObject.passwordHash;
     },
 });
 
