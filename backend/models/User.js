@@ -1,34 +1,41 @@
 const mongoose = require("mongoose");
-
-const uri = process.env.MONGODB_URI;
+const { MONGODB_URI } = require("../utils/config");
 mongoose.set("strictQuery", false);
 
-mongoose.connect(uri);
+mongoose.connect(MONGODB_URI);
 
 const userSchema = new mongoose.Schema(
     {
+        username: {
+            type: String,
+            required: true,
+            trim: true,
+        },
         name: {
             type: String,
-            required: true, // Ensures the name field is mandatory
-            trim: true, // Removes leading and trailing whitespace
+            required: true,
+            trim: true,
         },
         email: {
             type: String,
             required: true,
-            unique: true, // Ensures no duplicate emails
-            lowercase: true, // Converts to lowercase before saving
-            match: [/^\S+@\S+\.\S+$/, "Invalid email format"], // Email validation
+            unique: true, 
+            lowercase: true, 
+            match: [/^\S+@\S+\.\S+$/, "Invalid email format"],
         },
         passwordHash: {
             type: String,
             required: function () {
-                return !this.googleId; // Password is required if Google ID is not present
+                return !this.googleId;
             },
-            minlength: 8, // Enforce minimum password length
+            minlength: 8,
         },
         googleId: {
             type: String,
-            unique: true, // Ensures no duplicate Google IDs
+            unique: true,
+            required: function () {
+                return !this.passwordHash;
+            },
         },
         tasks: [
             {
@@ -38,7 +45,7 @@ const userSchema = new mongoose.Schema(
         ],
     },
     {
-        timestamps: true, // Adds createdAt and updatedAt fields
+        timestamps: true,
     }
 );
 
