@@ -2,9 +2,10 @@ const tasksRouter = require("express").Router();
 const { body, validationResult } = require("express-validator");
 const Task = require("../models/Task");
 const formatTask = require("../utils/formatTask");
+const User = require("../models/User");
 tasksRouter.get("/", async (req, res) => {
     try {
-        const tasks = await Task.find({});
+        const tasks = await Task.find({}).populate("userId");
         const formattedTasks = tasks.map(formatTask);
         res.status(200).json({
             success: true,
@@ -20,7 +21,7 @@ tasksRouter.get("/", async (req, res) => {
     }
 });
 
-tasksRouter.get("/:id", async (req, res) => {
+tasksRouter.get("/:id", async (req, res, next) => {
     try {
         const task = await Task.findById(req.params.id);
         if (!task)
@@ -36,11 +37,7 @@ tasksRouter.get("/:id", async (req, res) => {
             data: formattedTask,
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            error: error.message,
-        });
+        next(error);
     }
 });
 
@@ -71,6 +68,12 @@ tasksRouter.post(
             .withMessage(
                 "dueDate must be in ISO8601 format (e.g., YYYY-MM-DD)."
             ),
+        body("userId")
+            .notEmpty()
+            .withMessage("userId is required")
+            .isString()
+            .isMongoId()
+            .escape(),
     ],
     async (req, res) => {
         const result = validationResult(req);
@@ -81,14 +84,18 @@ tasksRouter.post(
                 errors: result.array(),
             });
         try {
-            const { title, description, status, dueDate } = req.body;
+            const { title, description, status, dueDate, userId } = req.body;
+            const user = await User.findById(userId);
             const newTask = new Task({
                 title,
                 description,
                 status,
                 dueDate,
+                userId: user.id
             });
             const task = await newTask.save();
+            user.tasks = user.tasks.concat(task.id);
+            await user.save();
             const formattedTask = formatTask(task);
             res.status(201).json({
                 success: true,
@@ -131,7 +138,7 @@ tasksRouter.put(
                 "dueDate must be in ISO8601 format (e.g., YYYY-MM-DD)."
             ),
     ],
-    async (req, res) => {
+    async (req, res, next) => {
         const result = validationResult(req);
         if (!result.isEmpty())
             return res.status(422).json({
@@ -157,16 +164,12 @@ tasksRouter.put(
                 data: formattedTask,
             });
         } catch (error) {
-            res.status(500).json({
-                success: false,
-                statusCode: 500,
-                error: error.message,
-            });
+            next(error);
         }
     }
 );
 
-tasksRouter.delete("/:id", async (req, res) => {
+tasksRouter.delete("/:id", async (req, res, next) => {
     try {
         const task = await Task.findByIdAndDelete(req.params.id);
         if (!task)
@@ -177,11 +180,7 @@ tasksRouter.delete("/:id", async (req, res) => {
             });
         res.status(204).end();
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            error: error.message,
-        });
+        next(error);
     }
 });
 

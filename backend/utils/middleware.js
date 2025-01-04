@@ -22,4 +22,15 @@ const unknownEndpoint = (req, res) => {
 };
 
 
-module.exports = {logger, unknownEndpoint}
+const errorHandler = (err, req, res, next) => {
+    if (err.name === "CastError") {
+        return res.status(400).json({
+            success: false,
+            statusCode: 400,
+            error: "Malformatted Id",
+        });
+    }
+    next(err);
+};
+
+module.exports = {logger, unknownEndpoint, errorHandler}

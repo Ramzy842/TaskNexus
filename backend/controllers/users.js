@@ -21,7 +21,7 @@ usersRouter.post(
             .notEmpty()
             .withMessage("email is required and should be a string.")
             .isEmail().withMessage("Invalid email format.").normalizeEmail(),
-        body("password").notEmpty().withMessage("Password is required").isString().escape()
+        body("password").notEmpty().withMessage("Password is required").isString().escape(),
     ],
     async (req, res) => {
         const result = validationResult(req);
@@ -34,7 +34,6 @@ usersRouter.post(
         }
         try {
             const { username, name, email, password, googleId } = req.body;
-            // email existence check
             const emailExists = await User.findOne({ email });
             if (emailExists) {
                 return res.status(409).json({
@@ -102,7 +101,7 @@ const formatUser = (user) => {
 
 usersRouter.get("/", async (req, res) => {
     try {
-        const users = await User.find({});
+        const users = await User.find({}).populate("tasks");
         const formattedUsers = users.map(formatUser);
         res.status(200).json({
             success: true,
