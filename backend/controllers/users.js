@@ -2,7 +2,9 @@ const usersRouter = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { format } = require("date-fns");
+const { toZonedTime } = require("date-fns-tz");
 const { body, validationResult } = require("express-validator");
+const formatTask = require("../utils/formatTask");
 
 usersRouter.post(
     "/",
@@ -10,18 +12,26 @@ usersRouter.post(
         body("username")
             .notEmpty()
             .withMessage("username is required and should be a string.")
-            .isString().trim()
+            .isString()
+            .trim()
             .escape(),
         body("name")
             .notEmpty()
             .withMessage("name is required and should be a string.")
-            .isString().trim()
+            .isString()
+            .trim()
             .escape(),
         body("email")
             .notEmpty()
             .withMessage("email is required and should be a string.")
-            .isEmail().withMessage("Invalid email format.").normalizeEmail(),
-        body("password").notEmpty().withMessage("Password is required").isString().escape(),
+            .isEmail()
+            .withMessage("Invalid email format.")
+            .normalizeEmail(),
+        body("password")
+            .notEmpty()
+            .withMessage("Password is required")
+            .isString()
+            .escape(),
     ],
     async (req, res) => {
         const result = validationResult(req);
@@ -49,8 +59,7 @@ usersRouter.post(
                     error: "Either password or googleId is required.",
                 });
             }
-            if (password.length < 8)
-            {
+            if (password.length < 8) {
                 return res.status(400).json({
                     success: false,
                     statusCode: 400,
@@ -85,19 +94,18 @@ usersRouter.post(
     }
 );
 
-const formatUser = (user) => {
-    return {
-        ...user.toJSON(),
-        createdAt: {
-            raw: user.createdAt,
-            formatted: format(new Date(user.createdAt), "MM/dd/yyyy hh:mm a"),
-        },
-        updatedAt: {
-            raw: user.updatedAt,
-            formatted: format(new Date(user.updatedAt), "MM/dd/yyyy hh:mm a"),
-        }
-    };
-};
+const formatUser = (user) => ({
+    ...user.toJSON(),
+    tasks: user.tasks.map((task) => formatTask(task)),
+    createdAt: {
+        raw: user.createdAt,
+        formatted: format(new Date(user.createdAt), "MM/dd/yyyy hh:mm a"),
+    },
+    updatedAt: {
+        raw: user.updatedAt,
+        formatted: format(new Date(user.updatedAt), "MM/dd/yyyy hh:mm a"),
+    },
+});
 
 usersRouter.get("/", async (req, res) => {
     try {
@@ -115,6 +123,6 @@ usersRouter.get("/", async (req, res) => {
             error: error.message,
         });
     }
-})
+});
 
 module.exports = usersRouter;

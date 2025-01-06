@@ -32,7 +32,6 @@ const userSchema = new mongoose.Schema(
         },
         googleId: {
             type: String,
-            unique: true,
             required: function () {
                 return !this.passwordHash;
             },

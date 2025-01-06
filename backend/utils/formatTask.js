@@ -1,5 +1,5 @@
 const { format } = require("date-fns");
-
+const { toZonedTime } = require("date-fns-tz");
 const formatTask = (task) => {
     return {
         ...task.toJSON(),
@@ -9,12 +9,18 @@ const formatTask = (task) => {
         },
         createdAt: {
             raw: task.createdAt,
-            formatted: format(new Date(task.createdAt), "MM/dd/yyyy hh:mm a"),
+            formatted: format(
+                toZonedTime (new Date(task.createdAt), "UTC"),
+                "MM/dd/yyyy hh:mm a"
+            ),
         },
         updatedAt: {
             raw: task.updatedAt,
-            formatted: format(new Date(task.updatedAt), "MM/dd/yyyy hh:mm a"),
-        }
+            formatted: format(
+                toZonedTime(new Date(task.updatedAt), "UTC"),
+                "MM/dd/yyyy hh:mm a"
+            ),
+        },
     };
 };
 

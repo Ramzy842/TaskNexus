@@ -1,4 +1,5 @@
 var morgan = require("morgan");
+const jwt = require("jsonwebtoken");
 const logger = morgan(function (tokens, req, res) {
     return [
         tokens.method(req, res),
@@ -12,7 +13,6 @@ const logger = morgan(function (tokens, req, res) {
     ].join(" ");
 });
 
-
 const unknownEndpoint = (req, res) => {
     res.status(404).send({
         success: false,
@@ -21,7 +21,6 @@ const unknownEndpoint = (req, res) => {
     });
 };
 
-
 const errorHandler = (err, req, res, next) => {
     if (err.name === "CastError") {
         return res.status(400).json({
@@ -29,8 +28,37 @@ const errorHandler = (err, req, res, next) => {
             statusCode: 400,
             error: "Malformatted Id",
         });
-    }
+    } else if (err.name === "JsonWebTokenError")
+        return res.status(401).json({ error: "token invalid" });
+    else if (err.name === "TokenExpiredError")
+        return response.status(401).json({
+            error: "token expired",
+        });
     next(err);
 };
 
-module.exports = {logger, unknownEndpoint, errorHandler}
+const getTokenFrom = (req) => {
+    const authorization = req.get("authorization");
+    if (authorization && authorization.startsWith("Bearer "))
+        return authorization.replace("Bearer ", "");
+    return null;
+};
+
+const verifyToken = (req, res, next) => {
+    try {
+        const token = getTokenFrom(req);
+        const decodedToken = jwt.verify(token, process.env.SECRET);
+        if (!decodedToken.id)
+            return res.status(401).json({
+                success: false,
+                statusCode: 401,
+                error: "Invalid token.",
+            });
+        req.user = decodedToken;
+        next();
+    } catch (err) {
+        next(err);
+    }
+};
+
+module.exports = { logger, unknownEndpoint, errorHandler, verifyToken };
