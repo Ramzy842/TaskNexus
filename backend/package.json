@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --inspect --watch-path=./ ./server.js"
+    "start": "cross-env NODE_ENV=production node server.js",
+    "dev": "cross-env NODE_ENV=development node --inspect --watch-path=./ ./server.js",
+    "test": "cross-env NODE_ENV=test node --test"
   },
   "keywords": [],
   "author": "",
@@ -21,5 +22,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.2",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }
