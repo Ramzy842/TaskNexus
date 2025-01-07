@@ -48,17 +48,17 @@ tasksRouter.post(
     [
         body("title")
             .notEmpty()
-            .withMessage("title is required and should be a string.")
+            .withMessage("title is required.")
             .isString()
             .escape(),
         body("description")
             .notEmpty()
-            .withMessage("description is required and should be a string.")
+            .withMessage("description is required.")
             .isString()
             .escape(),
         body("status")
             .notEmpty()
-            .withMessage("status is required and should be a string.")
+            .withMessage("status is required.")
             .isIn(["To Do", "In Progress", "Completed"])
             .withMessage(
                 "Invalid status value. Allowed values are: To Do, In Progress, Completed."
@@ -111,12 +111,12 @@ tasksRouter.put(
         body("title")
             .optional()
             .isString()
-            .withMessage("title is required and should be a string.")
+            .withMessage("title is required.")
             .escape(),
         body("description")
             .optional()
             .isString()
-            .withMessage("description is required and should be a string.")
+            .withMessage("description is required.")
             .escape(),
         body("status")
             .optional()
@@ -193,5 +193,13 @@ module.exports = tasksRouter;
     "email": "ramzychahbani@gmail.com",
     "password": "123456789"
 }
+
+{
+    "username": "Paradox",
+    "name": "Ramzi",
+    "email": "ramzychahbani@gmail.com",
+    "password": "123456789"
+}
+
 
 */

@@ -11,19 +11,19 @@ usersRouter.post(
     [
         body("username")
             .notEmpty()
-            .withMessage("username is required and should be a string.")
+            .withMessage("username is required.")
             .isString()
             .trim()
             .escape(),
         body("name")
             .notEmpty()
-            .withMessage("name is required and should be a string.")
+            .withMessage("name is required.")
             .isString()
             .trim()
             .escape(),
         body("email")
             .notEmpty()
-            .withMessage("email is required and should be a string.")
+            .withMessage("email is required.")
             .isEmail()
             .withMessage("Invalid email format.")
             .normalizeEmail(),
