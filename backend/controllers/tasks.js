@@ -78,7 +78,7 @@ tasksRouter.post(
             return res.status(400).json({
                 success: false,
                 statusCode: 400,
-                errors: result.array(),
+                errors: result.array().map((res) => res.msg),
             });
         try {
             const { title, description, status, dueDate } = req.body;
@@ -110,26 +110,30 @@ tasksRouter.put(
     [
         body("title")
             .optional()
+            .notEmpty()
+            .withMessage("title must not be empty if provided.")
             .isString()
-            .withMessage("title is required.")
             .escape(),
         body("description")
             .optional()
+            .notEmpty()
+            .withMessage("description must not be empty if provided.")
             .isString()
-            .withMessage("description is required.")
             .escape(),
         body("status")
             .optional()
-            .isIn(["To Do", "In Progress", "Completed"])
+            .notEmpty()
             .withMessage(
                 "Invalid status value. Allowed values are: To Do, In Progress, Completed."
-            ),
+            )
+            .isIn(["To Do", "In Progress", "Completed"]),
         body("dueDate")
             .optional()
-            .isISO8601()
+            .notEmpty()
             .withMessage(
                 "dueDate must be in ISO8601 format (e.g., YYYY-MM-DD)."
-            ),
+            )
+            .isISO8601(),
     ],
     verifyToken,
     async (req, res, next) => {
@@ -138,8 +142,10 @@ tasksRouter.put(
             return res.status(422).json({
                 success: false,
                 statusCode: 422,
-                errors: result.array(),
+                errors: result.array().map((res) => res.msg),
             });
+        if (!Object.keys(req.body).length)
+            return res.status(204).end();
         try {
             const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
                 new: true,
@@ -156,6 +162,7 @@ tasksRouter.put(
                 success: true,
                 statusCode: 200,
                 data: formattedTask,
+                message: "Task updated successfully.",
             });
         } catch (error) {
             next(error);

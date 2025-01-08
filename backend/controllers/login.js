@@ -25,7 +25,7 @@ loginRouter.post(
             return res.status(400).json({
                 success: false,
                 statusCode: 400,
-                errors: result.array(),
+                errors: result.array().map(res => res.msg),
             });
         }
         const { email, password } = req.body;

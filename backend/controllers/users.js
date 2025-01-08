@@ -2,9 +2,9 @@ const usersRouter = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { format } = require("date-fns");
-const { toZonedTime } = require("date-fns-tz");
 const { body, validationResult } = require("express-validator");
 const formatTask = require("../utils/formatTask");
+const { verifyToken } = require("../utils/middleware");
 
 usersRouter.post(
     "/",
@@ -39,7 +39,7 @@ usersRouter.post(
             return res.status(400).json({
                 success: false,
                 statusCode: 400,
-                errors: result.array(),
+                errors: result.array().map((res) => res.msg),
             });
         }
         try {
@@ -124,5 +124,56 @@ usersRouter.get("/", async (req, res) => {
         });
     }
 });
-
+usersRouter.put(
+    "/:id",
+    [
+        body("username")
+            .optional()
+            .notEmpty()
+            .withMessage("username must not be empty if provided.")
+            .isString()
+            .escape(),
+        body("email")
+            .optional()
+            .notEmpty()
+            .withMessage("email must not be empty if provided.")
+            .isEmail()
+            .withMessage("Invalid email format.")
+            .normalizeEmail(),
+    ],
+    verifyToken,
+    async (req, res, next) => {
+        const result = validationResult(req);
+        if (!result.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                statusCode: 400,
+                errors: result.array().map((res) => res.msg),
+            });
+        }
+        if (!Object.keys(req.body).length) return res.status(204).end();
+        try {
+            const updatedUser = await User.findByIdAndUpdate(
+                req.params.id,
+                req.body,
+                { new: true }
+            );
+            if (!updatedUser) {
+                return res.status(404).json({
+                    success: false,
+                    statusCode: 404,
+                    message: "The user you are trying to update is not found.",
+                });
+            }
+            res.status(200).json({
+                success: true,
+                statusCode: 200,
+                data: updatedUser,
+                message: "User updated successfully",
+            });
+        } catch (err) {
+            next(err);
+        }
+    }
+);
 module.exports = usersRouter;
