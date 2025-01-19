@@ -11,8 +11,7 @@ loginRouter.post(
             .notEmpty()
             .withMessage("email is required.")
             .isEmail()
-            .withMessage("Invalid email format.")
-            .normalizeEmail(),
+            .withMessage("Invalid email format."),
         body("password")
             .notEmpty()
             .withMessage("Password is required")
@@ -25,7 +24,7 @@ loginRouter.post(
             return res.status(400).json({
                 success: false,
                 statusCode: 400,
-                errors: result.array().map(res => res.msg),
+                errors: result.array().map((res) => res.msg),
             });
         }
         const { email, password } = req.body;
@@ -36,6 +35,14 @@ loginRouter.post(
                     success: false,
                     statusCode: 401,
                     error: "Invalid email or password.",
+                });
+            }
+            if (user.googleId) {
+                return res.status(400).json({
+                    success: false,
+                    statusCode: 400,
+                    message:
+                        "This email is registered with Google. Please use 'Log in with Google'.",
                 });
             }
             const passwordCorrect = await bcrypt.compare(
@@ -62,9 +69,12 @@ loginRouter.post(
                 statusCode: 200,
                 data: {
                     token,
-                    username: user.username,
-                    email: user.email,
-                    name: user.name,
+                    user: {
+                        id: user.id,
+                        username: user.username,
+                        email: user.email,
+                        name: user.name,
+                    },
                 },
             });
         } catch (err) {

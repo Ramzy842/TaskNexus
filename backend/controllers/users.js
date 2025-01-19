@@ -138,8 +138,7 @@ usersRouter.put(
             .notEmpty()
             .withMessage("email must not be empty if provided.")
             .isEmail()
-            .withMessage("Invalid email format.")
-            .normalizeEmail(),
+            .withMessage("Invalid email format."),
     ],
     verifyToken,
     async (req, res, next) => {

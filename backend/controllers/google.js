@@ -23,7 +23,7 @@ googleRouter.get("/callback", async (req, res) => {
     try {
         const { code } = req.query;
         const { tokens } = await oauth2Client.getToken(code);
-        
+
         oauth2Client.setCredentials(tokens);
         const ticket = await oauth2Client.verifyIdToken({
             idToken: tokens.id_token,
@@ -40,15 +40,21 @@ googleRouter.get("/callback", async (req, res) => {
             });
             await user.save();
         }
-        // Generate JWT
         const token = jwt.sign({ id: user.id }, process.env.SECRET, {
-            expiresIn: "1h",
+            expiresIn: 60 * 60,
         });
-        res.status(201).json({
+        res.status(200).json({
             success: true,
-            statusCode: 201,
-            data: token,
-            message: "Registration completed successfully.",
+            statusCode: 200,
+            data: {
+                token,
+                user: {
+                    id: user.id,
+                    username: user.username,
+                    email,
+                    name,
+                },
+            },
         });
     } catch (err) {
         return res.status(500).json({
