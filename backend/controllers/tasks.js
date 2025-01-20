@@ -32,6 +32,12 @@ tasksRouter.get("/:id", verifyToken, async (req, res, next) => {
                 statusCode: 404,
                 message: "Task not found.",
             });
+        if (req.user.id !== task.userId.toString())
+            return res.status(403).json({
+                success: false,
+                statusCode: 403,
+                message: "You are not authorized to access this task.",
+            });
         const formattedTask = formatTask(task);
         res.status(200).json({
             success: true,
@@ -144,8 +150,7 @@ tasksRouter.put(
                 statusCode: 422,
                 errors: result.array().map((res) => res.msg),
             });
-        if (!Object.keys(req.body).length)
-            return res.status(204).end();
+        if (!Object.keys(req.body).length) return res.status(204).end();
         try {
             const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
                 new: true,
@@ -157,6 +162,12 @@ tasksRouter.put(
                     message: "The task you are trying to update is not found.",
                 });
             }
+            if (req.user.id !== task.userId.toString())
+                return res.status(403).json({
+                    success: false,
+                    statusCode: 403,
+                    message: "You are not authorized to update this task.",
+                });
             const formattedTask = formatTask(task);
             res.status(200).json({
                 success: true,
@@ -179,7 +190,13 @@ tasksRouter.delete("/:id", verifyToken, async (req, res, next) => {
                 statusCode: 404,
                 message: "The task you are trying to delete is not found.",
             });
-        res.status(204).end();
+        if (req.user.id === task.userId.toString()) return res.status(204).end();
+        else
+            return res.status(403).json({
+                success: false,
+                statusCode: 403,
+                message: "You are not authorized to delete this task.",
+            });
     } catch (error) {
         next(error);
     }

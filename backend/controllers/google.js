@@ -51,8 +51,8 @@ googleRouter.get("/callback", async (req, res) => {
                 user: {
                     id: user.id,
                     username: user.username,
-                    email,
-                    name,
+                    email: user.email,
+                    name: user.name,
                 },
             },
         });
@@ -60,7 +60,7 @@ googleRouter.get("/callback", async (req, res) => {
         return res.status(500).json({
             success: false,
             statusCode: 500,
-            error: err.message,
+            error: "Something went wrong.",
         });
     }
 });

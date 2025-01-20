@@ -25,8 +25,7 @@ usersRouter.post(
             .notEmpty()
             .withMessage("email is required.")
             .isEmail()
-            .withMessage("Invalid email format.")
-            .normalizeEmail(),
+            .withMessage("Invalid email format."),
         body("password")
             .notEmpty()
             .withMessage("Password is required")
@@ -151,6 +150,12 @@ usersRouter.put(
             });
         }
         if (!Object.keys(req.body).length) return res.status(204).end();
+        if (req.user.id !== req.params.id)
+            return res.status(403).json({
+                success: false,
+                statusCode: 403,
+                message: "You are not authorized to update user info.",
+            });
         try {
             const updatedUser = await User.findByIdAndUpdate(
                 req.params.id,
