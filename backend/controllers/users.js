@@ -1,9 +1,7 @@
 const usersRouter = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const { format } = require("date-fns");
 const { body, validationResult } = require("express-validator");
-const formatTask = require("../utils/formatTask");
 const { verifyToken } = require("../utils/middleware");
 
 usersRouter.post(
@@ -93,27 +91,13 @@ usersRouter.post(
     }
 );
 
-const formatUser = (user) => ({
-    ...user.toJSON(),
-    tasks: user.tasks.map((task) => formatTask(task)),
-    createdAt: {
-        raw: user.createdAt,
-        formatted: format(new Date(user.createdAt), "MM/dd/yyyy hh:mm a"),
-    },
-    updatedAt: {
-        raw: user.updatedAt,
-        formatted: format(new Date(user.updatedAt), "MM/dd/yyyy hh:mm a"),
-    },
-});
-
 usersRouter.get("/", async (req, res) => {
     try {
         const users = await User.find({}).populate("tasks");
-        const formattedUsers = users.map(formatUser);
         res.status(200).json({
             success: true,
             statusCode: 200,
-            data: formattedUsers,
+            data: users,
         });
     } catch (error) {
         res.status(500).json({

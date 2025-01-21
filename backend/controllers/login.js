@@ -29,7 +29,7 @@ loginRouter.post(
         }
         const { email, password } = req.body;
         try {
-            const user = await User.findOne({ email });
+            const user = await User.findOne({ email }).populate("tasks");
             if (!user) {
                 return res.status(401).json({
                     success: false,
@@ -74,6 +74,9 @@ loginRouter.post(
                         username: user.username,
                         email: user.email,
                         name: user.name,
+                        tasks: user.tasks,
+                        createdAt: user.createdAt,
+                        updatedAt: user.updatedAt,
                     },
                 },
             });

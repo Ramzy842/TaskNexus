@@ -1,18 +1,16 @@
 const tasksRouter = require("express").Router();
 const { body, validationResult } = require("express-validator");
 const Task = require("../models/Task");
-const formatTask = require("../utils/formatTask");
 const User = require("../models/User");
 const { verifyToken } = require("../utils/middleware");
 
 tasksRouter.get("/", async (req, res) => {
     try {
         const tasks = await Task.find({}).populate("userId");
-        const formattedTasks = tasks.map(formatTask);
         res.status(200).json({
             success: true,
             statusCode: 200,
-            data: formattedTasks,
+            data: tasks,
         });
     } catch (error) {
         res.status(500).json({
@@ -38,11 +36,10 @@ tasksRouter.get("/:id", verifyToken, async (req, res, next) => {
                 statusCode: 403,
                 message: "You are not authorized to access this task.",
             });
-        const formattedTask = formatTask(task);
         res.status(200).json({
             success: true,
             statusCode: 200,
-            data: formattedTask,
+            data: task,
         });
     } catch (error) {
         next(error);
@@ -99,11 +96,10 @@ tasksRouter.post(
             const task = await newTask.save();
             user.tasks = user.tasks.concat(task.id);
             await user.save();
-            const formattedTask = formatTask(task);
             res.status(201).json({
                 success: true,
                 statusCode: 201,
-                data: formattedTask,
+                data: task,
             });
         } catch (error) {
             next(error);
@@ -168,11 +164,10 @@ tasksRouter.put(
                     statusCode: 403,
                     message: "You are not authorized to update this task.",
                 });
-            const formattedTask = formatTask(task);
             res.status(200).json({
                 success: true,
                 statusCode: 200,
-                data: formattedTask,
+                data: task,
                 message: "Task updated successfully.",
             });
         } catch (error) {

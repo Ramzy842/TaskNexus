@@ -30,7 +30,7 @@ googleRouter.get("/callback", async (req, res) => {
             audience: google.Client_ID,
         });
         const { name, email, sub: googleId } = ticket.getPayload();
-        let user = await User.findOne({ email });
+        let user = await User.findOne({ email }).populate("tasks");
         if (!user) {
             user = new User({
                 username: email.split("@")[0],
@@ -53,6 +53,9 @@ googleRouter.get("/callback", async (req, res) => {
                     username: user.username,
                     email: user.email,
                     name: user.name,
+                    tasks: user.tasks,
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt,
                 },
             },
         });
