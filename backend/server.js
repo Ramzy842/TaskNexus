@@ -1,21 +1,5 @@
+const app = require("./app");
 const { PORT } = require("./utils/config");
-const express = require("express");
-const app = express();
-const cors = require("cors");
-const { unknownEndpoint, logger, errorHandler } = require("./utils/middleware");
-app.use(express.json());
-const tasksRouter = require("./controllers/tasks");
-const usersRouter = require("./controllers/users");
-const loginRouter = require("./controllers/login");
-const googleRouter = require("./controllers/google")
-app.use(cors());
-app.use(logger);
-app.use("/api/tasks/", tasksRouter);
-app.use("/api/users/", usersRouter);
-app.use("/api/login/", loginRouter);
-app.use("/api/auth/google/", googleRouter);
-app.use(unknownEndpoint);
-app.use(errorHandler);
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
