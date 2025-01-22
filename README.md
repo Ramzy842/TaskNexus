@@ -1,4 +1,4 @@
-#Tech
+Tech
 - Node
 - Express
 - MongoDB
