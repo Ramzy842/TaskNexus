@@ -66,7 +66,7 @@ Task Tracker is a full-stack MERN (MongoDB, Express, React, Node.js) web applica
    ```env
    MONGODB_URI=<Your MongoDB URI>
    SECRET=<Your JWT Secret>
-   PORT=5000
+   PORT=4000
    ```
 
 5. Start the development servers:
