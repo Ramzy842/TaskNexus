@@ -8,6 +8,7 @@ Task Tracker is a full-stack MERN (MongoDB, Express, React, Node.js) web applica
 - **Task Management**: Add, view, edit, delete, and mark tasks as complete.
 - **Authentication**:
   - JWT-based user authentication for secure access.
+  - Google OAuth for external authentication.
   - Role-based access control for enhanced security.
 - **Responsive Design**: Built with TailwindCSS for a mobile-friendly experience.
 
@@ -47,7 +48,7 @@ Task Tracker is a full-stack MERN (MongoDB, Express, React, Node.js) web applica
 ### Steps to Run Locally
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/task-tracker.git
+   git clone https://github.com/Ramzy842/task-tracker.git
    ```
 
 2. Navigate to the project directory:
@@ -63,8 +64,8 @@ Task Tracker is a full-stack MERN (MongoDB, Express, React, Node.js) web applica
 
 4. Create a `.env` file in the root directory and add the following environment variables:
    ```env
-   MONGO_URI=<Your MongoDB URI>
-   JWT_SECRET=<Your JWT Secret>
+   MONGODB_URI=<Your MongoDB URI>
+   SECRET=<Your JWT Secret>
    PORT=5000
    ```
 
@@ -96,16 +97,16 @@ Task Tracker is a full-stack MERN (MongoDB, Express, React, Node.js) web applica
 
 The application is deployed using modern CI/CD workflows:
 - **Frontend**: Deployed on Vercel.
-- **Backend**: Deployed on Render or AWS.
+- **Backend**: Deployed on AWS.
 
 ## API Documentation
 
-The backend API is documented using Swagger. Access the documentation locally at `http://localhost:5000/api-docs`.
+The backend API is documented using Swagger. Access the documentation locally at `http://localhost:4000/api-docs`.
 
 ### Example Endpoints
 - **POST /api/auth/login**: User login.
 - **GET /api/tasks**: Retrieve all tasks.
-- **PATCH /api/tasks/:id**: Update a task.
+- **PUT /api/tasks/:id**: Update a task.
 
 ## Screenshots
 
@@ -116,7 +117,6 @@ The backend API is documented using Swagger. Access the documentation locally at
 ![Task Management](https://via.placeholder.com/800x400)
 
 ## Future Enhancements
-- Google OAuth for external authentication.
 - Task collaboration features for multi-user environments.
 - Notifications and reminders for upcoming tasks.
 - Analytics dashboard for task insights.
@@ -137,6 +137,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Contact
 
 For any questions or feedback, feel free to reach out:
-- **Email**: your-email@example.com
-- **GitHub**: [your-username](https://github.com/your-username)
+- **Email**: ramzychahbani@gmail.com
+- **GitHub**: [Ramzy842](https://github.com/Ramzy842)
 
