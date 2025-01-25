@@ -9,25 +9,32 @@ usersRouter.post(
     [
         body("username")
             .notEmpty()
-            .withMessage("username is required.")
+            .withMessage("Username is required.")
             .isString()
+            .withMessage("Invalid username.")
             .trim()
             .escape(),
         body("name")
             .notEmpty()
-            .withMessage("name is required.")
+            .withMessage("Name is required.")
             .isString()
+            .withMessage("Invalid name.")
             .trim()
             .escape(),
         body("email")
             .notEmpty()
-            .withMessage("email is required.")
+            .withMessage("Email is required.")
             .isEmail()
             .withMessage("Invalid email format."),
         body("password")
             .notEmpty()
-            .withMessage("Password is required")
+            .withMessage("Password is required.")
             .isString()
+            .withMessage("Invalid password.")
+            .isLength({ min: 12, max: 24 })
+            .withMessage(
+                "Password should be at least 12 characters long and not exceeding 24 characters."
+            )
             .escape(),
     ],
     async (req, res) => {
@@ -54,13 +61,6 @@ usersRouter.post(
                     success: false,
                     statusCode: 400,
                     error: "Either password or googleId is required.",
-                });
-            }
-            if (password.length < 8) {
-                return res.status(400).json({
-                    success: false,
-                    statusCode: 400,
-                    error: "Password should be at least 8 characters long.",
                 });
             }
             const saltRounds = 10;
@@ -111,15 +111,15 @@ usersRouter.put(
     "/:id",
     [
         body("username")
-            .optional()
             .notEmpty()
-            .withMessage("username must not be empty if provided.")
+            .withMessage("Username is required.")
             .isString()
+            .withMessage("Invalid username.")
+            .trim()
             .escape(),
         body("email")
-            .optional()
             .notEmpty()
-            .withMessage("email must not be empty if provided.")
+            .withMessage("Email is required.")
             .isEmail()
             .withMessage("Invalid email format."),
     ],
