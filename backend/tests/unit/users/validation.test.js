@@ -7,7 +7,6 @@ const {
     messages,
 } = require("../../../utils/validators");
 
-// USER VALIDATION
 describe("User validation middleware", () => {
     const validateUser = (req, res, next) => {
         const result = validationResult(req);
@@ -20,7 +19,6 @@ describe("User validation middleware", () => {
         }
         next();
     };
-
     const runMiddleWare = async (req, res, next) => {
         try {
             for (let middleware of userValidationParams) {
@@ -161,9 +159,7 @@ describe("User validation middleware", () => {
         userValidationParams[0] = jest.fn(() => {
             throw new Error("Unexpected error");
         });
-
         await runMiddleWare(req, res, next);
-
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.json).toHaveBeenCalledWith({
             success: false,

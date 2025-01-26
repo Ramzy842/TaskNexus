@@ -11,6 +11,8 @@ const createUser = async (username, name, email, passwordHash) => {
 };
 
 const getHashedPassword = async (password, googleId) => {
+    if (!password && !googleId)
+        return null;
     const saltRounds = 10;
     if (googleId) return null;
     return await bcrypt.hash(password, saltRounds);
