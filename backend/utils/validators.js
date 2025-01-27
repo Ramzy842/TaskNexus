@@ -3,8 +3,10 @@ const { body } = require("express-validator");
 const messages = {
     usernameRequired: "Username is required.",
     invalidUsername: "Invalid username.",
+    inaccurateUsernameLength: "Username should be at least 3 characters long and not exceeding 16 characters.",
     nameRequired: "Name is required.",
     invalidName: "Invalid name.",
+    inaccurateNameLength: "Name should be at least 3 characters long and not exceeding 16 characters.",
     emailRequired: "Email is required.",
     invalidEmail: "Invalid email format.",
     passwordRequired: "Password is required.",
@@ -18,6 +20,8 @@ const validateUsername = body("username")
     .withMessage(messages.usernameRequired)
     .isString()
     .withMessage(messages.invalidUsername)
+    .isLength({ min: 3, max: 16 })
+    .withMessage(messages.inaccurateUsernameLength)
     .trim()
     .escape();
 
@@ -26,6 +30,8 @@ const validateName = body("name")
     .withMessage(messages.nameRequired)
     .isString()
     .withMessage(messages.invalidName)
+    .isLength({ min: 3, max: 16 })
+    .withMessage(messages.inaccurateNameLength)
     .trim()
     .escape();
 

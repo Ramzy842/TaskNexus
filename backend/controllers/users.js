@@ -25,8 +25,14 @@ usersRouter.post(
                 errors: result.array().map((res) => res.msg),
             });
         }
+        if (Object.keys(req.body).length !== 4)
+            return res.status(400).json({
+                success: false,
+                statusCode: 400,
+                error: messages.bodyPayloadLengthError,
+            });
         try {
-            const { username, name, email, password, googleId } = req.body;
+            const { username, name, email, password } = req.body;
             const emailExists = await User.findOne({ email });
             if (emailExists) {
                 return res.status(409).json({
@@ -35,14 +41,7 @@ usersRouter.post(
                     error: messages.usedEmail,
                 });
             }
-            if (!password && !googleId) {
-                return res.status(400).json({
-                    success: false,
-                    statusCode: 400,
-                    error: messages.passwordOrGoogleRequired,
-                });
-            }
-            const passwordHash = await getHashedPassword(password, googleId);
+            const passwordHash = await getHashedPassword(password);
             const savedUser = await createUser(
                 username,
                 name,
