@@ -19,8 +19,8 @@ const userSchema = new mongoose.Schema(
         email: {
             type: String,
             required: true,
-            unique: true, 
-            lowercase: true, 
+            lowercase: true,
+            unique: true,
             match: [/^\S+@\S+\.\S+$/, "Invalid email format"],
         },
         passwordHash: {
@@ -47,6 +47,7 @@ const userSchema = new mongoose.Schema(
         timestamps: true,
     }
 );
+
 
 userSchema.set("toJSON", {
     transform: (document, returnedObject) => {

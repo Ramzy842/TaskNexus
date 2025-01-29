@@ -74,7 +74,7 @@ describe("User validation middleware", () => {
         expect(res.json).toHaveBeenCalledWith({
             success: false,
             statusCode: 400,
-            errors: [messages.usernameRequired],
+            errors: [messages.usernameRequired, messages.inaccurateUsernameLength],
         });
     });
     test("Returns error for invalid email format", async () => {
@@ -98,7 +98,7 @@ describe("User validation middleware", () => {
     test("Returns password length error when password is less than 12 characters.", async () => {
         let req = {
             body: {
-                username: "SomeRandomUsername",
+                username: "SomeRandomUser",
                 name: "John Doe",
                 email: "johnDoe@gmil.com",
                 password: "123456789",
@@ -116,7 +116,7 @@ describe("User validation middleware", () => {
     test("Returns password length error when password is greater than 24 characters.", async () => {
         let req = {
             body: {
-                username: "SomeRandomUsername",
+                username: "SomeRandomUser",
                 name: "John Doe",
                 email: "johnDoe@gmil.com",
                 password: "123456789123456789123456789",
@@ -134,7 +134,7 @@ describe("User validation middleware", () => {
     test("Calls next upon validation success", async () => {
         let req = {
             body: {
-                username: "SomeRandomUsername",
+                username: "SomeRandomUser",
                 name: "John Doe",
                 email: "johnDoe@gmil.com",
                 password: "12345678912345",

@@ -48,7 +48,7 @@ usersRouter.post(
                 email,
                 passwordHash
             );
-            savedUser.save();
+            await savedUser.save();
             delete savedUser.passwordHash;
             res.status(201).json({
                 success: true,
@@ -78,10 +78,28 @@ usersRouter.get("/", async (req, res) => {
         res.status(500).json({
             success: false,
             statusCode: 500,
-            error: error.message,
+            error: "Something went wrong while trying to retrieve users.",
         });
     }
 });
+
+usersRouter.get("/:id", async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).populate("tasks");
+        res.status(200).json({
+            success: true,
+            statusCode: 200,
+            data: user,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            statusCode: 500,
+            error: "Something went wrong while trying to retrieve user.",
+        });
+    }
+});
+
 usersRouter.put(
     "/:id",
     [validateUsernameUpdate, validateEmailUpdate, validateNameUpdate],
