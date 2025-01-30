@@ -65,3 +65,16 @@ test("Calls next when validation succeeds", async () => {
     // next called in the runLoginMiddleWare fn to run validators and when validation succeeds
     expect(next.mock.calls).toHaveLength(loginValidationParams.length + 1);
 })
+
+test("Ignores unexpected fields and logs in successfully", async () => {
+    let req = {
+        body: {
+            email: "email@gmail.com",
+            password: "password123456789",
+            extraField: "shouldBeIgnored",
+        },
+    };
+    await runLoginMiddleWare(req, res, next);
+    validateUser(req, res, next);
+    expect(next.mock.calls).toHaveLength(loginValidationParams.length + 1);
+});
