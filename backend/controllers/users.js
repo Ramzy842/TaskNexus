@@ -184,14 +184,13 @@ usersRouter.delete("/:id", async (req, res) => {
         res.status(200).json({
             success: true,
             statusCode: 200,
-            data: updatedUser,
             message: "User deleted successfully",
         });
     } catch (err) {
         res.status(500).json({
             success: false,
             statusCode: 500,
-            error: "Something went wrong while trying to update user.",
+            error: "Something went wrong while trying to delete user.",
         });
     }
 });
