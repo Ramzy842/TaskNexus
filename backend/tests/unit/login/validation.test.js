@@ -1,8 +1,6 @@
 const { messages } = require("../../../utils/validators");
 const {
-    runMiddleWare,
     validateUser,
-    userValidationParams,
     runLoginMiddleWare,
     loginValidationParams,
 } = require("../middleware");
