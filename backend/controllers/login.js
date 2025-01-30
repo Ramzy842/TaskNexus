@@ -3,18 +3,19 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
+const { messages } = require("../utils/validators");
 
 loginRouter.post(
     "/",
     [
         body("email")
             .notEmpty()
-            .withMessage("email is required.")
+            .withMessage(messages.emailRequired)
             .isEmail()
-            .withMessage("Invalid email format."),
+            .withMessage(messages.invalidEmail),
         body("password")
             .notEmpty()
-            .withMessage("Password is required")
+            .withMessage(messages.passwordRequired)
             .isString()
             .escape(),
     ],

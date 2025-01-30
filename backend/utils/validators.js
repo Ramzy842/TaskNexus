@@ -3,10 +3,12 @@ const { body } = require("express-validator");
 const messages = {
     usernameRequired: "Username is required.",
     invalidUsername: "Invalid username.",
-    inaccurateUsernameLength: "Username should be at least 3 characters long and not exceeding 16 characters.",
+    inaccurateUsernameLength:
+        "Username should be at least 3 characters long and not exceeding 16 characters.",
     nameRequired: "Name is required.",
     invalidName: "Invalid name.",
-    inaccurateNameLength: "Name should be at least 3 characters long and not exceeding 16 characters.",
+    inaccurateNameLength:
+        "Name should be at least 3 characters long and not exceeding 16 characters.",
     emailRequired: "Email is required.",
     invalidEmail: "Invalid email format.",
     passwordRequired: "Password is required.",
@@ -61,7 +63,8 @@ const validateUsernameUpdate = body("username")
     .trim()
     .escape();
 
-const validateNameUpdate = body("name").optional()
+const validateNameUpdate = body("name")
+    .optional()
     .notEmpty()
     .withMessage(messages.nameRequired)
     .isString()
@@ -69,19 +72,27 @@ const validateNameUpdate = body("name").optional()
     .trim()
     .escape();
 
-const validateEmailUpdate = body("email").optional()
+const validateEmailUpdate = body("email")
+    .optional()
     .notEmpty()
     .withMessage(messages.emailRequired)
     .isEmail()
     .withMessage(messages.invalidEmail);
 
-const validatePasswordUpdate = body("password").optional()
+const validatePasswordUpdate = body("password")
+    .optional()
     .notEmpty()
     .withMessage(messages.passwordRequired)
     .isString()
     .withMessage(messages.invalidPassword)
     .isLength({ min: 12, max: 24 })
     .withMessage(messages.inaccuratePasswordLength)
+    .escape();
+
+const validatePasswordLogin = body("password")
+    .notEmpty()
+    .withMessage(messages.passwordRequired)
+    .isString()
     .escape();
 
 module.exports = {
@@ -93,5 +104,6 @@ module.exports = {
     validateNameUpdate,
     validateEmailUpdate,
     validatePasswordUpdate,
+    validatePasswordLogin,
     messages,
 };

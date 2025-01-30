@@ -1,56 +1,24 @@
-const { validationResult } = require("express-validator");
+const { messages } = require("../../../utils/validators");
 const {
-    validateUsername,
-    validateName,
-    validateEmail,
-    validatePassword,
-    messages,
-} = require("../../../utils/validators");
+    runUsersMiddleWare,
+    validateUser,
+    userValidationParams,
+} = require("../middleware");
 
 describe("User validation middleware", () => {
-    const validateUser = (req, res, next) => {
-        const result = validationResult(req);
-        if (!result.isEmpty()) {
-            return res.status(400).json({
-                success: false,
-                statusCode: 400,
-                errors: result.array().map((res) => res.msg),
-            });
-        }
-        next();
-    };
-    const runMiddleWare = async (req, res, next) => {
-        try {
-            for (let middleware of userValidationParams) {
-                await middleware(req, res, next);
-            }
-        } catch (err) {
-            res.status(500).json({
-                success: false,
-                statusCode: 500,
-                error: "Internal server error.",
-            });
-        }
-    };
-    let res, next, userValidationParams;
+    let res, next;
     beforeEach(() => {
         res = {
             status: jest.fn().mockReturnThis(),
             json: jest.fn().mockReturnThis(),
         };
         next = jest.fn();
-        userValidationParams = [
-            validateUsername,
-            validateName,
-            validateEmail,
-            validatePassword,
-        ];
     });
     test("Returns all error messages when body is empty", async () => {
         let req = {
             body: {},
         };
-        await runMiddleWare(req, res, next);
+        await runUsersMiddleWare(req, res, next);
         validateUser(req, res, next);
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
@@ -68,13 +36,16 @@ describe("User validation middleware", () => {
                 password: "12345678912345",
             },
         };
-        await runMiddleWare(req, res, next);
+        await runUsersMiddleWare(req, res, next);
         validateUser(req, res, next);
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
             statusCode: 400,
-            errors: [messages.usernameRequired, messages.inaccurateUsernameLength],
+            errors: [
+                messages.usernameRequired,
+                messages.inaccurateUsernameLength,
+            ],
         });
     });
     test("Returns error for invalid email format", async () => {
@@ -86,7 +57,7 @@ describe("User validation middleware", () => {
                 password: "12345678912345",
             },
         };
-        await runMiddleWare(req, res, next);
+        await runUsersMiddleWare(req, res, next);
         validateUser(req, res, next);
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
@@ -104,7 +75,7 @@ describe("User validation middleware", () => {
                 password: "123456789",
             },
         };
-        await runMiddleWare(req, res, next);
+        await runUsersMiddleWare(req, res, next);
         validateUser(req, res, next);
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
@@ -122,7 +93,7 @@ describe("User validation middleware", () => {
                 password: "123456789123456789123456789",
             },
         };
-        await runMiddleWare(req, res, next);
+        await runUsersMiddleWare(req, res, next);
         validateUser(req, res, next);
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
@@ -140,7 +111,7 @@ describe("User validation middleware", () => {
                 password: "12345678912345",
             },
         };
-        await runMiddleWare(req, res, next);
+        await runUsersMiddleWare(req, res, next);
         validateUser(req, res, next);
         // Expect one call for each middleware and an additional call for validateUser's next()
         expect(next.mock.calls).toHaveLength(userValidationParams.length + 1);
@@ -159,7 +130,7 @@ describe("User validation middleware", () => {
         userValidationParams[0] = jest.fn(() => {
             throw new Error("Unexpected error");
         });
-        await runMiddleWare(req, res, next);
+        await runUsersMiddleWare(req, res, next);
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
