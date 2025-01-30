@@ -47,6 +47,12 @@ const getTokenFrom = (req) => {
 const verifyToken = (req, res, next) => {
     try {
         const token = getTokenFrom(req);
+        if (!token)
+            return res.status(401).json({
+                success: false,
+                statusCode: 401,
+                error: "Missing authorization token.",
+            });
         const decodedToken = jwt.verify(token, process.env.SECRET);
         if (!decodedToken.id)
             return res.status(401).json({

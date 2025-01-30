@@ -60,7 +60,7 @@ usersRouter.post(
             return res.status(500).json({
                 success: false,
                 statusCode: 500,
-                error: error.message,
+                error: "Something went wrong while trying to create user.",
             });
         }
     }
@@ -86,6 +86,13 @@ usersRouter.get("/", async (req, res) => {
 usersRouter.get("/:id", async (req, res) => {
     try {
         const user = await User.findById(req.params.id).populate("tasks");
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                statusCode: 404,
+                message: "User not found.",
+            });
+        }
         res.status(200).json({
             success: true,
             statusCode: 200,
@@ -113,7 +120,22 @@ usersRouter.put(
                 errors: result.array().map((res) => res.msg),
             });
         }
-        if (!Object.keys(req.body).length) return res.status(204).end();
+        if (!Object.keys(req.body).length) return res.status(400).end();
+        if (
+            Object.keys(req.body).some(
+                (key) =>
+                    key !== "username" &&
+                    key !== "email" &&
+                    key !== "name" &&
+                    key !== "password"
+            )
+        ) {
+            return res.status(400).json({
+                success: false,
+                statusCode: 400,
+                message: "Body contains invalid fields",
+            });
+        }
         if (req.user.id !== req.params.id)
             return res.status(403).json({
                 success: false,
@@ -140,8 +162,38 @@ usersRouter.put(
                 message: messages.successfullUserUpdate,
             });
         } catch (err) {
-            next(err);
+            res.status(500).json({
+                success: false,
+                statusCode: 500,
+                error: "Something went wrong while trying to update user.",
+            });
         }
     }
 );
+
+usersRouter.delete("/:id", async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.params.id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                statusCode: 404,
+                message: "The user you're trying to delete is not found.",
+            });
+        }
+        res.status(200).json({
+            success: true,
+            statusCode: 200,
+            data: updatedUser,
+            message: "User deleted successfully",
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            statusCode: 500,
+            error: "Something went wrong while trying to update user.",
+        });
+    }
+});
+
 module.exports = usersRouter;

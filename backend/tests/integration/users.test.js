@@ -149,6 +149,21 @@ describe("POST /api/users", () => {
     });
 });
 
+const users = [
+    {
+        username: "Sorcerer supreme",
+        name: "Doctor strange",
+        email: "strange@gmail.com",
+        password: "password123456",
+    },
+    {
+        username: "Iron Man",
+        name: "Tony Stark",
+        email: "stark@gmail.com",
+        password: "password123456",
+    },
+];
+
 describe("GET /api/users", () => {
     beforeEach(async () => {
         await User.deleteMany({}).exec();
@@ -156,21 +171,7 @@ describe("GET /api/users", () => {
     afterEach(async () => {
         await User.deleteMany({}).exec();
     });
-    
-    const users = [
-        {
-            username: "Sorcerer supreme",
-            name: "Doctor strange",
-            email: "strange@gmail.com",
-            password: "password123456",
-        },
-        {
-            username: "Iron Man",
-            name: "Tony Stark",
-            email: "stark@gmail.com",
-            password: "password123456",
-        },
-    ];
+
     test("returns empty array if there are no users are in the database", async () => {
         let res = await api.get("/api/users");
         expect(res.body.statusCode).toBe(200);
@@ -235,7 +236,75 @@ describe("GET /api/users", () => {
     });
 });
 
-describe("PUT /api/users/:id", () => {});
+describe("PUT /api/users/:id", () => {
+    let user, result;
+    beforeEach(async () => {
+        await User.deleteMany({});
+        user = await api.post("/api/users").send(users[0]);
+        result = await api
+            .post("/api/login")
+            .send({ email: users[0].email, password: users[0].password });
+    });
+    test("returns status code 204 when body is empty", async () => {
+        let res = await api
+            .put(`/api/users/${user.body.data.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`)
+            .send({});
+        expect(res.status).toBe(400);
+    });
+    test("returns status 400 if request body contains invalid fields", async () => {
+        let res = await api
+            .put(`/api/users/${user.body.data.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`)
+            .send({ color: "Black" });
+        expect(res.status).toBe(400);
+        expect(res.body.message).toBe("Body contains invalid fields");
+    });
+    test("returns 401 if the request is missing an authorization token", async () => {
+        let res = await api
+            .put(`/api/users/${user.body.data.id}`)
+            .send({ username: "Black" });
+        expect(res.status).toBe(401);
+        expect(res.body.error).toBe("Missing authorization token.");
+    });
+    test("returns authorization error message when id param doesn't match user id", async () => {
+        const tempId = new mongoose.Types.ObjectId();
+        let res = await api
+            .put(`/api/users/${tempId}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`)
+            .send({ username: "Black" });
+        expect(res.status).toBe(403);
+        expect(res.body.message).toBe(dbMessages.unauthorizedToUpdate);
+    });
+    test("returns user not found error message when trying to update using invalid id", async () => {
+        await api.delete(`/api/users/${user.body.data.id}`);
+        const deletedUser = await api.get(`/api/users/${user.body.data.id}`);
+        expect(deletedUser.body.message).toBe("User not found.");
+        let res = await api
+            .put(`/api/users/${user.body.data.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`)
+            .send({ username: "Black" });
+        expect(res.status).toBe(404);
+        expect(res.body.message).toBe(dbMessages.userToUpdateNotFound);
+    });
+    test("returns updated user upon request success", async () => {
+        let res = await api
+            .put(`/api/users/${user.body.data.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`)
+            .send({ username: "Black" });
+        expect(res.status).toBe(200);
+        expect(res.body.message).toBe(dbMessages.successfullUserUpdate);
+    });
+    test("returns status code 200 and updates only provided fields", async () => {
+        let res = await api
+            .put(`/api/users/${user.body.data.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`)
+            .send({ username: "Defender Strange" });
+        expect(res.status).toBe(200);
+        expect(res.body.data.username).toBe("Defender Strange");
+        expect(res.body.data.name).toBe("Doctor strange");
+    });
+});
 
 afterAll(async () => {
     await mongoose.connection.close();
