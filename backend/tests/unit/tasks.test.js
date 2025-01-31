@@ -102,7 +102,7 @@ describe("POST /api/tasks", () => {
             ],
         });
     });
-    test("Returns status 400 and error for invalid status value", async () => {
+    test("Returns status 400 and error for invalid dueDate value", async () => {
         let req = {
             body: {
                 title: "To do task",
