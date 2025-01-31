@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-const superset = require("supertest");
+const supertest = require("supertest");
 const app = require("../../app");
 const { messages } = require("../../utils/validators");
 const { messages: dbMessages } = require("../../utils/users");
 const User = require("../../models/User");
-const api = superset(app);
+const api = supertest(app)
 
 describe("POST /api/users", () => {
     beforeEach(async () => {

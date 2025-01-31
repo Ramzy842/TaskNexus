@@ -1,9 +1,9 @@
-const { messages } = require("../../../utils/validators");
+const { messages } = require("../../utils/validators");
 const {
     validateUser,
     runLoginMiddleWare,
     loginValidationParams,
-} = require("../middleware");
+} = require("./middleware");
 
 // Validation Tests
 let res, next;
