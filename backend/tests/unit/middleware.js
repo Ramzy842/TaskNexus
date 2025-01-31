@@ -6,7 +6,29 @@ const {
     validatePassword,
     validatePasswordLogin,
 } = require("../../utils/validators");
+const {
+    validateTitle,
+    validateDescription,
+    validateStatus,
+    validateDate,
+    validateTitleUpdate,
+    validateDescriptionUpdate,
+    validateStatusUpdate,
+    validateDateUpdate,
+} = require("../../utils/tasksValidators");
 const validateUser = (req, res, next) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        return res.status(400).json({
+            success: false,
+            statusCode: 400,
+            errors: result.array().map((res) => res.msg),
+        });
+    }
+    next();
+};
+
+const validateTask = (req, res, next) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
         return res.status(400).json({
@@ -26,6 +48,20 @@ let userValidationParams = [
 ];
 
 let loginValidationParams = [validateEmail, validatePasswordLogin];
+
+let tasksCreationValidationParams = [
+    validateTitle,
+    validateDescription,
+    validateStatus,
+    validateDate,
+];
+
+let tasksUpdateValidationParams = [
+    validateTitleUpdate,
+    validateDescriptionUpdate,
+    validateStatusUpdate,
+    validateDateUpdate,
+];
 
 const runUsersMiddleWare = async (req, res, next) => {
     try {
@@ -55,10 +91,43 @@ const runLoginMiddleWare = async (req, res, next) => {
     }
 };
 
+const runTaskCreationMiddleware = async (req, res, next) => {
+    try {
+        for (let middleware of tasksCreationValidationParams) {
+            await middleware(req, res, next);
+        }
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            statusCode: 500,
+            error: "Internal server error.",
+        });
+    }
+};
+
+const runTaskUpdateMiddleware = async (req, res, next) => {
+    try {
+        for (let middleware of tasksUpdateValidationParams) {
+            await middleware(req, res, next);
+        }
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            statusCode: 500,
+            error: "Internal server error.",
+        });
+    }
+};
+
 module.exports = {
     validateUser,
     runUsersMiddleWare,
     runLoginMiddleWare,
+    runTaskCreationMiddleware,
+    runTaskUpdateMiddleware,
     userValidationParams,
     loginValidationParams,
+    tasksCreationValidationParams,
+    tasksUpdateValidationParams,
+    validateTask,
 };

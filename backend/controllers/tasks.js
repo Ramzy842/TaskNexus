@@ -51,27 +51,29 @@ tasksRouter.post(
     [
         body("title")
             .notEmpty()
-            .withMessage("title is required.")
+            .withMessage("Title is required.")
             .isString()
+            .withMessage("Title is invalid.")
             .escape(),
         body("description")
             .notEmpty()
-            .withMessage("description is required.")
+            .withMessage("Description is required.")
             .isString()
+            .withMessage("Description is invalid.")
             .escape(),
         body("status")
             .notEmpty()
-            .withMessage("status is required.")
+            .withMessage("Status is required.")
             .isIn(["To Do", "In Progress", "Completed"])
             .withMessage(
                 "Invalid status value. Allowed values are: To Do, In Progress, Completed."
             ),
         body("dueDate")
             .notEmpty()
-            .withMessage("dueDate is required")
+            .withMessage("DueDate is required")
             .isISO8601()
             .withMessage(
-                "dueDate must be in ISO8601 format (e.g., YYYY-MM-DD)."
+                "DueDate must be in ISO8601 format (e.g., YYYY-MM-DD)."
             ),
     ],
     verifyToken,
@@ -113,29 +115,33 @@ tasksRouter.put(
         body("title")
             .optional()
             .notEmpty()
-            .withMessage("title must not be empty if provided.")
+            .withMessage("Title must not be empty if provided.")
             .isString()
+            .withMessage("Title is invalid.")
             .escape(),
         body("description")
             .optional()
             .notEmpty()
-            .withMessage("description must not be empty if provided.")
+            .withMessage("Description must not be empty if provided.")
             .isString()
+            .withMessage("Description is invalid.")
             .escape(),
         body("status")
             .optional()
             .notEmpty()
+            .withMessage("Status must not be empty if provided.")
+            .isIn(["To Do", "In Progress", "Completed"])
             .withMessage(
                 "Invalid status value. Allowed values are: To Do, In Progress, Completed."
-            )
-            .isIn(["To Do", "In Progress", "Completed"]),
+            ),
         body("dueDate")
             .optional()
             .notEmpty()
+            .withMessage("DueDate must not be empty if provided.")
+            .isISO8601()
             .withMessage(
-                "dueDate must be in ISO8601 format (e.g., YYYY-MM-DD)."
-            )
-            .isISO8601(),
+                "DueDate must be in ISO8601 format (e.g., YYYY-MM-DD)."
+            ),
     ],
     verifyToken,
     async (req, res, next) => {
@@ -185,7 +191,8 @@ tasksRouter.delete("/:id", verifyToken, async (req, res, next) => {
                 statusCode: 404,
                 message: "The task you are trying to delete is not found.",
             });
-        if (req.user.id === task.userId.toString()) return res.status(204).end();
+        if (req.user.id === task.userId.toString())
+            return res.status(204).end();
         else
             return res.status(403).json({
                 success: false,
