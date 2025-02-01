@@ -51,14 +51,14 @@ const verifyToken = (req, res, next) => {
             return res.status(401).json({
                 success: false,
                 statusCode: 401,
-                error: "Missing authorization token.",
+                error: "Missing JWT token.",
             });
         const decodedToken = jwt.verify(token, process.env.SECRET);
         if (!decodedToken.id)
             return res.status(401).json({
                 success: false,
                 statusCode: 401,
-                error: "Invalid token.",
+                error: "Invalid JWT token.",
             });
         req.user = decodedToken;
         next();

@@ -39,6 +39,8 @@ loginRouter.post(
                 });
             }
             if (user.googleId) {
+                console.log("email: " + email);
+                console.log("Google ID: " + user.googleId);
                 return res.status(400).json({
                     success: false,
                     statusCode: 400,
@@ -60,7 +62,7 @@ loginRouter.post(
             const userForToken = {
                 username: user.username,
                 email: user.email,
-                id: user._id,
+                id: user._id.toString(),
             };
             const token = jwt.sign(userForToken, process.env.SECRET, {
                 expiresIn: 60 * 60,
@@ -71,7 +73,7 @@ loginRouter.post(
                 data: {
                     token,
                     user: {
-                        id: user.id,
+                        id: user._id.toString(),
                         username: user.username,
                         email: user.email,
                         name: user.name,

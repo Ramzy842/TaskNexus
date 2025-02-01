@@ -6,11 +6,12 @@ const { messages: dbMessages } = require("../../utils/users");
 const User = require("../../models/User");
 const api = supertest(app)
 
+beforeAll(async () => {
+    await User.deleteMany({});
+});
+
 describe("POST /api/users", () => {
     beforeEach(async () => {
-        await User.deleteMany({}).exec();
-    });
-    afterEach(async () => {
         await User.deleteMany({}).exec();
     });
 
@@ -265,7 +266,7 @@ describe("PUT /api/users/:id", () => {
             .put(`/api/users/${user.body.data.id}`)
             .send({ username: "Black" });
         expect(res.status).toBe(401);
-        expect(res.body.error).toBe("Missing authorization token.");
+        expect(res.body.error).toBe("Missing JWT token.");
     });
     test("returns authorization error message when id param doesn't match user id", async () => {
         const tempId = new mongoose.Types.ObjectId();
@@ -307,5 +308,6 @@ describe("PUT /api/users/:id", () => {
 });
 
 afterAll(async () => {
+    await User.deleteMany({})
     await mongoose.connection.close();
 });
