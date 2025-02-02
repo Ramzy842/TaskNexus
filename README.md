@@ -82,7 +82,7 @@ Task Tracker is a full-stack MERN (MongoDB, Express, React, Node.js) web applica
 ### Running Tests
 - **Backend Tests**:
   ```bash
-  npm run test
+  cd backend && npm run test
   ```
 - **Frontend Tests**:
   ```bash
