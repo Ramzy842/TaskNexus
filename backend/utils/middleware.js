@@ -34,7 +34,11 @@ const errorHandler = (err, req, res, next) => {
         return res.status(401).json({
             error: "token expired",
         });
-    next(err);
+    return res.status(500).json({
+        success: false,
+        statusCode: 500,
+        error: "Internal Server Error",
+    });
 };
 
 const getTokenFrom = (req) => {
