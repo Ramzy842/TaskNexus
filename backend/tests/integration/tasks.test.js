@@ -87,7 +87,7 @@ describe("GET /api/tasks", () => {
     });
 });
 describe("GET /api/tasks/:id", () => {
-    const id = "somerandomid";
+    const tempId = new mongoose.Types.ObjectId();
     test("Returns status 401 missing token error when token is missing", async () => {
         await api.post("/api/tasks").send({
             title: "Test Title",
@@ -95,7 +95,7 @@ describe("GET /api/tasks/:id", () => {
             dueDate: "2025-05-30",
             status: "To Do",
         });
-        let result = await api.get(`/api/tasks/${id}`);
+        let result = await api.get(`/api/tasks/${tempId}`);
         expect(result.status).toBe(401);
         expect(result.body.error).toBe("Missing JWT token.");
     });
@@ -185,22 +185,192 @@ describe("GET /api/tasks/:id", () => {
             .get(`/api/tasks/${task.body.data.id}`)
             .set("Authorization", `Bearer ${result.body.data.token}`);
         expect(res.status).toBe(500);
-        expect(res.body.error).toBe("Internal Server Error")
+        expect(res.body.error).toBe("Internal Server Error");
+        jest.restoreAllMocks();
     });
 });
-// describe("POST /api/tasks", () => {
-//     test("Returns status 401 and missing token error when token is missing", async () => {});
-//     test("Returns status 201 and created task object", async () => {});
-//     test("Returns status 500 when internal server error occurs (DB error)", async () => {});
-// });
-// describe("PUT /api/tasks/:id", () => {
-//     test("Returns status 401 and missing token error when token is missing", async () => {});
-//     test("Returns status 400 when body is empty", async () => {});
-//     test("Returns status 404 when the task to update is not found", async () => {});
-//     test("Returns status 403 and authorization error when task exists but authorization fails (the user trying to update the task does not own it)", async () => {});
-//     test("Returns status 200 and updated task object", async () => {});
-//     test("Returns status 500 when internal server error occurs (DB error)", async () => {});
-// });
+describe("POST /api/tasks", () => {
+    test("Returns status 401 and missing token error when token is missing", async () => {
+        let result = await api.post("/api/tasks").send({
+            title: "Test Title",
+            description: "Test Description",
+            dueDate: "2025-05-30",
+            status: "To Do",
+        });
+        expect(result.status).toBe(401);
+        expect(result.body.error).toBe("Missing JWT token.");
+    });
+    test("Returns status 201 and created task object", async () => {
+        let result = await api
+            .post("/api/login")
+            .send({ email: "loki@gmail.com", password: "password123456" });
+        let res = await api
+            .post("/api/tasks")
+            .set("Authorization", `Bearer ${result.body.data.token}`)
+            .send({
+                title: "Test Title",
+                description: "Test Description",
+                dueDate: "2025-05-30",
+                status: "To Do",
+            });
+        expect(res.status).toBe(201);
+        expect(res.body.data).toEqual(
+            expect.objectContaining({
+                title: "Test Title",
+                description: "Test Description",
+            })
+        );
+        expect(res.body.message).toBe("Task created successfully.");
+    });
+    test("Returns status 500 when internal server error occurs (DB error)", async () => {
+        let result = await api
+            .post("/api/login")
+            .send({ email: "loki@gmail.com", password: "password123456" });
+        jest.spyOn(User, "findById").mockImplementationOnce(() => {
+            throw new Error("Internal Server Error");
+        });
+        let res = await api
+            .post("/api/tasks")
+            .set("Authorization", `Bearer ${result.body.data.token}`)
+            .send({
+                title: "Test Title",
+                description: "Test Description",
+                dueDate: "2025-05-30",
+                status: "To Do",
+            });
+        expect(res.status).toBe(500);
+        expect(res.body.error).toBe("Internal Server Error");
+        jest.restoreAllMocks();
+    });
+});
+describe("PUT /api/tasks/:id", () => {
+    test("Returns status 401 and missing token error when token is missing", async () => {
+        const tempId = new mongoose.Types.ObjectId();
+        let result = await api.put(`/api/tasks/${tempId}`).send({
+            title: "Test Title",
+            description: "Test Description",
+            dueDate: "2025-05-30",
+            status: "To Do",
+        });
+        expect(result.status).toBe(401);
+        expect(result.body.error).toBe("Missing JWT token.");
+    });
+    test("Returns status 400 when body is empty", async () => {
+        let user = await api
+            .post("/api/login")
+            .send({ email: "loki@gmail.com", password: "password123456" });
+        let task = await api
+            .post("/api/tasks")
+            .set("Authorization", `Bearer ${user.body.data.token}`)
+            .send({
+                title: `Task ${Date.now}`,
+                description: `Description ${Date.now}`,
+                dueDate: "2025-05-30",
+                status: "Completed",
+            });
+        let result = await api
+            .put(`/api/tasks/${task.body.data.id}`)
+            .set("Authorization", `Bearer ${user.body.data.token}`)
+            .send({});
+        expect(result.status).toBe(400);
+        expect(result.body.message).toBe(
+            "Request body cannot be empty when updating a task."
+        );
+    });
+    test("Returns status 404 when the task to update is not found", async () => {
+        let user = await api
+            .post("/api/login")
+            .send({ email: "loki@gmail.com", password: "password123456" });
+        const tempId = new mongoose.Types.ObjectId();
+        let res = await api
+            .put(`/api/tasks/${tempId}`)
+            .set("Authorization", `Bearer ${user.body.data.token}`)
+            .send({ title: "Food" });
+        expect(res.status).toBe(404);
+        expect(res.body.message).toBe(
+            "The task you are trying to update is not found."
+        );
+    });
+    test("Returns status 403 and authorization error when task exists but authorization fails (the user trying to update the task does not own it)", async () => {
+        let user = await api
+            .post("/api/login")
+            .send({ email: "loki@gmail.com", password: "password123456" });
+        let task = await api
+            .post("/api/tasks")
+            .set("Authorization", `Bearer ${user.body.data.token}`)
+            .send({
+                title: `Task ${Date.now}`,
+                description: `Description ${Date.now}`,
+                dueDate: "2025-05-30",
+                status: "Completed",
+            });
+        const userForToken = {
+            username: "RandomUsername",
+            email: "randomEmail@gmail.com",
+            id: new mongoose.Types.ObjectId(),
+        };
+        const randomToken = jwt.sign(userForToken, process.env.SECRET, {
+            expiresIn: 60 * 60,
+        });
+        let result = await api
+            .put(`/api/tasks/${task.body.data.id}`)
+            .set("Authorization", `Bearer ${randomToken}`)
+            .send({ description: "Watch Severance Ep 3" });
+        expect(result.status).toBe(403);
+        expect(result.body.message).toBe(
+            "You are not authorized to update this task."
+        );
+    });
+    test("Returns status 200 and updated task object", async () => {
+        let user = await api
+            .post("/api/login")
+            .send({ email: "loki@gmail.com", password: "password123456" });
+        let task = await api
+            .post("/api/tasks")
+            .set("Authorization", `Bearer ${user.body.data.token}`)
+            .send({
+                title: `Task ${Date.now}`,
+                description: `Description ${Date.now}`,
+                dueDate: "2025-05-30",
+                status: "Completed",
+            });
+        let result = await api
+            .put(`/api/tasks/${task.body.data.id}`)
+            .set("Authorization", `Bearer ${user.body.data.token}`)
+            .send({ status: "In Progress" });
+        expect(result.status).toBe(200);
+        expect(result.body.data).toEqual(
+            expect.objectContaining({ status: "In Progress" })
+        );
+        expect(result.body.message).toBe("Task updated successfully.");
+    });
+    test("Returns status 500 when internal server error occurs (DB error)", async () => {
+        let user = await api
+            .post("/api/login")
+            .send({ email: "loki@gmail.com", password: "password123456" });
+        let task = await api
+            .post("/api/tasks")
+            .set("Authorization", `Bearer ${user.body.data.token}`)
+            .send({
+                title: `Task ${Date.now}`,
+                description: `Description ${Date.now}`,
+                dueDate: "2025-05-30",
+                status: "To Do",
+            });
+        jest.spyOn(Task, "findByIdAndUpdate").mockImplementationOnce(() => {
+            throw new Error("Internal Server Error");
+        });
+        let res = await api
+            .put(`/api/tasks/${task.body.data.id}`)
+            .set("Authorization", `Bearer ${user.body.data.token}`)
+            .send({
+                title: "Finish Frontend implementation",
+            });
+        expect(res.status).toBe(500);
+        expect(res.body.error).toBe("Internal Server Error");
+        jest.restoreAllMocks();
+    });
+});
 
 // describe("DELETE /api/tasks/:id", () => {
 //     test("Returns status 401 and missing token error when token is missing", async () => {});
