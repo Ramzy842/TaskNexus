@@ -4,15 +4,18 @@ const app = require("../../app");
 const { messages } = require("../../utils/validators");
 const { messages: dbMessages } = require("../../utils/users");
 const User = require("../../models/User");
-const api = supertest(app)
+const Task = require("../../models/Task");
+const api = supertest(app);
 
 beforeAll(async () => {
+    await Task.deleteMany({});
     await User.deleteMany({});
 });
 
 describe("POST /api/users", () => {
     beforeEach(async () => {
-        await User.deleteMany({}).exec();
+        await Task.deleteMany({});
+        await User.deleteMany({});
     });
 
     let expectedMessages;
@@ -308,6 +311,7 @@ describe("PUT /api/users/:id", () => {
 });
 
 afterAll(async () => {
-    await User.deleteMany({})
+    await User.deleteMany({});
+    await Task.deleteMany({});
     await mongoose.connection.close();
 });

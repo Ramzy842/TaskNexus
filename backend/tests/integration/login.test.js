@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const supertest = require("supertest");
 const User = require("../../models/User");
 const app = require("../../app");
+const Task = require("../../models/Task");
 const api = supertest(app);
 
 beforeEach(async () => {
@@ -26,7 +27,7 @@ test("Returns 401 with 'Invalid email or password.' if user doesn't exist", asyn
         .post("/api/login")
         .send({ password: "password123456789", email: "johnDoes@gmail.com" });
     expect(res.status).toBe(401);
-    expect(res.body.error).toBe("Invalid email or password.");
+    expect(res.body.message).toBe("Invalid email or password.");
 });
 test("Returns 400 with 'This email is registered with Google...' if user has googleId", async () => {
     let res = await api
@@ -44,7 +45,7 @@ test("Returns 401 with 'Invalid email or password.' if password is incorrect", a
         .post("/api/login")
         .send({ password: "anotherpassword", email: "johnDoes@gmail.com" });
     expect(res.status).toBe(401);
-    expect(res.body.error).toBe("Invalid email or password.");
+    expect(res.body.message).toBe("Invalid email or password.");
 });
 test("Returns 200 with a valid JWT and user data if user logs in successfully", async () => {
     let res = await api
@@ -57,6 +58,7 @@ test("Returns 200 with a valid JWT and user data if user logs in successfully", 
 });
 
 afterAll(async () => {
-    await User.deleteMany({})
+    await User.deleteMany({});
+    await Task.deleteMany({});
     await mongoose.connection.close();
 });

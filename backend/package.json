@@ -5,7 +5,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node server.js",
     "dev": "cross-env NODE_ENV=development node --inspect --watch-path=./ ./server.js",
-    "test": "cross-env NODE_ENV=test jest --watch --verbose"
+    "test": "cross-env NODE_ENV=test jest --runInBand --verbose"
   },
   "jest": {
     "testEnvironment": "node"

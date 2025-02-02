@@ -35,7 +35,7 @@ loginRouter.post(
                 return res.status(401).json({
                     success: false,
                     statusCode: 401,
-                    error: "Invalid email or password.",
+                    message: "Invalid email or password.",
                 });
             }
             if (user.googleId) {
@@ -56,7 +56,7 @@ loginRouter.post(
                 return res.status(401).json({
                     success: false,
                     statusCode: 401,
-                    error: "Invalid email or password.",
+                    message: "Invalid email or password.",
                 });
             }
             const userForToken = {

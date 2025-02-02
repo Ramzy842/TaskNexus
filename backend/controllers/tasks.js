@@ -102,6 +102,7 @@ tasksRouter.post(
                 success: true,
                 statusCode: 201,
                 data: task,
+                message: "Task created successfully.",
             });
         } catch (error) {
             next(error);
@@ -147,12 +148,18 @@ tasksRouter.put(
     async (req, res, next) => {
         const result = validationResult(req);
         if (!result.isEmpty())
-            return res.status(422).json({
+            return res.status(400).json({
                 success: false,
-                statusCode: 422,
+                statusCode: 400,
                 errors: result.array().map((res) => res.msg),
             });
-        if (!Object.keys(req.body).length) return res.status(204).end();
+        if (!Object.keys(req.body).length) {
+            return res.status(400).json({
+                success: false,
+                statusCode: 400,
+                message: "Request body cannot be empty when updating a task.",
+            });
+        }
         try {
             const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
                 new: true,
