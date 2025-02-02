@@ -372,12 +372,98 @@ describe("PUT /api/tasks/:id", () => {
     });
 });
 
-// describe("DELETE /api/tasks/:id", () => {
-//     test("Returns status 401 and missing token error when token is missing", async () => {});
-//     test("Returns status 404 when the task to delete is not found", async () => {});
-//     test("Returns status 403 and authorization error when task exists but authorization fails (the user trying to delete the task does not own it)", async () => {});
-//     test("Returns status 500 when internal server error occurs (DB error)", async () => {});
-// });
+describe("DELETE /api/tasks/:id", () => {
+    test("Returns status 401 and missing token error when token is missing", async () => {
+        const tempId = new mongoose.Types.ObjectId();
+        let result = await api.delete(`/api/tasks/${tempId}`);
+        expect(result.status).toBe(401);
+        expect(result.body.error).toBe("Missing JWT token.");
+    });
+    test("Returns status 404 when the task to delete is not found", async () => {
+        let user = await api
+            .post("/api/login")
+            .send({ email: "loki@gmail.com", password: "password123456" });
+        const tempId = new mongoose.Types.ObjectId();
+        let res = await api
+            .delete(`/api/tasks/${tempId}`)
+            .set("Authorization", `Bearer ${user.body.data.token}`);
+        expect(res.status).toBe(404);
+        expect(res.body.message).toBe(
+            "The task you are trying to delete is not found."
+        );
+    });
+    test("Returns status 403 and authorization error when task exists but authorization fails (the user trying to delete the task does not own it)", async () => {
+        let user = await api
+            .post("/api/login")
+            .send({ email: "loki@gmail.com", password: "password123456" });
+        let task = await api
+            .post("/api/tasks")
+            .set("Authorization", `Bearer ${user.body.data.token}`)
+            .send({
+                title: `Task ${Date.now}`,
+                description: `Description ${Date.now}`,
+                dueDate: "2025-05-30",
+                status: "Completed",
+            });
+        const userForToken = {
+            username: "RandomUsername",
+            email: "randomEmail@gmail.com",
+            id: new mongoose.Types.ObjectId(),
+        };
+        const randomToken = jwt.sign(userForToken, process.env.SECRET, {
+            expiresIn: 60 * 60,
+        });
+        let result = await api
+            .delete(`/api/tasks/${task.body.data.id}`)
+            .set("Authorization", `Bearer ${randomToken}`);
+        expect(result.status).toBe(403);
+        expect(result.body.message).toBe(
+            "You are not authorized to delete this task."
+        );
+    });
+    test("Returns status 500 when internal server error occurs (DB error)", async () => {
+        let user = await api
+            .post("/api/login")
+            .send({ email: "loki@gmail.com", password: "password123456" });
+        let task = await api
+            .post("/api/tasks")
+            .set("Authorization", `Bearer ${user.body.data.token}`)
+            .send({
+                title: `Task ${Date.now}`,
+                description: `Description ${Date.now}`,
+                dueDate: "2025-05-30",
+                status: "To Do",
+            });
+        jest.spyOn(Task, "findByIdAndDelete").mockImplementationOnce(() => {
+            throw new Error("Internal Server Error");
+        });
+        let res = await api
+            .delete(`/api/tasks/${task.body.data.id}`)
+            .set("Authorization", `Bearer ${user.body.data.token}`);
+        expect(res.status).toBe(500);
+        expect(res.body.error).toBe("Internal Server Error");
+        jest.restoreAllMocks();
+    });
+    test("Returns status 204 when deletion succeeds", async () => {
+        let user = await api
+            .post("/api/login")
+            .send({ email: "loki@gmail.com", password: "password123456" });
+        let task = await api
+            .post("/api/tasks")
+            .set("Authorization", `Bearer ${user.body.data.token}`)
+            .send({
+                title: `Task ${Date.now}`,
+                description: `Description ${Date.now}`,
+                dueDate: "2025-05-30",
+                status: "Completed",
+            });
+
+        let result = await api
+            .delete(`/api/tasks/${task.body.data.id}`)
+            .set("Authorization", `Bearer ${user.body.data.token}`);
+        expect(result.status).toBe(204);
+    });
+});
 
 afterAll(async () => {
     await User.deleteMany({});
