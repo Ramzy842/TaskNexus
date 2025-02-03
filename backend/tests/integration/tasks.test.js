@@ -6,9 +6,18 @@ const Task = require("../../models/Task");
 const api = supertest(app);
 const jwt = require("jsonwebtoken");
 
+
+beforeAll(async () => {
+    await Task.deleteMany({});
+    await User.deleteMany({});
+    await mongoose.disconnect();
+    await mongoose.connection.close();
+    const testDB_name = `test_db_${Date.now()}`;
+    const mongoUri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.qztos.mongodb.net/${testDB_name}?retryWrites=true&w=majority&appName=Cluster0`;
+    await mongoose.connect(mongoUri);    
+});
+
 beforeEach(async () => {
-    // await Task.deleteMany({});
-    // await User.deleteMany({});
     await api.post("/api/users").send({
         username: "Loki",
         name: "Loki Odinson",
@@ -22,6 +31,19 @@ beforeEach(async () => {
         password: "password123456",
     });
 });
+
+afterEach(async () => {
+    await Task.deleteMany({});
+    await User.deleteMany({});
+    await Task.collection.drop();
+    await User.collection.drop();
+});
+
+afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoose.connection.close();
+});
+
 describe("GET /api/tasks", () => {
     test("Returns status 200 and empty array if no tasks exist", async () => {
         let res = await api.get("/api/tasks");
@@ -463,10 +485,4 @@ describe("DELETE /api/tasks/:id", () => {
             .set("Authorization", `Bearer ${user.body.data.token}`);
         expect(result.status).toBe(204);
     });
-});
-
-afterAll(async () => {
-    await User.deleteMany({});
-    await Task.deleteMany({});
-    await mongoose.connection.close();
 });
