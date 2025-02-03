@@ -6,7 +6,7 @@ const Task = require("../../models/Task");
 const api = supertest(app);
 
 beforeEach(async () => {
-    await User.deleteMany({});
+    // await User.deleteMany({});
     await api.post("/api/users").send({
         username: "John",
         name: "John Doe",
@@ -20,6 +20,11 @@ beforeEach(async () => {
         googleId: "googleIdN01",
     });
     await newUser.save();
+});
+
+afterEach(async () => {
+    // await User.deleteMany({});
+    // await Task.deleteMany({});
 });
 
 test("Returns 401 with 'Invalid email or password.' if user doesn't exist", async () => {

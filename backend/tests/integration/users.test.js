@@ -10,14 +10,26 @@ const api = supertest(app);
 beforeAll(async () => {
     await Task.deleteMany({});
     await User.deleteMany({});
+    await mongoose.disconnect();
+    await mongoose.connection.close();
+    const testDB_name = `test_db_${Date.now()}`;
+    const mongoUri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.qztos.mongodb.net/${testDB_name}?retryWrites=true&w=majority&appName=Cluster0`;
+    await mongoose.connect(mongoUri);    
+});
+
+afterEach(async () => {
+    await Task.deleteMany({});
+    await User.deleteMany({});
+    await Task.collection.drop();
+    await User.collection.drop();
+});
+
+afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoose.connection.close();
 });
 
 describe("POST /api/users", () => {
-    beforeEach(async () => {
-        await Task.deleteMany({});
-        await User.deleteMany({});
-    });
-
     let expectedMessages;
     test("Returns status 400 and validation errors upon missing body properties", async () => {
         let res = await api.post("/api/users").send({
@@ -92,10 +104,11 @@ describe("POST /api/users", () => {
         expect(res.body.statusCode).toBe(201);
     });
     test("Returns status 409 and used email message when email is already used", async () => {
+        let randomEmail = `email-${Date.now()}@gmail.com`;
         const res01 = await api.post("/api/users").send({
             username: "Random User",
             name: "Random name",
-            email: "email@gmail.com",
+            email: randomEmail,
             password: "password123456",
         });
         expect(res01.status).toBe(201);
@@ -103,7 +116,7 @@ describe("POST /api/users", () => {
         const res = await api.post("/api/users").send({
             username: "Random User",
             name: "Random name",
-            email: "email@gmail.com",
+            email: randomEmail,
             password: "password123456",
         });
         expect(res.status).toBe(409);
@@ -169,13 +182,6 @@ const users = [
 ];
 
 describe("GET /api/users", () => {
-    beforeEach(async () => {
-        await User.deleteMany({}).exec();
-    });
-    afterEach(async () => {
-        await User.deleteMany({}).exec();
-    });
-
     test("returns empty array if there are no users are in the database", async () => {
         let res = await api.get("/api/users");
         expect(res.body.statusCode).toBe(200);
@@ -308,10 +314,4 @@ describe("PUT /api/users/:id", () => {
         expect(res.body.data.username).toBe("Defender Strange");
         expect(res.body.data.name).toBe("Doctor strange");
     });
-});
-
-afterAll(async () => {
-    await User.deleteMany({});
-    await Task.deleteMany({});
-    await mongoose.connection.close();
 });

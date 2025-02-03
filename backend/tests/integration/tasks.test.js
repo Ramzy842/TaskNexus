@@ -7,8 +7,8 @@ const api = supertest(app);
 const jwt = require("jsonwebtoken");
 
 beforeEach(async () => {
-    await Task.deleteMany({});
-    await User.deleteMany({});
+    // await Task.deleteMany({});
+    // await User.deleteMany({});
     await api.post("/api/users").send({
         username: "Loki",
         name: "Loki Odinson",
