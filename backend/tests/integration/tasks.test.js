@@ -7,7 +7,6 @@ const api = supertest(app);
 const jwt = require("jsonwebtoken");
 const { responseMessages } = require("../../utils/responseMessages");
 
-
 beforeAll(async () => {
     await Task.deleteMany({});
     await User.deleteMany({});
@@ -131,7 +130,9 @@ describe("GET /api/tasks/:id", () => {
             .get(`/api/tasks/${tempId}`)
             .set("Authorization", `Bearer ${result.body.data.token}`);
         expect(res.status).toBe(404);
-        expect(res.body.message).toBe(responseMessages.tasks.toRetrieveNotFound);
+        expect(res.body.message).toBe(
+            responseMessages.tasks.toRetrieveNotFound
+        );
     });
     test("Returns status 403 and authorization error when task exists but authorization fails (the user trying to access the task does not own it)", async () => {
         let result = await api
@@ -157,8 +158,6 @@ describe("GET /api/tasks/:id", () => {
         let res = await api
             .get(`/api/tasks/${task.body.data.id}`)
             .set("Authorization", `Bearer ${randomToken}`);
-        console.log(res.body);
-
         expect(res.status).toBe(403);
         expect(res.body.message).toBe(
             "You are not authorized to access this task."

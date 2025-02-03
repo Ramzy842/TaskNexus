@@ -2,14 +2,7 @@ const mongoose = require("mongoose");
 const { MONGODB_URI } = require("../utils/config");
 mongoose.set("strictQuery", false);
 
-mongoose
-    .connect(MONGODB_URI)
-    .then(() => {
-        console.log("Database connected successfully");
-    })
-    .catch((error) => {
-        console.error("Database connection error:", error.message);
-    });
+mongoose.connect(MONGODB_URI);
 
 const taskSchema = new mongoose.Schema(
     {

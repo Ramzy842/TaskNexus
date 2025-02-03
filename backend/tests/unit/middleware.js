@@ -5,7 +5,7 @@ const {
     validateEmail,
     validatePassword,
     validatePasswordLogin,
-} = require("../../utils/validators");
+} = require("../../utils/usersValidators");
 const {
     validateTitle,
     validateDescription,
@@ -68,12 +68,8 @@ const runUsersMiddleWare = async (req, res, next) => {
         for (let middleware of userValidationParams) {
             await middleware(req, res, next);
         }
-    } catch (err) {
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            error: "Internal server error.",
-        });
+    } catch (error) {
+        next(error);
     }
 };
 
@@ -82,12 +78,8 @@ const runLoginMiddleWare = async (req, res, next) => {
         for (let middleware of loginValidationParams) {
             await middleware(req, res, next);
         }
-    } catch (err) {
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            error: "Internal server error.",
-        });
+    } catch (error) {
+        next(error);
     }
 };
 
@@ -96,12 +88,8 @@ const runTaskCreationMiddleware = async (req, res, next) => {
         for (let middleware of tasksCreationValidationParams) {
             await middleware(req, res, next);
         }
-    } catch (err) {
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            error: "Internal server error.",
-        });
+    } catch (error) {
+        next(error);
     }
 };
 
@@ -110,12 +98,8 @@ const runTaskUpdateMiddleware = async (req, res, next) => {
         for (let middleware of tasksUpdateValidationParams) {
             await middleware(req, res, next);
         }
-    } catch (err) {
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            error: "Internal server error.",
-        });
+    } catch (error) {
+        next(error);
     }
 };
 

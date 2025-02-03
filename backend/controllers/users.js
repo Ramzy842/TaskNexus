@@ -10,7 +10,7 @@ const {
     validateUsernameUpdate,
     validateEmailUpdate,
     validateNameUpdate,
-} = require("../utils/validators");
+} = require("../utils/usersValidators");
 const { getHashedPassword, createUser } = require("../utils/users");
 const { responseMessages } = require("../utils/responseMessages");
 

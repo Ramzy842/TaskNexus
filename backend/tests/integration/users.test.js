@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../../app");
-const { messages } = require("../../utils/validators");
+const { messages } = require("../../utils/usersValidators");
 const { messages: dbMessages } = require("../../utils/users");
 const User = require("../../models/User");
 const Task = require("../../models/Task");

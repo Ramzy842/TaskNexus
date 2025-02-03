@@ -54,8 +54,6 @@ test("Returns 400 with 'This email is registered with Google...' if user has goo
     let res = await api
         .post("/api/login")
         .send({ email: "ada@gmail.com", password: "password123456789" });
-    console.log(res.body);
-
     expect(res.status).toBe(400);
     expect(res.body.message).toBe(
         `This email is registered with Google. Please use 'Log in with Google'.`

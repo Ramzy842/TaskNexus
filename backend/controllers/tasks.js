@@ -1,9 +1,19 @@
 const tasksRouter = require("express").Router();
-const { body, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 const Task = require("../models/Task");
 const User = require("../models/User");
 const { verifyToken } = require("../utils/middleware");
 const { responseMessages } = require("../utils/responseMessages");
+const {
+    validateTitle,
+    validateDescription,
+    validateStatus,
+    validateDate,
+    validateTitleUpdate,
+    validateDescriptionUpdate,
+    validateStatusUpdate,
+    validateDateUpdate,
+} = require("../utils/tasksValidators");
 
 tasksRouter.get("/", async (req, res, next) => {
     try {
@@ -45,34 +55,7 @@ tasksRouter.get("/:id", verifyToken, async (req, res, next) => {
 
 tasksRouter.post(
     "/",
-    [
-        body("title")
-            .notEmpty()
-            .withMessage("Title is required.")
-            .isString()
-            .withMessage("Title is invalid.")
-            .escape(),
-        body("description")
-            .notEmpty()
-            .withMessage("Description is required.")
-            .isString()
-            .withMessage("Description is invalid.")
-            .escape(),
-        body("status")
-            .notEmpty()
-            .withMessage("Status is required.")
-            .isIn(["To Do", "In Progress", "Completed"])
-            .withMessage(
-                "Invalid status value. Allowed values are: To Do, In Progress, Completed."
-            ),
-        body("dueDate")
-            .notEmpty()
-            .withMessage("DueDate is required")
-            .isISO8601()
-            .withMessage(
-                "DueDate must be in ISO8601 format (e.g., YYYY-MM-DD)."
-            ),
-    ],
+    [validateTitle, validateDescription, validateStatus, validateDate],
     verifyToken,
     async (req, res, next) => {
         const result = validationResult(req);
@@ -110,36 +93,10 @@ tasksRouter.post(
 tasksRouter.put(
     "/:id",
     [
-        body("title")
-            .optional()
-            .notEmpty()
-            .withMessage("Title must not be empty if provided.")
-            .isString()
-            .withMessage("Title is invalid.")
-            .escape(),
-        body("description")
-            .optional()
-            .notEmpty()
-            .withMessage("Description must not be empty if provided.")
-            .isString()
-            .withMessage("Description is invalid.")
-            .escape(),
-        body("status")
-            .optional()
-            .notEmpty()
-            .withMessage("Status must not be empty if provided.")
-            .isIn(["To Do", "In Progress", "Completed"])
-            .withMessage(
-                "Invalid status value. Allowed values are: To Do, In Progress, Completed."
-            ),
-        body("dueDate")
-            .optional()
-            .notEmpty()
-            .withMessage("DueDate must not be empty if provided.")
-            .isISO8601()
-            .withMessage(
-                "DueDate must be in ISO8601 format (e.g., YYYY-MM-DD)."
-            ),
+        validateTitleUpdate,
+        validateDescriptionUpdate,
+        validateStatusUpdate,
+        validateDateUpdate,
     ],
     verifyToken,
     async (req, res, next) => {

@@ -2,24 +2,13 @@ const loginRouter = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const { body, validationResult } = require("express-validator");
-const { messages } = require("../utils/validators");
+const { validationResult } = require("express-validator");
 const { responseMessages } = require("../utils/responseMessages");
+const { validateEmail, validatePassword } = require("../utils/loginValidators");
 
 loginRouter.post(
     "/",
-    [
-        body("email")
-            .notEmpty()
-            .withMessage(messages.emailRequired)
-            .isEmail()
-            .withMessage(messages.invalidEmail),
-        body("password")
-            .notEmpty()
-            .withMessage(messages.passwordRequired)
-            .isString()
-            .escape(),
-    ],
+    [validateEmail, validatePassword],
     async (req, res, next) => {
         const result = validationResult(req);
         if (!result.isEmpty()) {
@@ -40,8 +29,6 @@ loginRouter.post(
                 });
             }
             if (user.googleId) {
-                console.log("email: " + email);
-                console.log("Google ID: " + user.googleId);
                 return res.status(400).json({
                     success: false,
                     statusCode: 400,

@@ -1,4 +1,4 @@
-const { messages } = require("../../utils/validators");
+const { messages } = require("../../utils/usersValidators");
 const {
     runUsersMiddleWare,
     validateUser,
@@ -7,15 +7,16 @@ const {
 const bcrypt = require("bcrypt");
 const { getHashedPassword } = require("../../utils/users");
 
+let res, next;
+beforeEach(() => {
+    res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis(),
+    };
+    next = jest.fn();
+});
+
 describe("User validation middleware", () => {
-    let res, next;
-    beforeEach(() => {
-        res = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn().mockReturnThis(),
-        };
-        next = jest.fn();
-    });
     test("Returns all error messages when body is empty", async () => {
         let req = {
             body: {},
@@ -133,12 +134,8 @@ describe("User validation middleware", () => {
             throw new Error("Unexpected error");
         });
         await runUsersMiddleWare(req, res, next);
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.json).toHaveBeenCalledWith({
-            success: false,
-            statusCode: 500,
-            error: "Internal server error.",
-        });
+        expect(next).toHaveBeenCalledWith(expect.any(Error));
+        expect(next.mock.calls[0][0].message).toBe("Unexpected error");
     });
 });
 

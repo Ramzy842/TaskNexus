@@ -1,11 +1,10 @@
-const { messages } = require("../../utils/validators");
+const { messages } = require("../../utils/usersValidators");
 const {
     validateUser,
     runLoginMiddleWare,
     loginValidationParams,
 } = require("./middleware");
 
-// Validation Tests
 let res, next;
 
 beforeEach(() => {
@@ -59,12 +58,14 @@ test("Returns 400 with 'Password is required.' when password is missing", async 
 });
 
 test("Calls next when validation succeeds", async () => {
-    let req = { body: { email: "email@gmail.com", password: "password123456789" } };
+    let req = {
+        body: { email: "email@gmail.com", password: "password123456789" },
+    };
     await runLoginMiddleWare(req, res, next);
     validateUser(req, res, next);
     // next called in the runLoginMiddleWare fn to run validators and when validation succeeds
     expect(next.mock.calls).toHaveLength(loginValidationParams.length + 1);
-})
+});
 
 test("Ignores unexpected fields and logs in successfully", async () => {
     let req = {
