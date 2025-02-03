@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 const { messages } = require("../utils/validators");
+const { responseMessages } = require("../utils/responseMessages");
 
 loginRouter.post(
     "/",
@@ -35,7 +36,7 @@ loginRouter.post(
                 return res.status(401).json({
                     success: false,
                     statusCode: 401,
-                    message: "Invalid email or password.",
+                    message: responseMessages.login.invalidEmailOrPass,
                 });
             }
             if (user.googleId) {
@@ -44,8 +45,7 @@ loginRouter.post(
                 return res.status(400).json({
                     success: false,
                     statusCode: 400,
-                    message:
-                        "This email is registered with Google. Please use 'Log in with Google'.",
+                    message: responseMessages.login.registeredWithGoogle,
                 });
             }
             const passwordCorrect = await bcrypt.compare(
@@ -56,7 +56,7 @@ loginRouter.post(
                 return res.status(401).json({
                     success: false,
                     statusCode: 401,
-                    message: "Invalid email or password.",
+                    message: responseMessages.login.invalidEmailOrPass,
                 });
             }
             const userForToken = {

@@ -5,6 +5,7 @@ const { messages } = require("../../utils/validators");
 const { messages: dbMessages } = require("../../utils/users");
 const User = require("../../models/User");
 const Task = require("../../models/Task");
+const { responseMessages } = require("../../utils/responseMessages");
 const api = supertest(app);
 
 beforeAll(async () => {
@@ -112,7 +113,6 @@ describe("POST /api/users", () => {
             password: "password123456",
         });
         expect(res01.status).toBe(201);
-        console.log(res01.body.data);
         const res = await api.post("/api/users").send({
             username: "Random User",
             name: "Random name",
@@ -120,7 +120,7 @@ describe("POST /api/users", () => {
             password: "password123456",
         });
         expect(res.status).toBe(409);
-        expect(res.body.error).toBe(dbMessages.usedEmail);
+        expect(res.body.message).toBe(responseMessages.users.usedEmail);
     });
     test("Returns the user object when user is registered successfully", async () => {
         let res = await api.post("/api/users").send({
@@ -145,7 +145,7 @@ describe("POST /api/users", () => {
         });
         expect(res.body.statusCode).toBe(400);
         expect(res.body.statusCode).toBe(res.status);
-        expect(res.body.error).toBe(dbMessages.bodyPayloadLengthError);
+        expect(res.body.message).toBe(responseMessages.users.bodyPayloadLengthError);
     });
     test("Returns case-insensitive email duplicates error upon case sensitivity issues", async () => {
         let res01 = await api.post("/api/users").send({
@@ -162,7 +162,7 @@ describe("POST /api/users", () => {
             password: "password123456",
         });
         expect(res.body.statusCode).toBe(409);
-        expect(res.body.error).toBe(dbMessages.usedEmail);
+        expect(res.body.message).toBe(responseMessages.users.usedEmail);
     });
 });
 
@@ -212,7 +212,7 @@ describe("GET /api/users", () => {
         expect(res.status).toBe(500);
         expect(res.body.statusCode).toBe(500);
         expect(res.body.error).toBe(
-            "Something went wrong while trying to retrieve users."
+            "Internal Server Error."
         );
         jest.restoreAllMocks();
     });
@@ -284,18 +284,18 @@ describe("PUT /api/users/:id", () => {
             .set("Authorization", `Bearer ${result.body.data.token}`)
             .send({ username: "Black" });
         expect(res.status).toBe(403);
-        expect(res.body.message).toBe(dbMessages.unauthorizedToUpdate);
+        expect(res.body.message).toBe(responseMessages.users.updateUnauthorized);
     });
     test("returns user not found error message when trying to update using invalid id", async () => {
         await api.delete(`/api/users/${user.body.data.id}`);
         const deletedUser = await api.get(`/api/users/${user.body.data.id}`);
-        expect(deletedUser.body.message).toBe("User not found.");
+        expect(deletedUser.body.message).toBe(responseMessages.users.toRetrieveNotFound);
         let res = await api
             .put(`/api/users/${user.body.data.id}`)
             .set("Authorization", `Bearer ${result.body.data.token}`)
             .send({ username: "Black" });
         expect(res.status).toBe(404);
-        expect(res.body.message).toBe(dbMessages.userToUpdateNotFound);
+        expect(res.body.message).toBe(responseMessages.users.toUpdateNotFound);
     });
     test("returns updated user upon request success", async () => {
         let res = await api
@@ -303,7 +303,7 @@ describe("PUT /api/users/:id", () => {
             .set("Authorization", `Bearer ${result.body.data.token}`)
             .send({ username: "Black" });
         expect(res.status).toBe(200);
-        expect(res.body.message).toBe(dbMessages.successfullUserUpdate);
+        expect(res.body.message).toBe(responseMessages.users.updateSuccess);
     });
     test("returns status code 200 and updates only provided fields", async () => {
         let res = await api

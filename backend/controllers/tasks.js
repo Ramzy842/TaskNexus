@@ -3,8 +3,9 @@ const { body, validationResult } = require("express-validator");
 const Task = require("../models/Task");
 const User = require("../models/User");
 const { verifyToken } = require("../utils/middleware");
+const { responseMessages } = require("../utils/responseMessages");
 
-tasksRouter.get("/", async (req, res) => {
+tasksRouter.get("/", async (req, res, next) => {
     try {
         const tasks = await Task.find({}).populate("userId");
         res.status(200).json({
@@ -13,11 +14,7 @@ tasksRouter.get("/", async (req, res) => {
             data: tasks,
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            error: error.message,
-        });
+        next(error);
     }
 });
 
@@ -28,13 +25,13 @@ tasksRouter.get("/:id", verifyToken, async (req, res, next) => {
             return res.status(404).json({
                 success: false,
                 statusCode: 404,
-                message: "Task not found.",
+                message: responseMessages.tasks.toRetrieveNotFound,
             });
         if (req.user.id !== task.userId.toString())
             return res.status(403).json({
                 success: false,
                 statusCode: 403,
-                message: "You are not authorized to access this task.",
+                message: responseMessages.tasks.accessUnauthorized,
             });
         res.status(200).json({
             success: true,
@@ -102,7 +99,7 @@ tasksRouter.post(
                 success: true,
                 statusCode: 201,
                 data: task,
-                message: "Task created successfully.",
+                message: responseMessages.tasks.creationSuccess,
             });
         } catch (error) {
             next(error);
@@ -157,7 +154,7 @@ tasksRouter.put(
             return res.status(400).json({
                 success: false,
                 statusCode: 400,
-                message: "Request body cannot be empty when updating a task.",
+                message: responseMessages.tasks.emptyBody,
             });
         }
         try {
@@ -168,20 +165,20 @@ tasksRouter.put(
                 return res.status(404).json({
                     success: false,
                     statusCode: 404,
-                    message: "The task you are trying to update is not found.",
+                    message: responseMessages.tasks.toUpdateNotFound,
                 });
             }
             if (req.user.id !== task.userId.toString())
                 return res.status(403).json({
                     success: false,
                     statusCode: 403,
-                    message: "You are not authorized to update this task.",
+                    message: responseMessages.tasks.updateUnauthorized,
                 });
             res.status(200).json({
                 success: true,
                 statusCode: 200,
                 data: task,
-                message: "Task updated successfully.",
+                message: responseMessages.tasks.updateSuccess,
             });
         } catch (error) {
             next(error);
@@ -196,7 +193,7 @@ tasksRouter.delete("/:id", verifyToken, async (req, res, next) => {
             return res.status(404).json({
                 success: false,
                 statusCode: 404,
-                message: "The task you are trying to delete is not found.",
+                message: responseMessages.tasks.toDeleteNotFound,
             });
         if (req.user.id === task.userId.toString())
             return res.status(204).end();
@@ -204,7 +201,7 @@ tasksRouter.delete("/:id", verifyToken, async (req, res, next) => {
             return res.status(403).json({
                 success: false,
                 statusCode: 403,
-                message: "You are not authorized to delete this task.",
+                message: responseMessages.tasks.deletionUnauthorized,
             });
     } catch (error) {
         next(error);
@@ -212,27 +209,3 @@ tasksRouter.delete("/:id", verifyToken, async (req, res, next) => {
 });
 
 module.exports = tasksRouter;
-
-/*
-
-{
-    "title": "Test Title",
-    "description": "Test Description",
-    "dueDate": "2025-05-30",
-    "status": "To Do"
-}
-
-{
-    "email": "ramzychahbani@gmail.com",
-    "password": "123456789"
-}
-
-{
-    "username": "Paradox",
-    "name": "Ramzi",
-    "email": "ramzychahbani@gmail.com",
-    "password": "123456789"
-}
-
-
-*/

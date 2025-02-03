@@ -5,6 +5,7 @@ const app = require("../../app");
 const Task = require("../../models/Task");
 const api = supertest(app);
 const jwt = require("jsonwebtoken");
+const { responseMessages } = require("../../utils/responseMessages");
 
 
 beforeAll(async () => {
@@ -14,7 +15,7 @@ beforeAll(async () => {
     await mongoose.connection.close();
     const testDB_name = `test_db_${Date.now()}`;
     const mongoUri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.qztos.mongodb.net/${testDB_name}?retryWrites=true&w=majority&appName=Cluster0`;
-    await mongoose.connect(mongoUri);    
+    await mongoose.connect(mongoUri);
 });
 
 beforeEach(async () => {
@@ -104,7 +105,7 @@ describe("GET /api/tasks", () => {
         });
         let res = await api.get("/api/tasks");
         expect(res.status).toBe(500);
-        expect(res.body).toHaveProperty("error", "Internal server error");
+        expect(res.body).toHaveProperty("error", "Internal Server Error.");
         jest.restoreAllMocks();
     });
 });
@@ -130,7 +131,7 @@ describe("GET /api/tasks/:id", () => {
             .get(`/api/tasks/${tempId}`)
             .set("Authorization", `Bearer ${result.body.data.token}`);
         expect(res.status).toBe(404);
-        expect(res.body.message).toBe("Task not found.");
+        expect(res.body.message).toBe(responseMessages.tasks.toRetrieveNotFound);
     });
     test("Returns status 403 and authorization error when task exists but authorization fails (the user trying to access the task does not own it)", async () => {
         let result = await api
@@ -207,7 +208,7 @@ describe("GET /api/tasks/:id", () => {
             .get(`/api/tasks/${task.body.data.id}`)
             .set("Authorization", `Bearer ${result.body.data.token}`);
         expect(res.status).toBe(500);
-        expect(res.body.error).toBe("Internal Server Error");
+        expect(res.body.error).toBe("Internal Server Error.");
         jest.restoreAllMocks();
     });
 });
@@ -261,7 +262,7 @@ describe("POST /api/tasks", () => {
                 status: "To Do",
             });
         expect(res.status).toBe(500);
-        expect(res.body.error).toBe("Internal Server Error");
+        expect(res.body.error).toBe("Internal Server Error.");
         jest.restoreAllMocks();
     });
 });
@@ -389,7 +390,7 @@ describe("PUT /api/tasks/:id", () => {
                 title: "Finish Frontend implementation",
             });
         expect(res.status).toBe(500);
-        expect(res.body.error).toBe("Internal Server Error");
+        expect(res.body.error).toBe("Internal Server Error.");
         jest.restoreAllMocks();
     });
 });
@@ -463,7 +464,7 @@ describe("DELETE /api/tasks/:id", () => {
             .delete(`/api/tasks/${task.body.data.id}`)
             .set("Authorization", `Bearer ${user.body.data.token}`);
         expect(res.status).toBe(500);
-        expect(res.body.error).toBe("Internal Server Error");
+        expect(res.body.error).toBe("Internal Server Error.");
         jest.restoreAllMocks();
     });
     test("Returns status 204 when deletion succeeds", async () => {

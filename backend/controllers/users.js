@@ -11,12 +11,13 @@ const {
     validateEmailUpdate,
     validateNameUpdate,
 } = require("../utils/validators");
-const { getHashedPassword, createUser, messages } = require("../utils/users");
+const { getHashedPassword, createUser } = require("../utils/users");
+const { responseMessages } = require("../utils/responseMessages");
 
 usersRouter.post(
     "/",
     [validateUsername, validateName, validateEmail, validatePassword],
-    async (req, res) => {
+    async (req, res, next) => {
         const result = validationResult(req);
         if (!result.isEmpty()) {
             return res.status(400).json({
@@ -29,7 +30,7 @@ usersRouter.post(
             return res.status(400).json({
                 success: false,
                 statusCode: 400,
-                error: messages.bodyPayloadLengthError,
+                message: responseMessages.users.bodyPayloadLengthError,
             });
         try {
             const { username, name, email, password } = req.body;
@@ -38,7 +39,7 @@ usersRouter.post(
                 return res.status(409).json({
                     success: false,
                     statusCode: 409,
-                    error: messages.usedEmail,
+                    message: responseMessages.users.usedEmail,
                 });
             }
             const passwordHash = await getHashedPassword(password);
@@ -54,19 +55,15 @@ usersRouter.post(
                 success: true,
                 statusCode: 201,
                 data: savedUser,
-                message: messages.successfullRegistration,
+                message: responseMessages.users.successfullRegistration,
             });
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                statusCode: 500,
-                error: "Something went wrong while trying to create user.",
-            });
+            next(error);
         }
     }
 );
 
-usersRouter.get("/", async (req, res) => {
+usersRouter.get("/", async (req, res, next) => {
     try {
         const users = await User.find({}).populate("tasks");
         res.status(200).json({
@@ -75,22 +72,18 @@ usersRouter.get("/", async (req, res) => {
             data: users,
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            error: "Something went wrong while trying to retrieve users.",
-        });
+        next(error);
     }
 });
 
-usersRouter.get("/:id", async (req, res) => {
+usersRouter.get("/:id", async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id).populate("tasks");
         if (!user) {
             return res.status(404).json({
                 success: false,
                 statusCode: 404,
-                message: "User not found.",
+                message: responseMessages.users.toRetrieveNotFound,
             });
         }
         res.status(200).json({
@@ -99,11 +92,7 @@ usersRouter.get("/:id", async (req, res) => {
             data: user,
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            error: "Something went wrong while trying to retrieve user.",
-        });
+        next(error);
     }
 });
 
@@ -133,14 +122,14 @@ usersRouter.put(
             return res.status(400).json({
                 success: false,
                 statusCode: 400,
-                message: "Body contains invalid fields",
+                message: responseMessages.users.bodyInvalidFields,
             });
         }
         if (req.user.id !== req.params.id)
             return res.status(403).json({
                 success: false,
                 statusCode: 403,
-                message: messages.unauthorizedToUpdate,
+                message: responseMessages.users.updateUnauthorized,
             });
         try {
             const updatedUser = await User.findByIdAndUpdate(
@@ -152,46 +141,38 @@ usersRouter.put(
                 return res.status(404).json({
                     success: false,
                     statusCode: 404,
-                    message: messages.userToUpdateNotFound,
+                    message: responseMessages.users.toUpdateNotFound,
                 });
             }
             res.status(200).json({
                 success: true,
                 statusCode: 200,
                 data: updatedUser,
-                message: messages.successfullUserUpdate,
+                message: responseMessages.users.updateSuccess,
             });
-        } catch (err) {
-            res.status(500).json({
-                success: false,
-                statusCode: 500,
-                error: "Something went wrong while trying to update user.",
-            });
+        } catch (error) {
+            next(error);
         }
     }
 );
 
-usersRouter.delete("/:id", async (req, res) => {
+usersRouter.delete("/:id", async (req, res, next) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id);
         if (!user) {
             return res.status(404).json({
                 success: false,
                 statusCode: 404,
-                message: "The user you're trying to delete is not found.",
+                message: responseMessages.users.toDeleteNotFound,
             });
         }
         res.status(200).json({
             success: true,
             statusCode: 200,
-            message: "User deleted successfully",
+            message: responseMessages.users.deletionSuccess,
         });
-    } catch (err) {
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            error: "Something went wrong while trying to delete user.",
-        });
+    } catch (error) {
+        next(error)
     }
 });
 
