@@ -32,7 +32,7 @@ Task Tracker is a full-stack MERN (MongoDB, Express, React, Node.js) web applica
 - **Express**: Backend framework for building RESTful APIs.
 - **MongoDB**: NoSQL database for flexible data storage.
 - **Express Validator**: Middleware for validating user input.
-- **Rate Limiting**: Protects the API from abuse by limiting the number of requests from a single IP address in a given time window. Implemented using `express-rate-limit` for sensitive endpoints such as login, logout, and user management.
+- **Rate Limiting**: Protects the API from abuse by limiting the number of requests from a single IP address in a given time window. Implemented using `express-rate-limit` for sensitive endpoints such as login, logout, user and task management.
   - **Login**: Rate limited to 5 requests per 15 minutes.
   - **Logout**: Rate limited to 5 requests per 30 minutes.
   - **refresh**: Rate limited to 10 requests per 15 minutes.
