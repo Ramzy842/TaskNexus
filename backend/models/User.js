@@ -42,12 +42,12 @@ const userSchema = new mongoose.Schema(
                 ref: "Task",
             },
         ],
+        refreshToken: { type: String },
     },
     {
         timestamps: true,
     }
 );
-
 
 userSchema.set("toJSON", {
     transform: (document, returnedObject) => {
