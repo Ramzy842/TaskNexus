@@ -6,6 +6,7 @@ const {
 } = require("./middleware");
 const bcrypt = require("bcrypt");
 const { getHashedPassword } = require("../../utils/users");
+const mongoose = require("mongoose");
 
 let res, next;
 beforeEach(() => {
@@ -151,4 +152,13 @@ describe("Bcrypt Password hashing logic", () => {
         const isMatch = await bcrypt.compare(password, hashedPassword);
         expect(isMatch).toBe(true);
     });
+});
+
+afterEach(() => {
+    jest.clearAllMocks();
+});
+
+afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoose.connection.close();
 });

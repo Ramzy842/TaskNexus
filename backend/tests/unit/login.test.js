@@ -4,7 +4,7 @@ const {
     runLoginMiddleWare,
     loginValidationParams,
 } = require("./middleware");
-
+const mongoose = require("mongoose");
 let res, next;
 
 beforeEach(() => {
@@ -78,4 +78,12 @@ test("Ignores unexpected fields and logs in successfully", async () => {
     await runLoginMiddleWare(req, res, next);
     validateUser(req, res, next);
     expect(next.mock.calls).toHaveLength(loginValidationParams.length + 1);
+});
+afterEach(() => {
+    jest.clearAllMocks();
+});
+
+afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoose.connection.close();
 });

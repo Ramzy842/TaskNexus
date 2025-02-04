@@ -5,6 +5,8 @@ const {
     tasksUpdateValidationParams,
 } = require("./middleware");
 
+const mongoose = require("mongoose");
+
 let res, next;
 beforeEach(() => {
     res = {
@@ -132,6 +134,17 @@ describe("PUT /api/tasks/:id", () => {
         expect(res.status).not.toHaveBeenCalled();
         expect(res.json).not.toHaveBeenCalled();
         // runTaskUpdateMiddleware calls next and validation success calls it one last time
-        expect(next.mock.calls).toHaveLength(tasksUpdateValidationParams.length + 1);
+        expect(next.mock.calls).toHaveLength(
+            tasksUpdateValidationParams.length + 1
+        );
     });
+});
+
+afterEach(() => {
+    jest.clearAllMocks();
+});
+
+afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoose.connection.close();
 });
