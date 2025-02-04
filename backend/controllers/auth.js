@@ -54,8 +54,7 @@ authRouter.post(
             };
             const accessToken = generateAccessToken(userForToken);
             const refreshToken = generateRefreshToken(userForToken);
-            console.log(accessToken);
-            
+
             user.refreshToken = refreshToken;
             await user.save();
             res.cookie("refreshToken", refreshToken, {
@@ -88,7 +87,6 @@ authRouter.post(
 
 authRouter.post("/login/refresh", async (req, res, next) => {
     const { refreshToken } = req.cookies;
-    console.log("Cookies:", req.cookies);
     if (!refreshToken)
         return res.status(401).json({
             success: false,
@@ -97,7 +95,7 @@ authRouter.post("/login/refresh", async (req, res, next) => {
         });
     try {
         const user = await User.findOne({ refreshToken });
-        if (!user) {
+        if (!user || user.blacklistedTokens.includes(refreshToken)) {
             return res.status(403).json({
                 success: false,
                 statusCode: 403,
@@ -140,6 +138,7 @@ authRouter.post("/logout", async (req, res, next) => {
     try {
         const user = await User.findOne({ refreshToken });
         if (user) {
+            user.blacklistedTokens.push(refreshToken);
             user.refreshToken = null;
             await user.save();
         }
