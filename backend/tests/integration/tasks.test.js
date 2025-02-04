@@ -52,7 +52,7 @@ describe("GET /api/tasks", () => {
     });
     test("Returns status 200 and tasks array", async () => {
         let result = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         await api
             .post("/api/tasks")
@@ -75,7 +75,7 @@ describe("GET /api/tasks", () => {
     });
     test("Returns tasks array with userId property populated with task owner data", async () => {
         let result = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         await api
             .post("/api/tasks")
@@ -124,7 +124,7 @@ describe("GET /api/tasks/:id", () => {
     test("Returns status 404 and 'Task not found.' message if task does not exist", async () => {
         const tempId = new mongoose.Types.ObjectId();
         let result = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         let res = await api
             .get(`/api/tasks/${tempId}`)
@@ -136,7 +136,7 @@ describe("GET /api/tasks/:id", () => {
     });
     test("Returns status 403 and authorization error when task exists but authorization fails (the user trying to access the task does not own it)", async () => {
         let result = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         let task = await api
             .post("/api/tasks")
@@ -152,7 +152,7 @@ describe("GET /api/tasks/:id", () => {
             email: "randomEmail@gmail.com",
             id: new mongoose.Types.ObjectId(),
         };
-        const randomToken = jwt.sign(userForToken, process.env.SECRET, {
+        const randomToken = jwt.sign(userForToken, process.env.ACCESS_SECRET, {
             expiresIn: 60 * 60,
         });
         let res = await api
@@ -165,7 +165,7 @@ describe("GET /api/tasks/:id", () => {
     });
     test("Returns status 200 and task object", async () => {
         let result = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         let task = await api
             .post("/api/tasks")
@@ -189,7 +189,7 @@ describe("GET /api/tasks/:id", () => {
     });
     test("Returns status 500 when internal server error occurs (DB error)", async () => {
         let result = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         let task = await api
             .post("/api/tasks")
@@ -224,7 +224,7 @@ describe("POST /api/tasks", () => {
     });
     test("Returns status 201 and created task object", async () => {
         let result = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         let res = await api
             .post("/api/tasks")
@@ -246,7 +246,7 @@ describe("POST /api/tasks", () => {
     });
     test("Returns status 500 when internal server error occurs (DB error)", async () => {
         let result = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         jest.spyOn(User, "findById").mockImplementationOnce(() => {
             throw new Error("Internal Server Error");
@@ -279,7 +279,7 @@ describe("PUT /api/tasks/:id", () => {
     });
     test("Returns status 400 when body is empty", async () => {
         let user = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         let task = await api
             .post("/api/tasks")
@@ -301,7 +301,7 @@ describe("PUT /api/tasks/:id", () => {
     });
     test("Returns status 404 when the task to update is not found", async () => {
         let user = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         const tempId = new mongoose.Types.ObjectId();
         let res = await api
@@ -315,7 +315,7 @@ describe("PUT /api/tasks/:id", () => {
     });
     test("Returns status 403 and authorization error when task exists but authorization fails (the user trying to update the task does not own it)", async () => {
         let user = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         let task = await api
             .post("/api/tasks")
@@ -331,7 +331,7 @@ describe("PUT /api/tasks/:id", () => {
             email: "randomEmail@gmail.com",
             id: new mongoose.Types.ObjectId(),
         };
-        const randomToken = jwt.sign(userForToken, process.env.SECRET, {
+        const randomToken = jwt.sign(userForToken, process.env.ACCESS_SECRET, {
             expiresIn: 60 * 60,
         });
         let result = await api
@@ -345,7 +345,7 @@ describe("PUT /api/tasks/:id", () => {
     });
     test("Returns status 200 and updated task object", async () => {
         let user = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         let task = await api
             .post("/api/tasks")
@@ -368,7 +368,7 @@ describe("PUT /api/tasks/:id", () => {
     });
     test("Returns status 500 when internal server error occurs (DB error)", async () => {
         let user = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         let task = await api
             .post("/api/tasks")
@@ -403,7 +403,7 @@ describe("DELETE /api/tasks/:id", () => {
     });
     test("Returns status 404 when the task to delete is not found", async () => {
         let user = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         const tempId = new mongoose.Types.ObjectId();
         let res = await api
@@ -416,7 +416,7 @@ describe("DELETE /api/tasks/:id", () => {
     });
     test("Returns status 403 and authorization error when task exists but authorization fails (the user trying to delete the task does not own it)", async () => {
         let user = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         let task = await api
             .post("/api/tasks")
@@ -432,7 +432,7 @@ describe("DELETE /api/tasks/:id", () => {
             email: "randomEmail@gmail.com",
             id: new mongoose.Types.ObjectId(),
         };
-        const randomToken = jwt.sign(userForToken, process.env.SECRET, {
+        const randomToken = jwt.sign(userForToken, process.env.ACCESS_SECRET, {
             expiresIn: 60 * 60,
         });
         let result = await api
@@ -445,7 +445,7 @@ describe("DELETE /api/tasks/:id", () => {
     });
     test("Returns status 500 when internal server error occurs (DB error)", async () => {
         let user = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         let task = await api
             .post("/api/tasks")
@@ -468,7 +468,7 @@ describe("DELETE /api/tasks/:id", () => {
     });
     test("Returns status 204 when deletion succeeds", async () => {
         let user = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: "loki@gmail.com", password: "password123456" });
         let task = await api
             .post("/api/tasks")

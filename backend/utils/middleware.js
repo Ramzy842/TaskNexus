@@ -57,7 +57,7 @@ const verifyToken = (req, res, next) => {
                 statusCode: 401,
                 error: "Missing JWT token.",
             });
-        const decodedToken = jwt.verify(token, process.env.SECRET);
+        const decodedToken = jwt.verify(token, process.env.ACCESS_SECRET);
         if (!decodedToken.id)
             return res.status(401).json({
                 success: false,

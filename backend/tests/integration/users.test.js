@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../../app");
 const { messages } = require("../../utils/usersValidators");
-const { messages: dbMessages } = require("../../utils/users");
 const User = require("../../models/User");
 const Task = require("../../models/Task");
 const { responseMessages } = require("../../utils/responseMessages");
@@ -219,7 +218,7 @@ describe("GET /api/users", () => {
     test("returns list of users with tasks array populated for each user", async () => {
         await api.post("/api/users").send(users[0]);
         const result = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: users[0].email, password: users[0].password });
         const task = {
             title: "Test Title",
@@ -252,7 +251,7 @@ describe("PUT /api/users/:id", () => {
         await User.deleteMany({});
         user = await api.post("/api/users").send(users[0]);
         result = await api
-            .post("/api/login")
+            .post("/api/auth/login")
             .send({ email: users[0].email, password: users[0].password });
     });
     test("returns status code 204 when body is empty", async () => {

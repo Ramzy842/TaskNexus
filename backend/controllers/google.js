@@ -40,7 +40,7 @@ googleRouter.get("/callback", async (req, res) => {
             });
             await user.save();
         }
-        const token = jwt.sign({ id: user.id }, process.env.SECRET, {
+        const token = jwt.sign({ id: user.id }, process.env.ACCESS_SECRET, {
             expiresIn: 60 * 60,
         });
         res.status(200).json({

@@ -54,6 +54,8 @@ authRouter.post(
             };
             const accessToken = generateAccessToken(userForToken);
             const refreshToken = generateRefreshToken(userForToken);
+            console.log(accessToken);
+            
             user.refreshToken = refreshToken;
             await user.save();
             res.cookie("refreshToken", refreshToken, {
