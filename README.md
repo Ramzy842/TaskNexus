@@ -9,7 +9,6 @@ Task Tracker is a full-stack MERN (MongoDB, Express, React, Node.js) web applica
 - **Authentication**:
   - JWT-based user authentication for secure access.
   - Google OAuth for external authentication.
-  - Role-based access control for enhanced security.
 - **Responsive Design**: Built with TailwindCSS for a mobile-friendly experience.
 
 ### Advanced Features
