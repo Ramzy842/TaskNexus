@@ -10,6 +10,8 @@ const api = supertest(app);
 beforeAll(async () => {
     await Task.deleteMany({});
     await User.deleteMany({});
+    await Task.collection.drop();
+    await User.collection.drop();
     await mongoose.disconnect();
     await mongoose.connection.close();
     const testDB_name = `test_db_${Date.now()}`;

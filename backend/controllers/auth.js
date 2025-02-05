@@ -92,7 +92,7 @@ authRouter.post("/login/refresh", async (req, res, next) => {
         return res.status(401).json({
             success: false,
             statusCode: 401,
-            error: "Missing refresh token.",
+            message: "Missing refresh token.",
         });
     try {
         const user = await User.findOne({ refreshToken });
@@ -100,24 +100,25 @@ authRouter.post("/login/refresh", async (req, res, next) => {
             return res.status(403).json({
                 success: false,
                 statusCode: 403,
-                error: "Invalid refresh token.",
+                message: "Invalid refresh token.",
             });
         }
         const decodedToken = jwt.verify(
             refreshToken,
             process.env.REFRESH_SECRET
         );
-        if (!decodedToken.id)
+        if (!decodedToken)
             return res.status(403).json({
                 success: false,
                 statusCode: 403,
-                error: "Invalid refresh token.",
+                message: "Invalid refresh token.",
             });
         const newAccessToken = generateAccessToken({
             username: decodedToken.username,
             email: decodedToken.email,
             id: user._id.toString(),
         });
+
         return res.status(200).json({
             success: true,
             statusCode: 200,
@@ -138,27 +139,31 @@ authRouter.post("/logout", async (req, res, next) => {
         });
     try {
         const user = await User.findOne({ refreshToken });
-        if (user) {
+        if (user && !user.blacklistedRefreshTokens.includes(refreshToken)) {
             const accessToken = getTokenFrom(req);
             if (
                 accessToken &&
                 !user.blacklistedAccessTokens.includes(accessToken)
             )
                 user.blacklistedAccessTokens.push(accessToken);
-            if (!user.blacklistedRefreshTokens.includes(refreshToken))
-                user.blacklistedRefreshTokens.push(refreshToken);
+            user.blacklistedRefreshTokens.push(refreshToken);
             user.refreshToken = null;
             await user.save();
+            res.clearCookie("refreshToken", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "Strict",
+            });
+            return res.status(200).json({
+                success: true,
+                statusCode: 200,
+                message: "Logged out successfully",
+            });
         }
-        res.clearCookie("refreshToken", {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "Strict",
-        });
-        return res.status(200).json({
-            success: true,
-            statusCode: 200,
-            message: "Logged out successfully",
+        return res.status(403).json({
+            success: false,
+            statusCode: 403,
+            message: "Invalid refresh token.",
         });
     } catch (error) {
         next(error);

@@ -31,10 +31,14 @@ const errorHandler = (err, req, res, next) => {
             error: "Malformatted Id",
         });
     } else if (err.name === "JsonWebTokenError")
-        return res.status(401).json({ error: "token invalid" });
+        return res
+            .status(401)
+            .json({ success: false, statusCode: 401, error: "Token invalid" });
     else if (err.name === "TokenExpiredError")
         return res.status(401).json({
-            error: "token expired",
+            success: false,
+            statusCode: 401,
+            error: "Token expired",
         });
     return res.status(500).json({
         success: false,
