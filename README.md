@@ -1,6 +1,6 @@
 # Task Tracker
 
-Task Tracker is a full-stack MERN (MongoDB, Express, React, Node.js) web application designed to help users efficiently manage their tasks. This project showcases robust testing practices, modern UI/UX design, and scalable architecture, making it an excellent example of a professional-grade application.
+Task Tracker is a full-stack MERN (MongoDB, Express, React, Node.js) web application designed to help users efficiently manage their tasks. This project showcases robust testing and security practices, modern UI/UX design, and scalable architecture, an excellent example of a professional-grade application.
 
 ## Features
 
