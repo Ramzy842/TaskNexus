@@ -16,7 +16,7 @@ beforeAll(async () => {
     await mongoose.connection.close();
     const testDB_name = `test_db_${Date.now()}`;
     const mongoUri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.qztos.mongodb.net/${testDB_name}?retryWrites=true&w=majority&appName=Cluster0`;
-    await mongoose.connect(mongoUri);    
+    await mongoose.connect(mongoUri);
 });
 
 afterEach(async () => {
@@ -146,7 +146,9 @@ describe("POST /api/users", () => {
         });
         expect(res.body.statusCode).toBe(400);
         expect(res.body.statusCode).toBe(res.status);
-        expect(res.body.message).toBe(responseMessages.users.bodyPayloadLengthError);
+        expect(res.body.message).toBe(
+            responseMessages.users.bodyPayloadLengthError
+        );
     });
     test("Returns case-insensitive email duplicates error upon case sensitivity issues", async () => {
         let res01 = await api.post("/api/users").send({
@@ -212,9 +214,7 @@ describe("GET /api/users", () => {
         expect(spy).toHaveBeenCalled();
         expect(res.status).toBe(500);
         expect(res.body.statusCode).toBe(500);
-        expect(res.body.error).toBe(
-            "Internal Server Error."
-        );
+        expect(res.body.error).toBe("Internal Server Error.");
         jest.restoreAllMocks();
     });
     test("returns list of users with tasks array populated for each user", async () => {
@@ -232,9 +232,9 @@ describe("GET /api/users", () => {
             .post("/api/tasks")
             .set("Authorization", `Bearer ${result.body.data.token}`)
             .send(task);
-        const userData = await api.get(
-            `/api/users/${result.body.data.user.id}`
-        );
+        const userData = await api
+            .get(`/api/users/${result.body.data.user.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
         expect(userData.body.data).toHaveProperty("tasks");
         expect(userData.body.data.tasks).toEqual(
             expect.arrayContaining([
@@ -285,12 +285,20 @@ describe("PUT /api/users/:id", () => {
             .set("Authorization", `Bearer ${result.body.data.token}`)
             .send({ username: "Black" });
         expect(res.status).toBe(403);
-        expect(res.body.message).toBe(responseMessages.users.updateUnauthorized);
+        expect(res.body.message).toBe(
+            responseMessages.users.updateUnauthorized
+        );
     });
     test("returns user not found error message when trying to update using invalid id", async () => {
-        await api.delete(`/api/users/${user.body.data.id}`);
-        const deletedUser = await api.get(`/api/users/${user.body.data.id}`);
-        expect(deletedUser.body.message).toBe(responseMessages.users.toRetrieveNotFound);
+        await api
+            .delete(`/api/users/${user.body.data.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        const deletedUser = await api
+            .get(`/api/users/${user.body.data.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        expect(deletedUser.body.message).toBe(
+            responseMessages.users.toRetrieveNotFound
+        );
         let res = await api
             .put(`/api/users/${user.body.data.id}`)
             .set("Authorization", `Bearer ${result.body.data.token}`)
@@ -314,5 +322,151 @@ describe("PUT /api/users/:id", () => {
         expect(res.status).toBe(200);
         expect(res.body.data.username).toBe("Defender Strange");
         expect(res.body.data.name).toBe("Doctor strange");
+    });
+    test("Blocks request, returns status 401 and session expired error when access token is blacklisted", async () => {
+        await api
+            .post("/api/auth/logout")
+            .set("Cookie", `refreshToken=${result.body.data.refreshToken}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        let res = await api
+            .put(`/api/users/${user.body.data.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`)
+            .send({ password: "SOMEPASSWORD" });
+        expect(res.status).toBe(401);
+        expect(res.body.error).toBe("Session expired. Please log in again.");
+    });
+});
+
+describe("GET /api/users/:id", () => {
+    let user, result;
+    beforeEach(async () => {
+        await User.deleteMany({});
+        user = await api.post("/api/users").send(users[0]);
+        result = await api
+            .post("/api/auth/login")
+            .send({ email: users[0].email, password: users[0].password });
+    });
+    test("Returns status 200 and user object upon successfull user retrieval", async () => {
+        let res = await api
+            .get(`/api/users/${user.body.data.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        expect(res.status).toBe(200);
+        expect(res.body.data).toEqual(
+            expect.objectContaining({ email: user.body.data.email })
+        );
+    });
+    test("Returns status 404 and user to retrieve not found message", async () => {
+        await api
+            .delete(`/api/users/${result.body.data.user.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        let res = await api
+            .get(`/api/users/${result.body.data.user.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        expect(res.status).toBe(404);
+        expect(res.body.message).toBe(
+            responseMessages.users.toRetrieveNotFound
+        );
+    });
+    test("Returns status 403 and access unautorized message upon unauthoried access", async () => {
+        const tempId = new mongoose.Types.ObjectId();
+        let res = await api
+            .get(`/api/users/${tempId}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        expect(res.status).toBe(403);
+        expect(res.body.message).toBe(
+            responseMessages.users.accessUnauthorized
+        );
+    });
+    test("returns 401 if the request is missing an authorization token", async () => {
+        let res = await api.get(`/api/users/${user.body.data.id}`);
+        expect(res.status).toBe(401);
+        expect(res.body.error).toBe("Missing JWT token.");
+    });
+    test("Returns status 500 when internal server error occurs (DB error)", async () => {
+        let findByIdSpy = jest.spyOn(User, "findById");
+        findByIdSpy.mockImplementationOnce(() => {
+            throw new Error("Internal server error");
+        });
+        let res = await api
+            .get(`/api/users/${result.body.data.user.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        expect(res.status).toBe(500);
+        expect(res.body).toHaveProperty("error", "Internal Server Error.");
+        jest.restoreAllMocks();
+    });
+    test("Blocks request, returns status 401 and session expired error when access token is blacklisted", async () => {
+        await api
+            .post("/api/auth/logout")
+            .set("Cookie", `refreshToken=${result.body.data.refreshToken}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        let res = await api
+            .get(`/api/users/${user.body.data.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        expect(res.status).toBe(401);
+        expect(res.body.error).toBe("Session expired. Please log in again.");
+    });
+});
+
+describe("DELETE /api/users/:id", () => {
+    let user, result;
+    beforeEach(async () => {
+        await User.deleteMany({});
+        user = await api.post("/api/users").send(users[0]);
+        result = await api
+            .post("/api/auth/login")
+            .send({ email: users[0].email, password: users[0].password });
+    });
+    test("Returns status 200 and user object upon successfull user deletion", async () => {
+        let res = await api
+            .delete(`/api/users/${user.body.data.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        expect(res.status).toBe(200);
+        expect(res.body.message).toBe(responseMessages.users.deletionSuccess);
+    });
+    test("Returns status 404 and user to retrieve not found message", async () => {
+        await User.findByIdAndDelete(result.body.data.user.id);
+        let res = await api
+            .delete(`/api/users/${result.body.data.user.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        expect(res.status).toBe(404);
+        expect(res.body.message).toBe(responseMessages.users.toDeleteNotFound);
+    });
+    test("Returns status 403 and access unautorized message upon unauthoried deletion", async () => {
+        const tempId = new mongoose.Types.ObjectId();
+        let res = await api
+            .delete(`/api/users/${tempId}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        expect(res.status).toBe(403);
+        expect(res.body.message).toBe(
+            responseMessages.users.deletionUnauthorized
+        );
+    });
+    test("returns 401 if the request is missing an authorization token", async () => {
+        let res = await api.delete(`/api/users/${user.body.data.id}`);
+        expect(res.status).toBe(401);
+        expect(res.body.error).toBe("Missing JWT token.");
+    });
+    test("Returns status 500 when internal server error occurs (DB error)", async () => {
+        let findByIdSpy = jest.spyOn(User, "findByIdAndDelete");
+        findByIdSpy.mockImplementationOnce(() => {
+            throw new Error("Internal server error");
+        });
+        let res = await api
+            .delete(`/api/users/${result.body.data.user.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        expect(res.status).toBe(500);
+        expect(res.body).toHaveProperty("error", "Internal Server Error.");
+        jest.restoreAllMocks();
+    });
+    test("Blocks request, returns status 401 and session expired error when access token is blacklisted", async () => {
+        await api
+            .post("/api/auth/logout")
+            .set("Cookie", `refreshToken=${result.body.data.refreshToken}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        let res = await api
+            .delete(`/api/users/${user.body.data.id}`)
+            .set("Authorization", `Bearer ${result.body.data.token}`);
+        expect(res.status).toBe(401);
+        expect(res.body.error).toBe("Session expired. Please log in again.");
     });
 });

@@ -5,7 +5,7 @@ const app = require("../../app");
 const Task = require("../../models/Task");
 const api = supertest(app);
 const jwt = require("jsonwebtoken");
-const { createUser } = require("../../utils/users");
+const { createUser, generateRefreshToken } = require("../../utils/users");
 
 beforeAll(async () => {
     await Task.deleteMany({});
@@ -43,7 +43,6 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-    
     await mongoose.disconnect();
     await mongoose.connection.close();
 });
@@ -143,14 +142,103 @@ describe("POST /api/auth/login/refresh", () => {
     });
 });
 
-// Logout Tests
-
-// describe("POST /api/auth/logout", () => {
-//     test("Returns status 200 when user successfully logs out with a valid refresh token", async () => {});
-//     test("Returns status 200 when user successfully logs out and ensures refreshToken is blacklisted and removed", async () => {});
-//     test("Returns status 401 and 'Missing refresh token.' when a refresh token is missing", async () => {});
-//     test("Returns status 403 and 'Invalid refresh token.' when logging out with an already blacklisted refresh token", async () => {});
-//     test("Returns status 403 and 'Invalid refresh token.' when refresh token is not associated with any user", async () => {});
-//     test("Returns status 401 and 'Token expired.' when a refresh token is expired", async () => {});
-//     test("Clears refreshToken cookie upon logout", async () => {});
-// });
+describe("POST /api/auth/logout", () => {
+    let loggedUser = null;
+    beforeEach(async () => {
+        loggedUser = await api.post("/api/auth/login").send({
+            password: "password123456789",
+            email: "johnDoe@gmail.com",
+        });
+    });
+    test("Returns status 200 when user successfully logs out with a valid refresh token", async () => {
+        let res = await api
+            .post("/api/auth/logout")
+            .set("Cookie", `refreshToken=${loggedUser.body.data.refreshToken}`);
+        expect(res.status).toBe(200);
+        expect(res.body.message).toBe("Logged out successfully");
+    });
+    test("Returns status 200 when user successfully logs out and ensures refreshToken is blacklisted and removed", async () => {
+        let res = await api
+            .post("/api/auth/logout")
+            .set("Cookie", `refreshToken=${loggedUser.body.data.refreshToken}`);
+        expect(res.status).toBe(200);
+        
+        let user = await api
+        .get(`/api/users/${loggedUser.body.data.user.id}`)
+        .set("Authorization", `Bearer ${loggedUser.body.data.token}`);
+        console.log(user.body);
+        expect(user.body.data.refreshToken).toBeNull();
+        expect(user.body.data.blacklistedRefreshTokens).toEqual(
+            expect.arrayContaining([loggedUser.body.data.refreshToken])
+        );
+    });
+    test("Returns status 401 and 'Missing refresh token.' when a refresh token is missing", async () => {
+        let res = await api.post("/api/auth/logout");
+        expect(res.status).toBe(401);
+        expect(res.body.error).toBe("Missing refresh token.");
+    });
+    test("Returns status 403 and 'Invalid refresh token.' when logging out with an already blacklisted refresh token", async () => {
+        const refreshToken = loggedUser.body.data.refreshToken;
+        await api
+            .post("/api/auth/logout")
+            .set("Cookie", `refreshToken=${refreshToken}`);
+        let test = await api
+            .post("/api/auth/logout")
+            .set("Cookie", `refreshToken=${refreshToken}`);
+        expect(test.status).toBe(403);
+        expect(test.body.success).toBeFalsy();
+        expect(test.body.message).toBe("Invalid refresh token.");
+    });
+    test("Returns status 403 and 'Invalid refresh token.' when refresh token is not associated with any user", async () => {
+        const payload = {
+            username: "Test username",
+            email: "test@gmail.com",
+            id: new mongoose.Types.ObjectId(),
+        };
+        const refreshToken = generateRefreshToken(payload);
+        let test = await api
+            .post("/api/auth/logout")
+            .set("Cookie", `refreshToken=${refreshToken}`);
+        expect(test.status).toBe(403);
+        expect(test.body.success).toBeFalsy();
+        expect(test.body.message).toBe("Invalid refresh token.");
+    });
+    test("Returns status 401 and 'Token expired.' when a refresh token is expired", async () => {
+        const payload = {
+            username: loggedUser.body.data.user.username,
+            email: loggedUser.body.data.user.email,
+            id: loggedUser.body.data.user.id,
+        };
+        const expiredToken = jwt.sign(payload, process.env.REFRESH_SECRET, {
+            expiresIn: "1s",
+        });
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        let user = await createUser(
+            loggedUser.body.data.user.username,
+            "test",
+            loggedUser.body.data.user.email,
+            "testPass"
+        );
+        user.refreshToken = expiredToken;
+        await user.save();
+        let res = await api
+            .post("/api/auth/logout")
+            .set("Cookie", `refreshToken=${expiredToken}`);
+        expect(res.status).toBe(401);
+        expect(res.body.success).toBeFalsy();
+        expect(res.body).toHaveProperty("error", "Token expired");
+    });
+    test("Clears refreshToken cookie upon logout", async () => {
+        let res = await api
+            .post("/api/auth/logout")
+            .set("Cookie", `refreshToken=${loggedUser.body.data.refreshToken}`);
+        expect(res.status).toBe(200);
+        const setCookieHeader = res.headers["set-cookie"];
+        expect(setCookieHeader).toBeDefined();
+        expect(
+            setCookieHeader.some((cookie) =>
+                cookie.startsWith("refreshToken=;")
+            )
+        ).toBeTruthy();
+    });
+});

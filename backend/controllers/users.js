@@ -77,8 +77,14 @@ usersRouter.get("/", async (req, res, next) => {
     }
 });
 
-usersRouter.get("/:id", async (req, res, next) => {
+usersRouter.get("/:id",verifyToken, async (req, res, next) => {
     try {
+        if (req.params.id !== req.user.id)
+            return res.status(403).json({
+                success: false,
+                statusCode: 403,
+                message: responseMessages.users.accessUnauthorized,
+            });
         const user = await User.findById(req.params.id).populate("tasks");
         if (!user) {
             return res.status(404).json({
@@ -169,8 +175,14 @@ usersRouter.put(
     }
 );
 
-usersRouter.delete("/:id", async (req, res, next) => {
+usersRouter.delete("/:id", verifyToken, async (req, res, next) => {
     try {
+        if (req.params.id !== req.user.id)
+            return res.status(403).json({
+                success: false,
+                statusCode: 403,
+                message: responseMessages.users.deletionUnauthorized,
+            });
         const user = await User.findByIdAndDelete(req.params.id);
         if (!user) {
             return res.status(404).json({

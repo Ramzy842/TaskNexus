@@ -138,6 +138,16 @@ authRouter.post("/logout", async (req, res, next) => {
             error: "Missing refresh token.",
         });
     try {
+        const decodedToken = jwt.verify(
+            refreshToken,
+            process.env.REFRESH_SECRET
+        );
+        if (!decodedToken)
+            return res.status(403).json({
+                success: false,
+                statusCode: 403,
+                message: "Invalid refresh token.",
+            });
         const user = await User.findOne({ refreshToken });
         if (user && !user.blacklistedRefreshTokens.includes(refreshToken)) {
             const accessToken = getTokenFrom(req);

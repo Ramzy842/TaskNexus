@@ -28,6 +28,8 @@ const responseMessages = {
         updateSuccess: "User updated successfully.",
         bodyPayloadLengthError:
             "Body payload error! Make sure only username, name, email and password are provided.",
+        deletionUnauthorized: "You are not authorized to update user info.",
+        accessUnauthorized: "You are not authorized to access this user info.",
     },
 };
 
