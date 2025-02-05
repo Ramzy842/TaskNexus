@@ -10,6 +10,7 @@ const {
     validateUsernameUpdate,
     validateEmailUpdate,
     validateNameUpdate,
+    validatePasswordUpdate,
 } = require("../utils/usersValidators");
 const { getHashedPassword, createUser } = require("../utils/users");
 const { responseMessages } = require("../utils/responseMessages");
@@ -98,7 +99,12 @@ usersRouter.get("/:id", async (req, res, next) => {
 
 usersRouter.put(
     "/:id",
-    [validateUsernameUpdate, validateEmailUpdate, validateNameUpdate],
+    [
+        validateUsernameUpdate,
+        validateEmailUpdate,
+        validateNameUpdate,
+        validatePasswordUpdate,
+    ],
     verifyToken,
     async (req, res, next) => {
         const result = validationResult(req);
@@ -132,9 +138,16 @@ usersRouter.put(
                 message: responseMessages.users.updateUnauthorized,
             });
         try {
+            let passwordHash;
+            let updateData = {};
+            if (Object.keys(req.body).includes("password")) {
+                passwordHash = await getHashedPassword(req.body.password);
+                const { password, ...body } = req.body;
+                updateData = { ...body, passwordHash };
+            } else updateData = req.body;
             const updatedUser = await User.findByIdAndUpdate(
                 req.params.id,
-                req.body,
+                updateData,
                 { new: true }
             );
             if (!updatedUser) {
@@ -172,7 +185,7 @@ usersRouter.delete("/:id", async (req, res, next) => {
             message: responseMessages.users.deletionSuccess,
         });
     } catch (error) {
-        next(error)
+        next(error);
     }
 });
 
