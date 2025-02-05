@@ -166,7 +166,6 @@ describe("POST /api/auth/logout", () => {
         let user = await api
         .get(`/api/users/${loggedUser.body.data.user.id}`)
         .set("Authorization", `Bearer ${loggedUser.body.data.token}`);
-        console.log(user.body);
         expect(user.body.data.refreshToken).toBeNull();
         expect(user.body.data.blacklistedRefreshTokens).toEqual(
             expect.arrayContaining([loggedUser.body.data.refreshToken])
