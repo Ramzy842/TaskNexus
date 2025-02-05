@@ -1,5 +1,7 @@
 var morgan = require("morgan");
 const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+const { responseMessages } = require("./responseMessages");
 const logger = morgan(function (tokens, req, res) {
     return [
         tokens.method(req, res),
@@ -48,7 +50,7 @@ const getTokenFrom = (req) => {
     return null;
 };
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
     try {
         const token = getTokenFrom(req);
         if (!token)
@@ -64,6 +66,14 @@ const verifyToken = (req, res, next) => {
                 statusCode: 401,
                 error: "Invalid JWT token.",
             });
+        const user = await User.findById(decodedToken.id);
+        if (user && user.blacklistedAccessTokens.includes(token)) {
+            return res.status(401).json({
+                success: false,
+                statusCode: 401,
+                error: "Token has been revoked. Please log in again.",
+            });
+        }
         req.user = decodedToken;
         next();
     } catch (err) {
@@ -71,4 +81,10 @@ const verifyToken = (req, res, next) => {
     }
 };
 
-module.exports = { logger, unknownEndpoint, errorHandler, verifyToken };
+module.exports = {
+    logger,
+    unknownEndpoint,
+    errorHandler,
+    verifyToken,
+    getTokenFrom,
+};

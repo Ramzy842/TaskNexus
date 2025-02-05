@@ -43,7 +43,8 @@ const userSchema = new mongoose.Schema(
             },
         ],
         refreshToken: { type: String },
-        blacklistedTokens: { type: [String], default: [] },
+        blacklistedAccessTokens: { type: [String], default: [] },
+        blacklistedRefreshTokens: { type: [String], default: [] },
     },
     {
         timestamps: true,
@@ -56,8 +57,9 @@ userSchema.set("toJSON", {
         delete returnedObject._id;
         delete returnedObject.__v;
         delete returnedObject.passwordHash;
-        delete returnedObject.blacklistedTokens
-        delete returnedObject.refreshToken
+        delete returnedObject.blacklistedAccessTokens;
+        delete returnedObject.blacklistedRefreshTokens;
+        delete returnedObject.refreshToken;
     },
 });
 

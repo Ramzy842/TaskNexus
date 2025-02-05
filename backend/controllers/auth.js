@@ -6,6 +6,7 @@ const { validationResult } = require("express-validator");
 const { responseMessages } = require("../utils/responseMessages");
 const { validateEmail, validatePassword } = require("../utils/loginValidators");
 const { generateAccessToken, generateRefreshToken } = require("../utils/users");
+const { getTokenFrom } = require("../utils/middleware");
 
 authRouter.post(
     "/login",
@@ -95,7 +96,7 @@ authRouter.post("/login/refresh", async (req, res, next) => {
         });
     try {
         const user = await User.findOne({ refreshToken });
-        if (!user || user.blacklistedTokens.includes(refreshToken)) {
+        if (!user || user.blacklistedRefreshTokens.includes(refreshToken)) {
             return res.status(403).json({
                 success: false,
                 statusCode: 403,
@@ -138,11 +139,22 @@ authRouter.post("/logout", async (req, res, next) => {
     try {
         const user = await User.findOne({ refreshToken });
         if (user) {
-            user.blacklistedTokens.push(refreshToken);
+            const accessToken = getTokenFrom(req);
+            if (
+                accessToken &&
+                !user.blacklistedAccessTokens.includes(accessToken)
+            )
+                user.blacklistedAccessTokens.push(accessToken);
+            if (!user.blacklistedRefreshTokens.includes(refreshToken))
+                user.blacklistedRefreshTokens.push(refreshToken);
             user.refreshToken = null;
             await user.save();
         }
-        res.clearCookie("refreshToken");
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict",
+        });
         return res.status(200).json({
             success: true,
             statusCode: 200,
