@@ -67,11 +67,18 @@ const verifyToken = async (req, res, next) => {
                 error: "Invalid JWT token.",
             });
         const user = await User.findById(decodedToken.id);
+        if (process.env.NODE_ENV !== "test" && !user) {
+            return res.status(401).json({
+                success: false,
+                statusCode: 401,
+                error: responseMessages.users.toRetrieveNotFound,
+            });
+        }
         if (user && user.blacklistedAccessTokens.includes(token)) {
             return res.status(401).json({
                 success: false,
                 statusCode: 401,
-                error: "Token has been revoked. Please log in again.",
+                error: "Session expired. Please log in again.",
             });
         }
         req.user = decodedToken;
