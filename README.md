@@ -1,11 +1,13 @@
-# Task Tracker
+# TaskNexus
 
-Task Tracker is a full-stack MERN (MongoDB, Express, React, Node.js) web application designed to help users efficiently manage their tasks. This project showcases robust testing and security practices, modern UI/UX design, and scalable architecture, an excellent example of a professional-grade application.
+TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web application designed to help users efficiently manage their tasks. This project showcases robust testing and security practices, modern UI/UX design, and scalable architecture.
 
 ## Features
 
 ### Core Features
 - **Task Management**: Add, view, edit, delete, and mark tasks as complete.
+- **Task Statuses** (To Do, In Progress, Completed).
+- **Due Dates**: To ensure deadline management.
 - **Authentication**:
   - JWT-based user authentication for secure access.
   - Google OAuth for external authentication.
@@ -48,12 +50,12 @@ Task Tracker is a full-stack MERN (MongoDB, Express, React, Node.js) web applica
 
 ### Prerequisites
 - Node.js and npm installed.
-- MongoDB running locally or on a cloud service.
+- MongoDB on a cloud service (MongoDb Atlas).
 
 ### Steps to Run Locally
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Ramzy842/task-tracker.git
+   git clone https://github.com/Ramzy842/taskNexus.git
    ```
 
 2. Navigate to the project directory:
@@ -70,7 +72,13 @@ Task Tracker is a full-stack MERN (MongoDB, Express, React, Node.js) web applica
 4. Create a `.env` file in the root directory and add the following environment variables:
    ```env
    MONGODB_URI=<Your MongoDB URI>
-   SECRET=<Your JWT Secret>
+   DEVELOPMENT_MONGODB_URI=<Your Development MongoDB URI>
+   ACCESS_SECRET=<Your JWT Secret for access token>
+   REFRESH_SECRET=<Your JWT Secret for refresh token>
+   Client_ID=<Client ID from Google Developer Console>
+   Client_SECRET=<Client Secret from Google Developer Console>
+   MONGO_USERNAME=<MongoDB database username>
+   MONGO_PASSWORD=<MongoDB database password>
    PORT=4000
    ```
 
@@ -120,11 +128,6 @@ The backend API is documented using Swagger. Access the documentation locally at
 
 ### Task Management
 ![Task Management](https://via.placeholder.com/800x400)
-
-## Future Enhancements
-- Task collaboration features for multi-user environments.
-- Notifications and reminders for upcoming tasks.
-- Analytics dashboard for task insights.
 
 ## Contributing
 
