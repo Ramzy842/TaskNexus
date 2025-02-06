@@ -129,11 +129,6 @@ The backend API is documented using Swagger. Access the documentation locally at
 ### Task Management
 ![Task Management](https://via.placeholder.com/800x400)
 
-## Future Enhancements
-- Task collaboration features for multi-user environments.
-- Notifications and reminders for upcoming tasks.
-- Analytics dashboard for task insights.
-
 ## Contributing
 
 Contributions are welcome! Follow these steps:
