@@ -88,7 +88,7 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
    npm run dev
    ```
 
-6. Access the application at `http://localhost:3000`.
+6. Access the application at `http://localhost:5173`.
 
 ## Testing
 
