@@ -55,7 +55,7 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
 ### Steps to Run Locally
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Ramzy842/taskNexus.git
+   git clone https://github.com/Ramzy842/TaskNexus.git
    ```
 
 2. Navigate to the project directory:
