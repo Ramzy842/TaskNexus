@@ -6,7 +6,7 @@ const AuthLayout = ({ children }) => {
 					TaskNexus
 				</p>
 			</div>
-			<div className="bg-[#E3EAE9] flex justify-center items-center">{children}</div>
+			<div className="bg-[#E3EAE9] flex justify-center flex-col items-center">{children}</div>
 		</div>
 	);
 };
