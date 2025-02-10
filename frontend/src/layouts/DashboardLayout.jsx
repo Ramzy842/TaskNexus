@@ -4,22 +4,33 @@ const DashboardLayout = ({ children }) => {
 	return (
 		<div className="grid grid-rows-[auto_1fr] h-screen bg-[#C2D0CE] p-4 overflow-hidden">
 			<div className=" w-full flex justify-between items-center mb-4">
-				<Button
-					type="button"
-					text="Add task"
-					classNames="text-white bg-[#124242] px-4 py-2 rounded-sm cursor-pointer font-bold text-base hover:bg-teal-900"
-				/>
+				<div className="flex items-center bg-linear-to-r from-teal-900 to-teal-700 rounded-md p-3 cursor-pointer">
+					<Button
+						type="button"
+						text="Add task"
+						classNames="text-white font-semibold text-base mr-2 select-none cursor-pointer"
+					/>
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M12 5V19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+						<path d="M5 12H19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+					</svg>
+
+				</div>
+
 				<div className="flex items-center">
 					<h1 className="hidden sm:flex mr-4 font-semibold text-[#0A2D29]">ParadoxStyx</h1>
 					<div className="w-12 bg-teal-800 rounded-3xl h-12"></div>
 				</div>
 			</div>
 			<div className="h-full">{children}</div>
-			<div className="absolute bottom-4 p-2 right-4 flex cursor-pointer">
-				<img src="./src/assets/log-out.svg" className="mr-2" alt="" />
-				<Button text="Log out" classNames="text-xl" />
+			<div className="absolute block bottom-4 rounded-md hover:bg-teal-700 group hover:text-white p-2 right-4 flex cursor-pointer">
+				<svg className="mr-2 group-hover:stroke-white stroke-black" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M12 28H6.66667C5.95942 28 5.28115 27.719 4.78105 27.219C4.28095 26.7189 4 26.0406 4 25.3333V6.66667C4 5.95942 4.28095 5.28115 4.78105 4.78105C5.28115 4.28095 5.95942 4 6.66667 4H12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+					<path d="M21.334 22.6673L28.0007 16.0007L21.334 9.33398" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+					<path d="M28 16H12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+				</svg>
+				<Button text="Log out" classNames="text-lg select-none cursor-pointer" />
 			</div>
-			
 		</div>
 	);
 };

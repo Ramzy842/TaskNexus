@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CompletedTasks from "../components/CompletedTasks";
+
 import TaskList from "../components/TaskList";
 import DashboardLayout from "../layouts/DashboardLayout";
 
@@ -22,7 +22,7 @@ const Home = () => {
                 <h1 className="font-medium text-lg mr-2">Completed</h1>
                 <img src="./src/assets/completed.svg" alt="Completed tasks icon" className="select-none" />
             </div>
-            <CompletedTasks tasks={completedTasks} />
+            <TaskList tasks={completedTasks} />
         </DashboardLayout>
     );
 };

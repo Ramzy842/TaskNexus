@@ -1,5 +1,4 @@
 import TaskCard from "./TaskCard"
-import { useState, useEffect } from 'react'
 
 const TaskList = ({tasks}) => {
 	return (
