@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const StatusSelection = () => {
+const StatusSelection = ({handler}) => {
     const [statuses, setStatuses] = useState([{
         id: 0,
         status: 'To Do',
@@ -18,7 +18,10 @@ const StatusSelection = () => {
     }])
     const [selected, setSelected] = useState(statuses[0])
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    return <div className="">
+    useEffect(() => {
+        handler(selected.status);
+    }, [selected])
+    return <div>
         <button onClick={() => setIsMenuOpen(!isMenuOpen)} type="button" className={`cursor-pointer ${selected.styles} px-2 py-1 rounded-sm text-xs font-medium border`}>{selected.status}</button>
         {isMenuOpen && <div className="flex flex-col absolute">
             {statuses.filter(status => status.status !== selected.status).map(stat => {
