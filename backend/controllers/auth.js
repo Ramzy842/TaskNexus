@@ -131,19 +131,19 @@ authRouter.post("/login/refresh", async (req, res, next) => {
 
 authRouter.post("/logout", async (req, res, next) => {
     const { refreshToken } = req.cookies;
-	const accessToken = getTokenFrom(req);
     if (!refreshToken)
         return res.status(401).json({
             success: false,
             statusCode: 401,
             error: "Missing refresh token.",
         });
-	if (!accessToken)
-		return res.status(401).json({
-			success: false,
-			statusCode: 401,
-			error: "Missing access token.",
-		});
+    const accessToken = getTokenFrom(req);
+    if (!accessToken)
+        return res.status(401).json({
+            success: false,
+            statusCode: 401,
+            error: "Missing access token.",
+        });
     try {
         const decodedToken = jwt.verify(
             refreshToken,

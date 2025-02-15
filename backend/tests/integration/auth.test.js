@@ -132,6 +132,7 @@ describe("POST /api/auth/login/refresh", () => {
     test("Returns status 403 and 'Invalid refresh token.' when refresh token is blacklisted or not linked to a valid user", async () => {
         await api
             .post("/api/auth/logout")
+            .set("Authorization", `Bearer ${loggedUser.body.data.token}`)
             .set("Cookie", `refreshToken=${loggedUser.body.data.refreshToken}`);
         let test = await api
             .post("/api/auth/login/refresh")
@@ -153,6 +154,7 @@ describe("POST /api/auth/logout", () => {
     test("Returns status 200 when user successfully logs out with a valid refresh token", async () => {
         let res = await api
             .post("/api/auth/logout")
+            .set("Authorization", `Bearer ${loggedUser.body.data.token}`)
             .set("Cookie", `refreshToken=${loggedUser.body.data.refreshToken}`);
         expect(res.status).toBe(200);
         expect(res.body.message).toBe("Logged out successfully");
@@ -160,15 +162,29 @@ describe("POST /api/auth/logout", () => {
     test("Returns status 200 when user successfully logs out and ensures refreshToken is blacklisted and removed", async () => {
         let res = await api
             .post("/api/auth/logout")
+            .set("Authorization", `Bearer ${loggedUser.body.data.token}`)
             .set("Cookie", `refreshToken=${loggedUser.body.data.refreshToken}`);
         expect(res.status).toBe(200);
-        
-        let user = await api
-        .get(`/api/users/${loggedUser.body.data.user.id}`)
-        .set("Authorization", `Bearer ${loggedUser.body.data.token}`);
-        expect(user.body.data.refreshToken).toBeNull();
-        expect(user.body.data.blacklistedRefreshTokens).toEqual(
+        let user = await User.findById(loggedUser.body.data.user.id);
+        expect(user.refreshToken).toBeNull();
+        expect(user.blacklistedRefreshTokens).toEqual(
             expect.arrayContaining([loggedUser.body.data.refreshToken])
+        );
+    });
+    test("Returns status 401 and 'Session expired. Please log in again.' when user logs out and access token is blacklisted", async () => {
+        let res = await api
+            .post("/api/auth/logout")
+            .set("Authorization", `Bearer ${loggedUser.body.data.token}`)
+            .set("Cookie", `refreshToken=${loggedUser.body.data.refreshToken}`);
+        expect(res.status).toBe(200);
+        let user = await api
+            .get(`/api/users/${loggedUser.body.data.user.id}`)
+            .set("Authorization", `Bearer ${loggedUser.body.data.token}`);
+        expect(user.status).toBe(401);
+        expect(user.body.error).toBe("Session expired. Please log in again.")
+        let userData = await User.findById(loggedUser.body.data.user.id);
+        expect(userData.blacklistedAccessTokens).toEqual(
+            expect.arrayContaining([loggedUser.body.data.token])
         );
     });
     test("Returns status 401 and 'Missing refresh token.' when a refresh token is missing", async () => {
@@ -180,9 +196,11 @@ describe("POST /api/auth/logout", () => {
         const refreshToken = loggedUser.body.data.refreshToken;
         await api
             .post("/api/auth/logout")
+            .set("Authorization", `Bearer ${loggedUser.body.data.token}`)
             .set("Cookie", `refreshToken=${refreshToken}`);
         let test = await api
             .post("/api/auth/logout")
+            .set("Authorization", `Bearer ${loggedUser.body.data.token}`)
             .set("Cookie", `refreshToken=${refreshToken}`);
         expect(test.status).toBe(403);
         expect(test.body.success).toBeFalsy();
@@ -197,6 +215,7 @@ describe("POST /api/auth/logout", () => {
         const refreshToken = generateRefreshToken(payload);
         let test = await api
             .post("/api/auth/logout")
+            .set("Authorization", `Bearer ${loggedUser.body.data.token}`)
             .set("Cookie", `refreshToken=${refreshToken}`);
         expect(test.status).toBe(403);
         expect(test.body.success).toBeFalsy();
@@ -222,6 +241,7 @@ describe("POST /api/auth/logout", () => {
         await user.save();
         let res = await api
             .post("/api/auth/logout")
+            .set("Authorization", `Bearer ${loggedUser.body.data.token}`)
             .set("Cookie", `refreshToken=${expiredToken}`);
         expect(res.status).toBe(401);
         expect(res.body.success).toBeFalsy();
@@ -230,6 +250,7 @@ describe("POST /api/auth/logout", () => {
     test("Clears refreshToken cookie upon logout", async () => {
         let res = await api
             .post("/api/auth/logout")
+            .set("Authorization", `Bearer ${loggedUser.body.data.token}`)
             .set("Cookie", `refreshToken=${loggedUser.body.data.refreshToken}`);
         expect(res.status).toBe(200);
         const setCookieHeader = res.headers["set-cookie"];
