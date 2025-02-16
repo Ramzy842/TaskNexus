@@ -4,17 +4,17 @@ const StatusSelection = ({handler}) => {
     const [statuses, setStatuses] = useState([{
         id: 0,
         status: 'To Do',
-        styles: "bg-yellow-100 text-yellow-700 hover:bg-yellow-300"
+        styles: "bg-yellow-100 text-yellow-700 hover:bg-yellow-300 px-4"
     },
     {
         id: 1,
         status: 'In Progress',
-        styles: "bg-blue-100 text-blue-700  hover:bg-blue-300"
+        styles: "bg-blue-100 text-blue-700  hover:bg-blue-300 px-4"
     },
     {
         id: 2,
         status: 'Completed',
-        styles: "bg-green-100 text-green-700 hover:bg-green-300"
+        styles: "bg-green-100 text-green-700 hover:bg-green-300 px-4"
     }])
     const [selected, setSelected] = useState(statuses[0])
     const [isMenuOpen, setIsMenuOpen] = useState(false);

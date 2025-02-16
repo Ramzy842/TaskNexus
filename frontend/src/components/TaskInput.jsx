@@ -6,7 +6,7 @@ const TaskInput = ({ type, placeholder, classNames, iconSrc, inputName, value, h
     useEffect(() => {
         handler(val)
     }, [val])
-    return <div className="flex items-center gap-x-2 mb-4">
+    return <div className="flex items-center gap-x-2 mb-2">
         <img src={iconSrc} height={24} width={24} alt={inputName} />
         {type === "select" ?
             <StatusSelection handler={handler} />

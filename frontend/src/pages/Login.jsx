@@ -42,7 +42,7 @@ const Login = () => {
                     classNames="text-white bg-[#124242] w-full py-2 rounded-sm cursor-pointer font-medium text-base hover:bg-teal-900"
                 />
                 <div className="flex flex-col items-center">
-                    <p className="font-normal bg-[#C2D0CE] z-2 text-[#124242] text-sm my-4 text-center px-2">Or continue with</p>
+                    <p className="font-normal bg-[#E3EAE9] z-2 text-[#124242] text-sm my-4 text-center px-2">Or continue with</p>
                     <div className="h-[1px] bg-teal-900 w-full relative bottom-6"></div>
                 </div>
 

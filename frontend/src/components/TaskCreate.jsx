@@ -15,17 +15,11 @@ const TaskCreate = ({ setFormIsOpen }) => {
         { id: 3, placeholder: "Set status", iconSrc: "./src/assets/status.svg", type: "select", value: status, handler: setStatus },
     ])
 
-    // useEffect(() => {
-    //     console.log("Title: ", title);
-    //     console.log("Description: ", description);
-    //     console.log("Due date: ", dueDate);
-    //     console.log("Status: ", status);
-    // }, [title, description, dueDate, status])
-    return <form className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4">
-        <div className="sm:w-1/3">
+    return <form className="flex flex-col justify-start sm:flex-row sm:items-start sm:justify-between mb-4">
+        <div className="sm:w-1/3 sm:max-w-1/3 mb-4 sm:mb-0">
             {taskDetails.map(detail => {
                 const { id, placeholder, iconSrc, type, value, handler } = detail;
-                return <TaskInput handler={handler} value={value} key={id} type={type} placeholder={placeholder} iconSrc={iconSrc} classNames="text-gray-900 font-normal border-b border-transparent focus:border-teal-700 pb-0.5 outline-none w-full" />
+                return <TaskInput handler={handler} value={value} key={id} type={type} placeholder={placeholder} iconSrc={iconSrc} classNames="text-[#212121] text-sm font-normal border-b border-transparent focus:border-teal-700 outline-none w-full cursor-pointer bg-white rounded-sm p-2" />
             })}
         </div>
         <FormActions setFormIsOpen={setFormIsOpen} />
