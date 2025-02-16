@@ -1,7 +1,6 @@
 import { useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout"
 import TaskInput from "../components/TaskInput";
-import FormActions from "../components/FormActions";
 import Button from "../components/Button";
 
 const EditTask = ({ task }) => {
@@ -10,10 +9,10 @@ const EditTask = ({ task }) => {
     const [dueDate, setDueDate] = useState(task.dueDate);
     const [status, setStatus] = useState(task.status)
     const [taskDetails, setTaskDetails] = useState([
-        { id: 0, placeholder: "Set title", iconSrc: "./src/assets/title.svg", type: "text", value: title, handler: setTitle },
-        { id: 1, placeholder: "Set description", iconSrc: "./src/assets/description.svg", type: "text", value: description, handler: setDescription },
-        { id: 2, placeholder: "Set due date", iconSrc: "./src/assets/duedate.svg", type: "date", value: dueDate, handler: setDueDate },
-        { id: 3, placeholder: "Set status", iconSrc: "./src/assets/status.svg", type: "select", value: status, handler: setStatus },
+        { id: 0, placeholder: "Set title", iconSrc: "/src/assets/title.svg", type: "text", value: title, handler: setTitle },
+        { id: 1, placeholder: "Set description", iconSrc: "/src/assets/description.svg", type: "text", value: description, handler: setDescription },
+        { id: 2, placeholder: "Set due date", iconSrc: "/src/assets/duedate.svg", type: "date", value: dueDate, handler: setDueDate },
+        { id: 3, placeholder: "Set status", iconSrc: "/src/assets/status.svg", type: "select", value: status, handler: setStatus },
     ])
     return (
         <DashboardLayout>
@@ -48,14 +47,14 @@ const EditTask = ({ task }) => {
                             classNames="text-white font-semibold text-md ml-2 select-none cursor-pointer"
                         />
                     </div>
-                    <div className="flex justify-center items-center bg-teal-600 hover:bg-teal-700 rounded-md p-3 cursor-pointer mb-2 w-full">
+                    {/* <div className="flex justify-center items-center bg-teal-600 hover:bg-teal-700 rounded-md p-3 cursor-pointer mb-2 w-full">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                         <Button
                             type="button"
                             text="Return Home"
                             classNames="text-white font-semibold text-md ml-2 select-none cursor-pointer"
                         />
-                    </div>
+                    </div> */}
                 </div>
 
             </div>

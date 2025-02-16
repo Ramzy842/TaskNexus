@@ -8,18 +8,25 @@ const DashboardLayout = ({ children }) => {
 		<div className="grid grid-rows-[auto_1fr] max-h-screen h-screen overflow-hidden bg-[#E3EAE9] p-4">
 			<div className="max-w-6xl m-auto w-full">
 				<div className=" w-full flex justify-between items-center mb-4">
-					<div className={`flex items-center bg-linear-to-r ${formIsOpen ? 'from-teal-900 to-gray-500' : 'from-teal-900 to-teal-700'}  rounded-md p-3 cursor-pointer`} onClick={() => setFormIsOpen(true)}>
+					{window.location.pathname === '/' ? <div className={`flex items-center bg-linear-to-r ${formIsOpen ? 'from-teal-900 to-gray-500' : 'from-teal-900 to-teal-700'}  rounded-md p-3 cursor-pointer`} onClick={() => setFormIsOpen(true)}>
 						<Button
 							type="button"
 							text="Add task"
 							classNames={`${formIsOpen ? 'text-gray-300' : 'text-white'} font-semibold text-base mr-2 select-none cursor-pointer`}
 							disabled={formIsOpen ? true : false}
 						/>
-						<svg width="24" height="24" className={`${formIsOpen ? 'stroke-gray-300' : 'stroke-white' }`} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<svg width="24" height="24" className={`${formIsOpen ? 'stroke-gray-300' : 'stroke-white'}`} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path d="M12 5V19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
 							<path d="M5 12H19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
 						</svg>
-					</div>
+					</div> : <div className="flex justify-center items-center bg-teal-600 hover:bg-teal-700 rounded-md p-3 cursor-pointer mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        <Button
+                            type="button"
+                            text="Return Home"
+                            classNames="text-white font-semibold text-md ml-2 select-none cursor-pointer"
+                        />
+                    </div>}
 					<div className="flex items-center">
 						<h1 className="hidden sm:flex mr-4 font-semibold text-[#0A2D29]">ParadoxStyx</h1>
 						<div className="w-12 bg-teal-800 rounded-3xl h-12"></div>
@@ -35,7 +42,7 @@ const DashboardLayout = ({ children }) => {
 						<Button text="Log out" classNames="text-lg select-none cursor-pointer" />
 					</div>
 				</div>
-				{formIsOpen && <TaskCreate setFormIsOpen={setFormIsOpen} /> } 
+				{formIsOpen && <TaskCreate setFormIsOpen={setFormIsOpen} />}
 			</div>
 			<div className="max-w-6xl mx-auto w-full">{children}</div>
 		</div>
