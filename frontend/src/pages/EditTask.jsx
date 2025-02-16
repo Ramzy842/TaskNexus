@@ -2,8 +2,11 @@ import { useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout"
 import TaskInput from "../components/TaskInput";
 import Button from "../components/Button";
+import { useParams } from "react-router";
 
 const EditTask = ({ task }) => {
+    let params = useParams();
+    console.log(params.id);
     const [title, setTitle] = useState(task.title);
     const [description, setDescription] = useState(task.description)
     const [dueDate, setDueDate] = useState(task.dueDate);

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Button from "../components/Button";
 import TaskCreate from "../components/TaskCreate";
+import { NavLink } from "react-router";
 
 const DashboardLayout = ({ children }) => {
 	const [formIsOpen, setFormIsOpen] = useState(false)
@@ -19,14 +20,14 @@ const DashboardLayout = ({ children }) => {
 							<path d="M12 5V19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
 							<path d="M5 12H19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
 						</svg>
-					</div> : <div className="flex justify-center items-center bg-teal-600 hover:bg-teal-700 rounded-md p-3 cursor-pointer mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                        <Button
-                            type="button"
-                            text="Return Home"
-                            classNames="text-white font-semibold text-md ml-2 select-none cursor-pointer"
-                        />
-                    </div>}
+					</div> : <NavLink to='/'><div className="flex justify-center items-center bg-teal-600 hover:bg-teal-700 rounded-md p-3 cursor-pointer mb-2">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+						<Button
+							type="button"
+							text="Return Home"
+							classNames="text-white font-semibold text-md ml-2 select-none cursor-pointer"
+						/>
+					</div></NavLink>}
 					<div className="flex items-center">
 						<h1 className="hidden sm:flex mr-4 font-semibold text-[#0A2D29]">ParadoxStyx</h1>
 						<div className="w-12 bg-teal-800 rounded-3xl h-12"></div>
