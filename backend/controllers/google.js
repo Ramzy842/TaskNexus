@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { OAuth2Client } = require("google-auth-library");
 const User = require("../models/User");
 const { google, PORT } = require("../utils/config");
+const { generateAccessToken, generateRefreshToken } = require("../utils/users");
 
 const oauth2Client = new OAuth2Client(
     google.Client_ID,
@@ -19,7 +20,7 @@ googleRouter.get("/", (req, res) => {
     res.redirect(authUrl);
 });
 
-googleRouter.get("/callback", async (req, res) => {
+googleRouter.get("/callback", async (req, res, next) => {
     try {
         const { code } = req.query;
         const { tokens } = await oauth2Client.getToken(code);
@@ -40,16 +41,28 @@ googleRouter.get("/callback", async (req, res) => {
             });
             await user.save();
         }
-        const token = jwt.sign({ id: user.id }, process.env.ACCESS_SECRET, {
-            expiresIn: 60 * 60,
+        const userForToken = {
+            username: user.username,
+            email: user.email,
+            id: user._id.toString(),
+        };
+        const accessToken = generateAccessToken(userForToken);
+        const refreshToken = generateRefreshToken(userForToken);
+        user.refreshToken = refreshToken;
+        await user.save();
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict",
         });
         res.status(200).json({
             success: true,
             statusCode: 200,
             data: {
-                token,
+                token: accessToken,
+                refreshToken: user.refreshToken,
                 user: {
-                    id: user.id,
+                    id: user._id.toString(),
                     username: user.username,
                     email: user.email,
                     name: user.name,
@@ -60,11 +73,7 @@ googleRouter.get("/callback", async (req, res) => {
             },
         });
     } catch (err) {
-        return res.status(500).json({
-            success: false,
-            statusCode: 500,
-            error: "Something went wrong.",
-        });
+        next(err)
     }
 });
 
