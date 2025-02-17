@@ -8,7 +8,7 @@ const api = axios.create({
 api.interceptors.request.use(
     (config) => {
         const accessToken = localStorage.getItem("accessToken");
-        if (accessToken && (config.url.startsWith("/tasks") || config.url.startsWith("/users"))) {
+        if (accessToken && (config.url.startsWith("/tasks") || config.url.startsWith("/users") || config.url.startsWith("/auth/logout"))) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         }
         return config;
@@ -34,6 +34,7 @@ api.interceptors.response.use(response => response, async (error) => {
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             return api(req);
         } catch (refreshError) {
+            console.log("Refresh Error: ", refreshError);
             console.error("Refresh token expired. Logging out...");
             localStorage.removeItem("accessToken");
             window.location.href = "/login";

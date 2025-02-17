@@ -2,6 +2,7 @@ import { useState } from "react";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import AuthLayout from "../layouts/AuthLayout";
+import { NavLink } from "react-router";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ const Login = () => {
                     label="Email"
                     type="text"
                     placeholder=""
-                    classNames="bg-white text-black px-2 py-1 block rounded-sm text-xl mb-4 w-full text-sm"
+                    classNames="bg-white text-black px-2 py-1 block rounded-sm text-xl mb-4 w-full text-sm outline-none border-b border-transparent focus:border-teal-400"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
@@ -26,7 +27,7 @@ const Login = () => {
                         label="Password"
                         type="password"
                         placeholder=""
-                        classNames="bg-white text-black px-2 pr-12 py-1 block rounded-sm text-xl w-full text-sm flex-1"
+                        classNames="bg-white text-black px-2 pr-12 py-1 block rounded-sm text-xl w-full text-sm flex-1 outline-none border-b border-transparent focus:border-teal-400"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
@@ -43,10 +44,10 @@ const Login = () => {
                 />
                 <div className="flex flex-col items-center">
                     <p className="font-normal bg-[#E3EAE9] z-2 text-[#124242] text-sm my-4 text-center px-2">Or continue with</p>
-                    <div className="h-[1px] bg-teal-900 w-full relative bottom-6"></div>
+                    <div className="h-[1.5px] bg-teal-800 w-full relative bottom-6.5"></div>
                 </div>
 
-                <div className="border border-[#124242] w-full py-2 px-4 hover:bg-white group rounded-sm flex justify-center items-center cursor-pointer">
+                <div className="border border-[#124242] w-full py-2 px-4 hover:bg-white group rounded-sm flex justify-center items-center cursor-pointer mb-5">
                     <img src="./src/assets/google.svg" alt="google login" />
                     <Button
                         type="button"
@@ -54,7 +55,7 @@ const Login = () => {
                         classNames=" bg-transparent text-[#124242] group-hover:cursor-pointer w-full h-full bg-red-400 text-center font-medium text-sm "
                     />
                 </div>
-
+                <p className=" w-full text-sm text-center">Don't have an account? <NavLink className='text-teal-700 font-medium' to="/signup">Signup</NavLink></p>
             </form>
         </AuthLayout>
     );
