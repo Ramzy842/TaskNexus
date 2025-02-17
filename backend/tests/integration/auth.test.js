@@ -82,7 +82,7 @@ test("Returns 200 with a valid JWT and user data if user logs in successfully", 
 
 // Refresh Token tests
 
-describe("POST /api/auth/login/refresh", () => {
+describe("POST /api/auth/refresh", () => {
     let loggedUser = null;
     beforeEach(async () => {
         loggedUser = await api.post("/api/auth/login").send({
@@ -92,14 +92,14 @@ describe("POST /api/auth/login/refresh", () => {
     });
     test("Returns status 200 and access token when a valid refresh token is provided", async () => {
         let res = await api
-            .post("/api/auth/login/refresh")
+            .post("/api/auth/refresh")
             .set("Cookie", `refreshToken=${loggedUser.body.data.refreshToken}`);
         expect(res.status).toBe(200);
         expect(res.body.success).toBeTruthy();
         expect(res.body).toHaveProperty("accessToken");
     });
     test("Returns status 401 and 'Missing refresh token.' when a refresh token is missing", async () => {
-        let res = await api.post("/api/auth/login/refresh");
+        let res = await api.post("/api/auth/refresh");
         expect(res.status).toBe(401);
         expect(res.body.success).toBeFalsy();
         expect(res.body).toHaveProperty("message", "Missing refresh token.");
@@ -123,7 +123,7 @@ describe("POST /api/auth/login/refresh", () => {
         user.refreshToken = expiredToken;
         await user.save();
         let res = await api
-            .post("/api/auth/login/refresh")
+            .post("/api/auth/refresh")
             .set("Cookie", `refreshToken=${expiredToken}`);
         expect(res.status).toBe(401);
         expect(res.body.success).toBeFalsy();
@@ -135,7 +135,7 @@ describe("POST /api/auth/login/refresh", () => {
             .set("Authorization", `Bearer ${loggedUser.body.data.token}`)
             .set("Cookie", `refreshToken=${loggedUser.body.data.refreshToken}`);
         let test = await api
-            .post("/api/auth/login/refresh")
+            .post("/api/auth/refresh")
             .set("Cookie", `refreshToken=${loggedUser.body.data.refreshToken}`);
         expect(test.status).toBe(403);
         expect(test.body.success).toBeFalsy();

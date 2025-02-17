@@ -16,7 +16,7 @@ app.use(logger);
 
 // Rate limiting
 app.use('/api/auth/login', limiter.login);
-app.use('/api/auth/login/refresh', limiter.refresh);
+app.use('/api/auth/refresh', limiter.refresh);
 app.use('/api/auth/logout', limiter.logout);
 app.use('/api/users/', limiter.users);
 app.use('/api/tasks/', limiter.tasks);
