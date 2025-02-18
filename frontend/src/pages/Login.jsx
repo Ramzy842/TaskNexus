@@ -16,14 +16,11 @@ const Login = () => {
     const handleLogin = async () => {
         try {
             const res = await login(email, password);
-            console.log(res);
-            if (res.errors)
-            {
+            if (res.errors) {
                 setMessage(null);
                 handleErrors(res.errors)
             }
-            if (res.message)
-            {
+            if (res.message) {
                 setEmailErrors(null);
                 setPasswordErrors(null)
                 setMessage(res.message);
@@ -40,21 +37,19 @@ const Login = () => {
     }
 
     const handleErrors = (errors) => {
-        let emailErrorsArr = errors.filter(error => error.toLowerCase().includes("email"))
-        let passwordErrorsArr = errors.filter(error => error.toLowerCase().includes("password"))
-        console.log("Email errors: ", emailErrorsArr);
-        console.log("Password errors: ", passwordErrorsArr);
-        setEmailErrors(emailErrorsArr.length ? emailErrorsArr : null );
+        let emailErrorsArr = errors.filter(error => /\bemail\b/i.test(error))
+        let passwordErrorsArr = errors.filter(error => /\bpassword\b/i.test(error))
+        setEmailErrors(emailErrorsArr.length ? emailErrorsArr : null);
         setPasswordErrors(passwordErrorsArr.length ? passwordErrorsArr : null)
     }
-    
+
     return (
         <AuthLayout>
             <form action="#" className="flex flex-col w-4/5 sm:max-w-xs sm:w-full">
                 <h1 className="font-semibold text-4xl self-start text-[#0A2D29] mb-4 self-start py-2">
                     Log in
                 </h1>
-                {message && <p className="text-xs bg-red-200 text-red-700 py-1 px-2 mb-2 rounded-xs">
+                {message && <p className="text-xs md:text-sm bg-red-200 text-red-700 py-1 px-2 mb-2 rounded-xs">
                     {message}
                 </p>}
                 <Input
@@ -65,11 +60,14 @@ const Login = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                {emailErrors && <div className="text-xs bg-red-200 text-red-700 py-1 px-2 mb-2 rounded-xs">
-                    {emailErrors.map((error, index) =>
-                        <p key={index} className="">{error}</p>
-                    )}</div>}
-
+                {emailErrors && <div className="text-xs bg-red-200 text-red-700 py-1 px-2 mb-2 rounded-xs relative flex flex-col">
+                    <span className="self-end bg-red-500 text-white rounded-sm px-1 font-bold text-xs ">{emailErrors.length}</span>
+                    <div>
+                        {emailErrors.map((error, index) =>
+                            <p key={index} className="">- {error}</p>
+                        )}
+                    </div>
+                </div>}
                 <div className="mb-3 relative">
                     <Input
                         label="Password"
@@ -79,12 +77,15 @@ const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <img onClick={() => setShowPassword(!showPassword)} src={ showPassword ? "./src/assets/show.svg" : "./src/assets/hide.svg"} className="absolute bottom-1.5 h-6 right-1.5 cursor-pointer z-2 bg-white " alt="hide/show password" />
+                    <img onClick={() => setShowPassword(!showPassword)} src={showPassword ? "./src/assets/show.svg" : "./src/assets/hide.svg"} className="absolute bottom-1.5 h-6 right-1.5 cursor-pointer z-2 bg-white " alt="hide/show password" />
                 </div>
-                {passwordErrors && <div className="text-xs bg-red-200 text-red-700 py-1 px-2 mb-2 rounded-xs">
-                    {passwordErrors.map((error, index) =>
-                        <p key={index} className="">{error}</p>
-                    )}</div>}
+                {passwordErrors && <div className="text-xs bg-red-200 text-red-700 py-1 px-2 mb-2 rounded-xs relative flex flex-col">
+                        <span className="self-end bg-red-500 text-white rounded-sm px-1 font-bold text-xs ">{passwordErrors.length}</span>
+                        <div>{passwordErrors.map((error, index) =>
+                            <p key={index} className="">- {error}</p>
+                        )}</div>
+                    </div>
+                }
                 <p className="w-full text-end text-xs mb-4 font-normal cursor-pointer">
                     Forgot your password?
                 </p>
