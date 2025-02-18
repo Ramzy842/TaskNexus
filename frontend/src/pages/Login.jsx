@@ -2,18 +2,20 @@ import { useState } from "react";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import AuthLayout from "../layouts/AuthLayout";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import {login} from "../services/auth"
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [userData, setUserData] = useState({})
+    const navigate = useNavigate()
     const handleLogin = async () => {
         try {
             const res = await login(email, password);
             console.log(res);
             localStorage.setItem("accessToken", res.data.token)
             setUserData(res.data.user)
+            navigate("/");
         }
         catch (error)
         {
