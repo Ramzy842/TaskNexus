@@ -4,22 +4,17 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import "./styles/globals.css";
-import AuthLayout from "./layouts/AuthLayout";
-import { useEffect } from "react";
+
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-    const navigate = useNavigate()
-    useEffect(() => {
-        const accessToken = localStorage.getItem("accessToken");
-        if (!accessToken)
-            navigate("/login")
-    }, [])
+    const task = { id: 1, title: "Random Task", description: "Do something", status: "In Progress", dueDate: "07-06-2000" }
     return (
         <Routes>
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
-            <Route index element={ < Home />} />
-            <Route path="tasks/:id/edit" element={<EditTask task={{ id: 1, title: "Random Task", description: "Do something", status: "In Progress", dueDate: "07-06-2000" }} />} />
+            <Route element={<ProtectedRoute element={<Home />} />} index />
+            <Route path="tasks/:id/edit" element={<ProtectedRoute element={<EditTask task={task} />} />} />
             <Route path="*" element={<div className="text-2xl md:text-4xl lg:text-6xl font-bold flex items-center justify-center h-screen w-full bg-teal-500">Page not found - 404</div>} />
         </Routes>
     );

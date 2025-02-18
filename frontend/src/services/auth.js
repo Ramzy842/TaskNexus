@@ -5,8 +5,7 @@ const signup = async (username, email, name, password) => {
         const res = await api.post(`/users`, { username, email, name, password });
         return res.data;
     } catch (error) {
-        console.log("Error in signup: ", error);
-        throw error;
+        return error.response.data;
     }
 }
 
@@ -15,8 +14,7 @@ const login = async (email, password) => {
         const res = await api.post(`/auth/login`, { email, password });
         return res.data;
     } catch (error) {
-        console.error("Error in login: ", error);
-        throw error;
+        return error.response.data;
     }
 }
 
@@ -25,8 +23,7 @@ const logout = async () => {
         const res = await api.post(`/auth/logout`);
         return res.data;
     } catch (error) {
-        console.error("Error in logout: ", error);
-        throw error;
+        return error.response.data;
     }
 }
 
@@ -35,9 +32,8 @@ const getRefreshToken =  async () => {
         const res = await api.post(`/auth/refresh`);
         return res.data;
     } catch (error) {
-        console.error("Error in refreshToken: ", error);
-        throw error;
+        return error.response.data;
     }
 }
 
-export default { signup, login, logout, getRefreshToken }
+export { signup, login, logout, getRefreshToken }

@@ -3,14 +3,27 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import AuthLayout from "../layouts/AuthLayout";
 import { NavLink } from "react-router";
-
+import {login} from "../services/auth"
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [userData, setUserData] = useState({})
+    const handleLogin = async () => {
+        try {
+            const res = await login(email, password);
+            console.log(res);
+            localStorage.setItem("accessToken", res.data.token)
+            setUserData(res.data.user)
+        }
+        catch (error)
+        {
+            console.error("Login failed:", error.response?.data || error.message);
+        }
+    }
 
     return (
         <AuthLayout>
-            <form action="#" className="flex flex-col md:max-w-xs md:w-full">
+            <form action="#" className="flex flex-col w-4/5 sm:max-w-xs sm:w-full">
                 <h1 className="font-semibold text-4xl self-start text-[#0A2D29] mb-4 self-start py-2">
                     Log in
                 </h1>
@@ -18,7 +31,7 @@ const Login = () => {
                     label="Email"
                     type="text"
                     placeholder=""
-                    classNames="bg-white text-black px-2 py-1 block rounded-sm text-xl mb-4 w-full text-sm outline-none border-b border-transparent focus:border-teal-400"
+                    classNames="bg-white text-black p-2 block rounded-sm mb-4 w-full text-sm outline-none border-b border-transparent focus:border-teal-400"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
@@ -27,7 +40,7 @@ const Login = () => {
                         label="Password"
                         type="password"
                         placeholder=""
-                        classNames="bg-white text-black px-2 pr-12 py-1 block rounded-sm text-xl w-full text-sm flex-1 outline-none border-b border-transparent focus:border-teal-400"
+                        classNames="bg-white text-black  pr-12 p-2 block rounded-sm  w-full text-sm flex-1 outline-none border-b border-transparent focus:border-teal-400"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
@@ -38,6 +51,7 @@ const Login = () => {
                     Forgot your password?
                 </p>
                 <Button
+                    onClick={handleLogin}
                     type="button"
                     text="Log in"
                     classNames="text-white bg-[#124242] w-full py-2 rounded-sm cursor-pointer font-medium text-base hover:bg-teal-900"

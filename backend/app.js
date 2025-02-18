@@ -1,6 +1,11 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const corsOptions = {
+    origin: 'http://localhost:5173', // The frontend origin
+    credentials: true, // Allow sending credentials (cookies, etc.)
+};
+app.use(cors(corsOptions));
 const cookieParser = require("cookie-parser");
 const { unknownEndpoint, logger, errorHandler } = require("./utils/middleware");
 const { limiter } = require("./utils/config");
@@ -11,15 +16,14 @@ const authRouter = require("./controllers/auth");
 
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors());
 app.use(logger);
 
 // Rate limiting
-app.use('/api/auth/login', limiter.login);
-app.use('/api/auth/refresh', limiter.refresh);
-app.use('/api/auth/logout', limiter.logout);
-app.use('/api/users/', limiter.users);
-app.use('/api/tasks/', limiter.tasks);
+// app.use('/api/auth/login', limiter.login);
+// app.use('/api/auth/refresh', limiter.refresh);
+// app.use('/api/auth/logout', limiter.logout);
+// app.use('/api/users/', limiter.users);
+// app.use('/api/tasks/', limiter.tasks);
 
 // Routers
 app.use("/api/tasks/", tasksRouter);
