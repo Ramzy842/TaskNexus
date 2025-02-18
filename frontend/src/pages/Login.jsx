@@ -1,34 +1,62 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import AuthLayout from "../layouts/AuthLayout";
 import { NavLink, useNavigate } from "react-router";
-import {login} from "../services/auth"
+import { login } from "../services/auth"
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [emailErrors, setEmailErrors] = useState(null)
+    const [passwordErrors, setPasswordErrors] = useState(null)
+    const [message, setMessage] = useState(null)
     const [userData, setUserData] = useState({})
+    const [showPassword, setShowPassword] = useState(false)
     const navigate = useNavigate()
     const handleLogin = async () => {
         try {
             const res = await login(email, password);
             console.log(res);
-            localStorage.setItem("accessToken", res.data.token)
-            setUserData(res.data.user)
-            navigate("/");
+            if (res.errors)
+            {
+                setMessage(null);
+                handleErrors(res.errors)
+            }
+            if (res.message)
+            {
+                setEmailErrors(null);
+                setPasswordErrors(null)
+                setMessage(res.message);
+            }
+            else if (res.data) {
+                localStorage.setItem("accessToken", res.data.token)
+                setUserData(res.data.user)
+                navigate("/");
+            }
         }
-        catch (error)
-        {
+        catch (error) {
             console.error("Login failed:", error.response?.data || error.message);
         }
     }
 
+    const handleErrors = (errors) => {
+        let emailErrorsArr = errors.filter(error => error.toLowerCase().includes("email"))
+        let passwordErrorsArr = errors.filter(error => error.toLowerCase().includes("password"))
+        console.log("Email errors: ", emailErrorsArr);
+        console.log("Password errors: ", passwordErrorsArr);
+        setEmailErrors(emailErrorsArr.length ? emailErrorsArr : null );
+        setPasswordErrors(passwordErrorsArr.length ? passwordErrorsArr : null)
+    }
+    
     return (
         <AuthLayout>
             <form action="#" className="flex flex-col w-4/5 sm:max-w-xs sm:w-full">
                 <h1 className="font-semibold text-4xl self-start text-[#0A2D29] mb-4 self-start py-2">
                     Log in
                 </h1>
+                {message && <p className="text-xs bg-red-200 text-red-700 py-1 px-2 mb-2 rounded-xs">
+                    {message}
+                </p>}
                 <Input
                     label="Email"
                     type="text"
@@ -37,18 +65,26 @@ const Login = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
+                {emailErrors && <div className="text-xs bg-red-200 text-red-700 py-1 px-2 mb-2 rounded-xs">
+                    {emailErrors.map((error, index) =>
+                        <p key={index} className="">{error}</p>
+                    )}</div>}
+
                 <div className="mb-3 relative">
                     <Input
                         label="Password"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         placeholder=""
                         classNames="bg-white text-black  pr-12 p-2 block rounded-sm  w-full text-sm flex-1 outline-none border-b border-transparent focus:border-teal-400"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <img src="./src/assets/eye.svg" className="absolute bottom-1.5 h-6 right-1.5 cursor-pointer z-2 bg-white " alt="hide/show password" />
+                    <img onClick={() => setShowPassword(!showPassword)} src={ showPassword ? "./src/assets/show.svg" : "./src/assets/hide.svg"} className="absolute bottom-1.5 h-6 right-1.5 cursor-pointer z-2 bg-white " alt="hide/show password" />
                 </div>
-
+                {passwordErrors && <div className="text-xs bg-red-200 text-red-700 py-1 px-2 mb-2 rounded-xs">
+                    {passwordErrors.map((error, index) =>
+                        <p key={index} className="">{error}</p>
+                    )}</div>}
                 <p className="w-full text-end text-xs mb-4 font-normal cursor-pointer">
                     Forgot your password?
                 </p>

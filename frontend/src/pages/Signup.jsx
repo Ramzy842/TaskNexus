@@ -9,6 +9,7 @@ const Signup = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false)
     return (
         <AuthLayout>
             <form action="#" className="flex flex-col w-4/5 sm:max-w-xs sm:w-full">
@@ -42,13 +43,13 @@ const Signup = () => {
                 <div className="relative mb-4">
                     <Input
                         label="Password"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         placeholder=""
                         classNames="bg-white text-black p-2 rounded-sm text-sm pr-12 border-b border-transparent focus:border-teal-400"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <img src="./src/assets/eye.svg" className="absolute bottom-1.5 h-6 right-1.5 cursor-pointer z-2 " alt="hide/show password" />
+                   <img onClick={() => setShowPassword(!showPassword)} src={ showPassword ? "./src/assets/show.svg" : "./src/assets/hide.svg"} className="absolute bottom-1.5 h-6 right-1.5 cursor-pointer z-2 bg-white " alt="hide/show password" />
                 </div>
 
                 <Button
