@@ -4,6 +4,7 @@ import Input from "../components/Input";
 import AuthLayout from "../layouts/AuthLayout";
 import { NavLink, useNavigate } from "react-router";
 import { login } from "../services/auth"
+import { useDispatch } from "react-redux";
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -13,6 +14,7 @@ const Login = () => {
     const [userData, setUserData] = useState({})
     const [showPassword, setShowPassword] = useState(false)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const handleLogin = async () => {
         try {
             const res = await login(email, password);
@@ -28,6 +30,7 @@ const Login = () => {
             else if (res.data) {
                 localStorage.setItem("accessToken", res.data.token)
                 setUserData(res.data.user)
+                dispatch({type: 'GET_USER', payload: res.data.user})
                 navigate("/");
             }
         }

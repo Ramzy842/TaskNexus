@@ -3,10 +3,12 @@ import Button from "../components/Button";
 import TaskCreate from "../components/TaskCreate";
 import { NavLink, useNavigate } from "react-router";
 import { logout } from "../services/auth";
+import { useSelector } from "react-redux";
 
 const DashboardLayout = ({ children }) => {
 	const [formIsOpen, setFormIsOpen] = useState(false)
 	const navigate = useNavigate()
+	const name = useSelector(state => state.user.name)
 	const handleLogout = async () => {
 		try {
 			await logout();
@@ -40,7 +42,7 @@ const DashboardLayout = ({ children }) => {
 						/>
 					</div></NavLink>}
 					<div className="flex items-center">
-						<h1 className="hidden sm:flex mr-4 font-semibold text-[#0A2D29]">ParadoxStyx</h1>
+						<h1 className="hidden sm:flex mr-4 font-semibold text-[#0A2D29]">{name}</h1>
 						<div className="w-12 bg-teal-800 rounded-3xl h-12"></div>
 					</div>
 				</div>
@@ -56,7 +58,7 @@ const DashboardLayout = ({ children }) => {
 				</div>
 				{formIsOpen && <TaskCreate setFormIsOpen={setFormIsOpen} />}
 			</div>
-			<div className="max-w-6xl mx-auto w-full">{children}</div>
+			<div className="max-w-6xl h-4/5 max-h-4/5 overflow-y-auto mx-auto w-full">{children}</div>
 		</div>
 	);
 };
