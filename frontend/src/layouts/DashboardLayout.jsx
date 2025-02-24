@@ -11,6 +11,7 @@ const DashboardLayout = ({ children }) => {
 		try {
 			await logout();
 			localStorage.removeItem("accessToken");
+			localStorage.removeItem("id")
 			navigate("/login")
 		} catch (error) {
 			console.error(error);
