@@ -11,18 +11,10 @@ import { getUserData } from "../redux/actions/userActions";
 const Home = () => {
   const tasks = useSelector((state) => state.tasks.tasks);
   const loading = useSelector((state) => state.tasks.loading);
-  const user = useSelector(state => state.user.user);
+  
   const dispatch = useDispatch();
-  useEffect(() => {
-    if (!tasks.length) dispatch(getTasks());
-  }, [tasks]);
-  useEffect(() => {
-    
-        const id = localStorage.getItem("id");
-        console.log(id);
-        dispatch(getUserData(id))
-    
-  }, [])
+  
+  
   return (
     <DashboardLayout>
       <div className="flex items-center mb-2">

@@ -3,6 +3,7 @@ import {
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
+  RESET_AUTH,
 } from "../types/authTypes";
 import { login } from "../../services/auth";
 
@@ -29,6 +30,12 @@ const loginFailure = (res) => {
   };
 };
 
+const resetAuth = (res) => {
+  return {
+    type: RESET_AUTH
+  }
+}
+
 const loginUser = (email, password) => {
   return async (dispatch) => {
     dispatch(loginRequest());
@@ -42,19 +49,21 @@ const loginUser = (email, password) => {
       } else if (res.data) {
         localStorage.setItem("accessToken", res.data.token);
         localStorage.setItem("id", res.data.user.id)
+        localStorage.setItem("username", res.data.user.username)
         dispatch(loginSuccess(res.data.user));
       }
     } catch (error) {
+      console.log(error);
       dispatch(
         loginFailure({
-          message: error.response?.data?.message || "Login failed",
-          errors: null,
+          message: null,
+          errors: error.response.data.error,
         })
       );
     }
   };
 };
 
-export { loginSuccess, loginRequest, loginFailure };
+export { loginSuccess, loginRequest, loginFailure, resetAuth };
 
 export default loginUser;

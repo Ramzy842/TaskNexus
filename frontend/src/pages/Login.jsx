@@ -47,7 +47,7 @@ const Login = () => {
           Log in
         </h1>
         {message && (
-          <p className="text-xs md:text-sm bg-red-200 text-red-700 py-1 px-2 mb-2 rounded-xs">
+          <p className="text-xs bg-red-200 text-red-700 p-2 mb-2 rounded-xs">
             {message}
           </p>
         )}

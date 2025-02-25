@@ -8,19 +8,12 @@ import { getTaskData } from "../redux/actions/taskActions";
 
 const EditTask = () => {
     let params = useParams();
-    console.log(params);
-    // const [title, setTitle] = useState(task.title);
-    // const [description, setDescription] = useState(task.description)
-    // const [dueDate, setDueDate] = useState(task.dueDate);
-    // const [status, setStatus] = useState(task.status)
     const [taskDetails, setTaskDetails] = useState([])
     const dispatch = useDispatch();
     const task = useSelector(state => state.tasks.task);
-    console.log(task);
     useEffect(() => {
         const id = params.id;
         dispatch(getTaskData(id));
-        console.log(task);
     }, [])
     useEffect(() => {
         if (task)

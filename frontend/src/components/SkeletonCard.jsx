@@ -7,9 +7,9 @@ const SkeletonCard = () => {
     >
       <div>
         <p
-          className={`sm:hidden select-none mb-0.5 font-medium px-2 py-1 rounded-sm text-xs bg-gray-300 h-5 w-24`}
+          className={`sm:hidden select-none mb-0.5 font-medium px-2 py-1 rounded-sm text-xs bg-gray-300 h-5 w-12 sm:w-24`}
         ></p>
-        <p className={`text-sm truncate bg-gray-400 h-6 w-48 rounded-sm`}></p>
+        <p className={`text-sm truncate bg-gray-400 h-6 w-24 sm:w-48 rounded-sm`}></p>
       </div>
       <div className="flex items-center justify-center ">
         <p
