@@ -10,9 +10,9 @@ import logger from "redux-logger";
 import rootReducer from "./redux/rootReducer.js";
 
 export const store = createStore(rootReducer, applyMiddleware(logger, thunk));
-store.subscribe(() => {
-  console.log(store.getState());
-});
+// store.subscribe(() => {
+//   console.log(store.getState());
+// });
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <BrowserRouter>

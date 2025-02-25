@@ -18,9 +18,9 @@ const StatusSelection = ({handler}) => {
     }])
     const [selected, setSelected] = useState(statuses[0])
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    useEffect(() => {
-        handler(selected.status);
-    }, [selected])
+    // useEffect(() => {
+    //     handler(selected.status);
+    // }, [selected])
     return <div>
         <button onClick={() => setIsMenuOpen(!isMenuOpen)} type="button" className={`cursor-pointer ${selected.styles} px-2 py-1 rounded-sm text-xs font-medium border`}>{selected.status}</button>
         {isMenuOpen && <div className="flex flex-col absolute">

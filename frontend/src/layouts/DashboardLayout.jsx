@@ -7,6 +7,8 @@ import { logout } from "../services/auth";
 const DashboardLayout = ({ children }) => {
 	const [formIsOpen, setFormIsOpen] = useState(false)
 	const navigate = useNavigate()
+	
+
 	const handleLogout = async () => {
 		try {
 			await logout();

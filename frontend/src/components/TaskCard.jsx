@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 
 const TaskCard = ({ setTitle,id, title, status }) => {
 	return <div className={`border-b bg-white  w-full rounded-sm flex justify-between items-center py-2 px-4 mb-1 shadow-[0_0_8px_-2px_rgba(0,200,100,0.25)] border-transparent`}>
-		<div>
+		<div className="flex flex-col items-start">
 			<p className={`sm:hidden select-none mb-0.5 font-medium ${status === "Completed" ? 'bg-green-100 text-green-700' : status === "In Progress" ? "bg-blue-100 text-blue-700" : "bg-yellow-100 text-yellow-700"} px-2 py-1 rounded-sm text-xs`}>{status}</p>
 			<p className={`text-sm truncate`}>{title}</p>
 		</div>

@@ -1,29 +1,46 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout"
 import TaskInput from "../components/TaskInput";
 import Button from "../components/Button";
 import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { getTaskData } from "../redux/actions/taskActions";
 
-const EditTask = ({ task }) => {
+const EditTask = () => {
     let params = useParams();
-    console.log(params.id);
-    const [title, setTitle] = useState(task.title);
-    const [description, setDescription] = useState(task.description)
-    const [dueDate, setDueDate] = useState(task.dueDate);
-    const [status, setStatus] = useState(task.status)
-    const [taskDetails, setTaskDetails] = useState([
-        { id: 0, placeholder: "Set title", iconSrc: "/src/assets/title.svg", type: "text", value: title, handler: setTitle },
-        { id: 1, placeholder: "Set description", iconSrc: "/src/assets/description.svg", type: "text", value: description, handler: setDescription },
-        { id: 2, placeholder: "Set due date", iconSrc: "/src/assets/duedate.svg", type: "date", value: dueDate, handler: setDueDate },
-        { id: 3, placeholder: "Set status", iconSrc: "/src/assets/status.svg", type: "select", value: status, handler: setStatus },
-    ])
+    console.log(params);
+    // const [title, setTitle] = useState(task.title);
+    // const [description, setDescription] = useState(task.description)
+    // const [dueDate, setDueDate] = useState(task.dueDate);
+    // const [status, setStatus] = useState(task.status)
+    const [taskDetails, setTaskDetails] = useState([])
+    const dispatch = useDispatch();
+    const task = useSelector(state => state.tasks.task);
+    console.log(task);
+    useEffect(() => {
+        const id = params.id;
+        dispatch(getTaskData(id));
+        console.log(task);
+    }, [])
+    useEffect(() => {
+        if (task)
+        {
+            setTaskDetails([
+                { id: 0, placeholder: "Set title", iconSrc: "/src/assets/title.svg", type: "text", value: task.title  },
+                { id: 1, placeholder: "Set description", iconSrc: "/src/assets/description.svg", type: "text", value: task.description,  },
+                { id: 2, placeholder: "Set due date", iconSrc: "/src/assets/duedate.svg", type: "date", value: task.dueDate,  },
+                { id: 3, placeholder: "Set status", iconSrc: "/src/assets/status.svg", type: "select", value: task.status,  },
+            ])
+        }
+        console.log(task);
+    }, [task])
     return (
         <DashboardLayout>
             <div className=" mt-2 sm:flex justify-between items-start gap-x-8">
                 <div className="sm:w-1/2 sm:max-w-1/2 mb-12 sm:mb-0">
                     {taskDetails.map(detail => {
-                        const { id, placeholder, iconSrc, type, value, handler } = detail;
-                        return <TaskInput handler={handler} value={value} key={id} type={type} placeholder={placeholder} iconSrc={iconSrc} classNames="text-[#212121] text-sm font-normal border-b border-transparent focus:border-teal-700 outline-none w-full cursor-pointer bg-white rounded-sm  p-2" />
+                        const { id, placeholder, iconSrc, type, value} = detail;
+                        return <TaskInput value={value} key={id} type={type} placeholder={placeholder} iconSrc={iconSrc} classNames="text-[#212121] text-sm font-normal border-b border-transparent focus:border-teal-700 outline-none w-full cursor-pointer bg-white rounded-sm  p-2" />
                     })}
                 </div>
                 <div className="">

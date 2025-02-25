@@ -11,9 +11,9 @@ const request = async (method, url, payload = null) => {
     }
 }
 
-const create = (payload) => request("post", "/tasks", payload)
-const get = async (id) => request("get", `/tasks/${id}`);
-const update = async (id, payload) => request("put", `/tasks/${id}`, payload);
-const remove = async (id) => request("delete", `/tasks/${id}`)
+const createTask = (payload) => request("post", "/tasks", payload)
+const getTask = async (id) => request("get", `/tasks/${id}`);
+const updateTask = async (id, payload) => request("put", `/tasks/${id}`, payload);
+const removeTask = async (id) => request("delete", `/tasks/${id}`)
 
-export { create, get, remove, update }
+export { createTask, getTask, removeTask, updateTask }
