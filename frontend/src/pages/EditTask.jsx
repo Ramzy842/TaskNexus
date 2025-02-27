@@ -3,7 +3,11 @@ import DashboardLayout from "../layouts/DashboardLayout";
 
 import { useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTaskFailure, getTaskData } from "../redux/actions/taskActions";
+import {
+    deleteTaskFailure,
+    editTask,
+    getTaskData,
+} from "../redux/actions/taskActions";
 import SkeletonEdit from "../components/SkeletonEdit";
 import Button from "../components/Button";
 import TaskInput from "../components/TaskInput";
@@ -62,12 +66,51 @@ const EditTask = () => {
             ]);
         }
     }, [task]);
+    useEffect(() => {
+        console.log(taskDetails);
+    }, [taskDetails]);
     const handleDelete = async () => {
         try {
             await removeTask(id);
             navigate("/");
         } catch (error) {
             dispatch(deleteTaskFailure(error.response.data.message));
+        }
+    };
+    const handleInputChange = (index, newValue) => {
+        setTaskDetails((prevDetails) =>
+            prevDetails.map((detail, i) =>
+                i === index ? { ...detail, value: newValue } : detail
+            )
+        );
+    };
+    const handleStatusChange = (newStatus) => {
+        setTaskDetails((prevDetails) =>
+            prevDetails.map((detail) =>
+                detail.type === "select"
+                    ? { ...detail, value: newStatus }
+                    : detail
+            )
+        );
+    };
+    const handleSave = () => {
+      if (!task)
+        return ;
+        const updatedFields = {};
+        if (taskDetails[0].value !== task.title) {
+            updatedFields.title = taskDetails[0].value;
+        }
+        if (taskDetails[1].value !== task.description) {
+            updatedFields.description = taskDetails[1].value;
+        }
+        if (taskDetails[2].value !== task.dueDate.split("T")[0]) {
+            updatedFields.dueDate = taskDetails[2].value;
+        }
+        if (taskDetails[3].value !== task.status) {
+            updatedFields.status = taskDetails[3].value;
+        }
+        if (Object.keys(updatedFields).length > 0) {
+            dispatch(editTask(id, updatedFields));
         }
     };
     return (
@@ -78,7 +121,7 @@ const EditTask = () => {
                 ) : (
                     <>
                         <div className="sm:w-1/2 sm:max-w-1/2 mb-12 sm:mb-0">
-                            {taskDetails.map((detail) => {
+                            {taskDetails.map((detail, index) => {
                                 const {
                                     id,
                                     placeholder,
@@ -92,7 +135,14 @@ const EditTask = () => {
                                         key={id}
                                         type={type}
                                         placeholder={placeholder}
-                                        handler={() => console.log("Something")}
+                                        onChange={(e) =>
+                                            handleInputChange(
+                                                index,
+                                                e.target.value
+                                            )
+                                        }
+                                        statusHandler={handleStatusChange}
+                                        handler={() => {}}
                                         iconSrc={iconSrc}
                                         classNames="text-[#212121] text-sm font-normal border-b border-transparent focus:border-teal-700 outline-none w-full cursor-pointer bg-white rounded-sm  p-2"
                                     />
@@ -100,7 +150,7 @@ const EditTask = () => {
                             })}
                         </div>
                         <div>
-                            <div className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-md p-3 cursor-pointer mb-2 w-full">
+                            <div onClick={handleSave} className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-md p-3 cursor-pointer mb-2 w-full">
                                 <svg
                                     width="24"
                                     height="24"

@@ -37,7 +37,7 @@ const tasksReducer = (state = initialState, action) => {
                 loading: false,
                 message: null,
                 error: null,
-                task: null,
+                // task: null,
                 tasks: action.payload,
             };
         case GET_TASKS_FAILURE:

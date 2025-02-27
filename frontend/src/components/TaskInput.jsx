@@ -7,6 +7,7 @@ const TaskInput = ({
   type,
   placeholder,
   classNames,
+  statusHandler,
   iconSrc,
   inputName,
   handler,
@@ -30,14 +31,14 @@ const TaskInput = ({
     }
     else
       setInputErrors(null)
-  }, [errors, loading]);
+  }, [errors, loading, target]);
 
   return (
     <div className="flex items-center gap-x-2 mb-2">
       <img src={iconSrc} height={24} width={24} alt={inputName} />
       <div className="w-full">
         {type === "select" ? (
-          <StatusSelection value={value} handler={handler} />
+          <StatusSelection value={value} handler={statusHandler} />
         ) : (
           <input
             value={value}
