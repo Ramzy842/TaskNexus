@@ -23,7 +23,7 @@ const EditTask = () => {
     const navigate = useNavigate();
     const error = useSelector((state) => state.tasks.error);
     useEffect(() => {
-        dispatch(getTaskData(id));
+        dispatch(getTaskData(id));             
     }, [dispatch, id]);
     useEffect(() => {
         if (error) {
@@ -116,7 +116,7 @@ const EditTask = () => {
     return (
         <DashboardLayout>
             <div className=" mt-2 sm:flex justify-between items-start gap-x-8">
-                {loading ? (
+                {loading && !task ? (
                     <SkeletonEdit />
                 ) : (
                     <>
@@ -142,7 +142,7 @@ const EditTask = () => {
                                             )
                                         }
                                         statusHandler={handleStatusChange}
-                                        handler={() => {}}
+                                        
                                         iconSrc={iconSrc}
                                         classNames="text-[#212121] text-sm font-normal border-b border-transparent focus:border-teal-700 outline-none w-full cursor-pointer bg-white rounded-sm  p-2"
                                     />

@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import Button from "../components/Button";
 import { NavLink, useNavigate } from "react-router";
 import { logout } from "../services/auth";
-import { getUserData } from "../redux/actions/userActions";
+import { getUserData, resetUser } from "../redux/actions/userActions";
 import { useDispatch} from "react-redux";
-import { getTasks } from "../redux/actions/taskActions";
+import { getTasks, resetTasks } from "../redux/actions/taskActions";
+import { resetAuth } from "../redux/actions/authActions";
 
 const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
@@ -23,6 +24,9 @@ const DashboardLayout = ({ children }) => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("id");
       localStorage.removeItem("username");
+      dispatch(resetAuth());
+      dispatch(resetTasks());
+      dispatch(resetUser())
       navigate("/login");
     } catch (error) {
       console.error(error);

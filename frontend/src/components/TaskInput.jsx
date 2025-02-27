@@ -10,9 +10,10 @@ const TaskInput = ({
   statusHandler,
   iconSrc,
   inputName,
-  handler,
   value,
   editMode,
+  handler,
+  handleStatusChange,
   ...rest
 }) => {
   const [inputErrors, setInputErrors] = useState(null);
@@ -32,18 +33,17 @@ const TaskInput = ({
     else
       setInputErrors(null)
   }, [errors, loading, target]);
-
   return (
     <div className="flex items-center gap-x-2 mb-2">
       <img src={iconSrc} height={24} width={24} alt={inputName} />
       <div className="w-full">
         {type === "select" ? (
-          <StatusSelection value={value} handler={statusHandler} />
+          <StatusSelection value={value} handler={editMode ? statusHandler : handleStatusChange} />
         ) : (
           <input
             value={value}
-            onChange={handler}
             type={type}
+            onChange={!editMode && handler}
             placeholder={placeholder}
             className={classNames}
             {...rest}

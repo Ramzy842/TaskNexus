@@ -21,8 +21,10 @@ import {
     GET_TASK_FAILURE,
     GET_TASK_REQUEST,
     GET_TASK_SUCCESS,
+    RESET_TASKS,
     RESET_TASK_CREATION,
 } from "../types/taskTypes";
+
 
 const getTasksSuccess = (tasks) => {
     return {
@@ -209,6 +211,13 @@ const editTask = (id, data) => {
     };
 };
 
+const resetTasks = () => {
+    return {
+        type: RESET_TASKS
+    }
+}
+
+
 export {
     getTasks,
     getTaskData,
@@ -216,5 +225,6 @@ export {
     editTask,
     deleteTask,
     resetTaskCreation,
-    deleteTaskFailure
+    deleteTaskFailure,
+    resetTasks
 };

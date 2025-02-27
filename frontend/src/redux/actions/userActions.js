@@ -3,6 +3,7 @@ import {
   GET_USER_FAILURE,
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
+  RESET_USER,
 } from "../types/userTypes";
 
 const getUserSuccess = (user) => {
@@ -36,4 +37,10 @@ const getUserData = (id) => {
   };
 };
 
-export { getUserData };
+const resetUser = () => {
+  return {
+      type: RESET_USER
+  }
+}
+
+export { getUserData, resetUser };

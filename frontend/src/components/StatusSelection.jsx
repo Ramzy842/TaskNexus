@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-const StatusSelection = ({ handler }) => {
+const StatusSelection = ({value, handler,  }) => {
     const statuses = [
         {
             id: 0,
@@ -18,11 +18,9 @@ const StatusSelection = ({ handler }) => {
             styles: "bg-green-100 text-green-700 hover:bg-green-300 px-4",
         },
     ];
-    const [selected, setSelected] = useState(statuses[0]);
+    const status = statuses.find(stat => stat.status === value)
+    const [selected, setSelected] = useState(status);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    useEffect(() => {
-        handler(selected.status);
-    }, [selected]);
     return (
         <div>
             <button
@@ -43,6 +41,7 @@ const StatusSelection = ({ handler }) => {
                                     key={id}
                                     onClick={() => {
                                         setSelected(statuses[id]);
+                                        handler(statuses[id].status)
                                         setIsMenuOpen(false);
                                     }}
                                     type="button"

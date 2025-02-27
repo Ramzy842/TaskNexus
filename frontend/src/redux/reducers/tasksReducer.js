@@ -14,6 +14,7 @@ import {
     GET_TASK_FAILURE,
     GET_TASK_REQUEST,
     GET_TASK_SUCCESS,
+    RESET_TASKS,
     RESET_TASK_CREATION,
 } from "../types/taskTypes";
 
@@ -37,13 +38,23 @@ const tasksReducer = (state = initialState, action) => {
                 loading: false,
                 message: null,
                 error: null,
-                // task: null,
                 tasks: action.payload,
             };
         case GET_TASKS_FAILURE:
-            return { ...state, loading: false, error: action.payload.error, task: null, };
+            return {
+                ...state,
+                loading: false,
+                error: action.payload.error,
+                task: null,
+            };
         case GET_TASK_REQUEST:
-            return { ...state, loading: true, message: null, error: null, task: null, };
+            return {
+                ...state,
+                loading: true,
+                message: null,
+                error: null,
+                task: null,
+            };
         case GET_TASK_SUCCESS:
             return {
                 ...state,
@@ -96,7 +107,7 @@ const tasksReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                task: null
+                task: null,
             };
         case DELETE_TASK_FAILURE:
             return {
@@ -122,6 +133,8 @@ const tasksReducer = (state = initialState, action) => {
                 message: action.payload.message,
                 loading: false,
             };
+        case RESET_TASKS:
+            return initialState
         default:
             return state;
     }
