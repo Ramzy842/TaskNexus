@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <DashboardLayout>
       <div className="flex items-center mb-2">
-        <h1 className="font-medium text-lg mr-2 text-teal-950">My tasks</h1>
+        <h1 className="font-medium text-lg mr-2 text-teal-950 select-none">My tasks</h1>
         <img
           src="./src/assets/layers.svg"
           alt="tasks icon"

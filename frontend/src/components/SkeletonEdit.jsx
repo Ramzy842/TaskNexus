@@ -1,4 +1,4 @@
-import React from "react";
+
 import Button from "./Button";
 
 const SkeletonEdit = () => {
@@ -7,7 +7,7 @@ const SkeletonEdit = () => {
     <>
       <div className="sm:w-1/2 sm:max-w-1/2 mb-12 sm:mb-0 flex flex-col gap-2 animate-pulse">
         {taskDetails.map((detail, index) => (
-          <div className="flex items-center gap-x-2">
+          <div key={index} className="flex items-center gap-x-2">
             <div className="p-4 rounded-sm bg-gray-400"></div>
             <div
               key={index}

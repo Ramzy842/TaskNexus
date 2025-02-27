@@ -8,7 +8,7 @@ const CreateTask = () => {
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(resetTaskCreation())
-    }, [])
+    }, [dispatch])
   return (
     <DashboardLayout>
         <TaskCreate  />

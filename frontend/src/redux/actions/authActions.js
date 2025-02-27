@@ -30,7 +30,7 @@ const loginFailure = (res) => {
   };
 };
 
-const resetAuth = (res) => {
+const resetAuth = () => {
   return {
     type: RESET_AUTH
   }

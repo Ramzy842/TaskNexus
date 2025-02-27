@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Button from "../components/Button";
-import TaskCreate from "../components/TaskCreate";
 import { NavLink, useNavigate } from "react-router";
 import { logout } from "../services/auth";
 import { getUserData } from "../redux/actions/userActions";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import { getTasks } from "../redux/actions/taskActions";
 
 const DashboardLayout = ({ children }) => {
@@ -16,7 +15,7 @@ const DashboardLayout = ({ children }) => {
   useEffect(() => {
     const id = localStorage.getItem("id");
     dispatch(getUserData(id));
-  }, []);
+  }, [dispatch]);
 
   const handleLogout = async () => {
     try {
@@ -81,7 +80,7 @@ const DashboardLayout = ({ children }) => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  class="feather feather-arrow-left"
+                  className="feather feather-arrow-left"
                 >
                   <line x1="19" y1="12" x2="5" y2="12"></line>
                   <polyline points="12 19 5 12 12 5"></polyline>
