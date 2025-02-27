@@ -165,7 +165,6 @@ const deleteTask = (id) => {
         try {
             await removeTask(id);
             dispatch(deleteTaskSuccess());
-            dispatch(getTaskData(id))
             dispatch(getTasks());
         } catch (error) {
             dispatch(deleteTaskFailure(error.response.data.message));
@@ -197,11 +196,11 @@ const editTaskFailure = (error) => {
     };
 };
 
-const editTask = (id) => {
+const editTask = (id, data) => {
     return async (dispatch) => {
         dispatch(editTaskRequest());
         try {
-            const res = await updateTask(id);
+            const res = await updateTask(id, data);
             dispatch(editTaskSuccess(res.data, res.message));
             dispatch(getTaskData(id));
         } catch (error) {

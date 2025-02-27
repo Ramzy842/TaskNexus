@@ -4,9 +4,7 @@ import { deleteTask } from "../redux/actions/taskActions";
 
 
 const TaskCard = ({ id, title, status }) => {
-    const dispatch = useDispatch();
-	console.log(typeof(id));
-	
+    const dispatch = useDispatch();	
     const handleDelete = () => {
         dispatch(deleteTask(id));
     };
