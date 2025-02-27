@@ -4,7 +4,7 @@ import Input from "../components/Input";
 import AuthLayout from "../layouts/AuthLayout";
 import { NavLink, useNavigate } from "react-router";
 
-import loginUser from "../redux/actions/authActions";
+import loginUser, { resetAuth } from "../redux/actions/authActions";
 import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
@@ -17,10 +17,14 @@ const Login = () => {
   const dispatch = useDispatch();
   const errors = useSelector((state) => state.auth.error);
   let message = useSelector((state) => state.auth.message);
-  const user = useSelector((state) => state.auth.user);
+  const id = localStorage.getItem("id")
   useEffect(() => {
-    if (user) navigate("/");
-  }, [user]);
+    dispatch(resetAuth());
+  }, []);
+  useEffect(() => {
+    console.log(id);
+    if (id) navigate("/");
+  }, [id]);
   useEffect(() => {
     if (errors) handleErrors(errors);
     else {
