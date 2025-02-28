@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router";
-import { deleteTask } from "../redux/actions/taskActions";
+import { deleteTask, editTask } from "../redux/actions/taskActions";
 
 
 const TaskCard = ({ id, title, status }) => {
@@ -8,6 +8,9 @@ const TaskCard = ({ id, title, status }) => {
     const handleDelete = () => {
         dispatch(deleteTask(id));
     };
+    const handleCompleted = () => {
+        dispatch(editTask(id, {status: 'Completed'}));
+    }
     return (
         <div
             className={`border-b bg-white  w-full rounded-sm flex justify-between items-center py-2 px-4 mb-1 shadow-[0_0_8px_-2px_rgba(0,200,100,0.25)] border-transparent`}
@@ -51,7 +54,7 @@ const TaskCard = ({ id, title, status }) => {
                             src="./src/assets/check-circle.svg"
                             alt="mark as completed icon"
                             className="cursor-pointer"
-                            onClick={() => console.log("mark as complete")}
+                            onClick={handleCompleted}
                         />
                     )}
                     <svg

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const StatusSelection = ({value, handler,  }) => {
+const StatusSelection = ({value, handler  }) => {
     const statuses = [
         {
             id: 0,
@@ -40,7 +40,9 @@ const StatusSelection = ({value, handler,  }) => {
                                 <button
                                     key={id}
                                     onClick={() => {
+                                        console.log("setting", statuses[id]);
                                         setSelected(statuses[id]);
+                                        console.log(handler);
                                         handler(statuses[id].status)
                                         setIsMenuOpen(false);
                                     }}

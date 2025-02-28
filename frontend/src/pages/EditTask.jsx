@@ -131,6 +131,7 @@ const EditTask = () => {
                                 } = detail;
                                 return (
                                     <TaskInput
+                                    editMode={true}
                                         value={value}
                                         key={id}
                                         type={type}

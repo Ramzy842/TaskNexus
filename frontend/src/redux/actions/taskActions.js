@@ -205,6 +205,7 @@ const editTask = (id, data) => {
             const res = await updateTask(id, data);
             dispatch(editTaskSuccess(res.data, res.message));
             dispatch(getTaskData(id));
+            dispatch(getTasks())
         } catch (error) {
             dispatch(editTaskFailure(error));
         }
