@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 
 const Settings = () => {
   const profilePicture = localStorage.getItem("profilePicture");
-  const user = useSelector((state) => state.user);
-  const info = [{title: "Name", value: user.user.name}]
+  
+  
   return (
     <DashboardLayout>
       <h1 className="font-medium text-2xl text-teal-950 mb-4">My Account</h1>
