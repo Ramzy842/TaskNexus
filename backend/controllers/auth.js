@@ -77,6 +77,7 @@ authRouter.post(
                         tasks: user.tasks,
                         createdAt: user.createdAt,
                         updatedAt: user.updatedAt,
+                        profilePicture: user.profilePicture
                     },
                 },
             });

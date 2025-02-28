@@ -32,7 +32,7 @@ googleRouter.get("/callback", async (req, res, next) => {
             idToken: tokens.id_token,
             audience: google.Client_ID,
         });
-        const { name, email, sub: googleId } = ticket.getPayload();
+        const { name, email, sub: googleId, picture } = ticket.getPayload();
         let user = await User.findOne({ email }).populate("tasks");
         if (!user) {
             user = new User({
@@ -51,6 +51,7 @@ googleRouter.get("/callback", async (req, res, next) => {
         const accessToken = generateAccessToken(userForToken);
         const refreshToken = generateRefreshToken(userForToken);
         user.refreshToken = refreshToken;
+        user.profilePicture = picture
         await user.save();
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
@@ -73,13 +74,14 @@ googleRouter.get("/callback", async (req, res, next) => {
                         tasks: user.tasks,
                         createdAt: user.createdAt,
                         updatedAt: user.updatedAt,
+                        profilePicture: user.profilePicture
                     },
                 },
             });
         res.redirect(
             `http://localhost:5173/auth/callback?id=${user._id.toString()}&username=${
                 user.username
-            }&accessToken=${accessToken}`
+            }&accessToken=${accessToken}&profilePicture=${user.profilePicture}`
         );
     } catch (err) {
         next(err);

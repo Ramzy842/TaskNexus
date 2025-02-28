@@ -10,6 +10,8 @@ import { resetAuth } from "../redux/actions/authActions";
 const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const profilePicture = localStorage.getItem("profilePicture") 
+  console.log(profilePicture);
   useEffect(() => {
     dispatch(getTasks());
   }, []);
@@ -24,6 +26,7 @@ const DashboardLayout = ({ children }) => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("id");
       localStorage.removeItem("username");
+      localStorage.removeItem("profilePicture")
       dispatch(resetAuth());
       dispatch(resetTasks());
       dispatch(resetUser())
@@ -101,7 +104,7 @@ const DashboardLayout = ({ children }) => {
             <h1 className="hidden sm:flex mr-4 font-semibold text-[#0A2D29]">
               {localStorage.getItem("username")}
             </h1>
-            <div className="w-12 bg-teal-800 rounded-3xl h-12"></div>
+            <div style={{  backgroundImage: profilePicture && `url(${profilePicture})`, backgroundSize: '100%' }} className={`w-12 rounded-3xl h-12`}></div>
           </div>
         </div>
         <div className="w-full absolute bottom-4 left-1/2 -translate-x-1/2 flex justify-end max-w-6xl mx-auto px-4 xl:px-0">

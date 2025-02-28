@@ -50,6 +50,7 @@ const loginUser = (email, password) => {
         localStorage.setItem("accessToken", res.data.token);
         localStorage.setItem("id", res.data.user.id)
         localStorage.setItem("username", res.data.user.username)
+        localStorage.setItem("profilePicture", res.data.user.profilePicture)
         dispatch(loginSuccess(res.data.user));
       }
     } catch (error) {

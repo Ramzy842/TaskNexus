@@ -128,7 +128,6 @@ const addTask = (title, description, dueDate, status) => {
             });
             console.log(res);
             dispatch(addTaskSuccess(res.message));
-            // dispatch(getTasks());
         } catch (error) {
             dispatch(addTaskFailure(error.response.data.errors));
         }
