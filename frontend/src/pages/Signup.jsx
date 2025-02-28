@@ -137,7 +137,7 @@ const Signup = () => {
                     text="Sign up"
                     classNames="text-white bg-[#124242] w-full py-2 rounded-sm cursor-pointer font-medium text-base hover:bg-teal-900 mb-5"
                 />
-                <p className=" w-full text-sm text-center">Already have an account? <NavLink className='text-teal-700 font-medium' to="/login">Log in</NavLink></p>
+                <p className=" w-full text-sm text-center">Already have an account? <NavLink className='ml-1 hover:text-teal-900 hover:underline text-teal-700 font-medium' to="/login">Log in</NavLink></p>
             </form>
         </AuthLayout>
     );

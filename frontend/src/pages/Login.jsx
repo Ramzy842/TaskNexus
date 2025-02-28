@@ -153,7 +153,7 @@ const Login = () => {
                 </div>
                 <p className=" w-full text-sm text-center">
                     Don't have an account?
-                    <NavLink className="text-teal-700 font-medium" to="/signup">
+                    <NavLink className="ml-1 hover:text-teal-900 hover:underline text-teal-700 font-medium" to="/signup">
                         Signup
                     </NavLink>
                 </p>
