@@ -57,9 +57,9 @@ userSchema.set("toJSON", {
         delete returnedObject._id;
         delete returnedObject.__v;
         delete returnedObject.passwordHash;
-        // delete returnedObject.blacklistedAccessTokens;
-        // delete returnedObject.blacklistedRefreshTokens;
-        // delete returnedObject.refreshToken;
+        delete returnedObject.blacklistedAccessTokens;
+        delete returnedObject.blacklistedRefreshTokens;
+        delete returnedObject.refreshToken;
     },
 });
 
