@@ -7,13 +7,16 @@ import "./styles/globals.css";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import CreateTask from "./pages/CreateTask";
+import AuthCallback from "./pages/AuthCallback";
+
 
 function App() {
     const task = { id: 1, title: "Random Task", description: "Do something", status: "In Progress", dueDate: "07-06-2000" }
     return (
         <Routes>
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<Signup />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route element={<ProtectedRoute element={<Home />} />} index />
             <Route element={<ProtectedRoute element={<CreateTask />} />} path="create" />
             <Route path="tasks/:id/edit" element={<ProtectedRoute element={<EditTask task={task} />} />} />

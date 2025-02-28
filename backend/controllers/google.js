@@ -13,16 +13,18 @@ const oauth2Client = new OAuth2Client(
 );
 
 googleRouter.get("/", (req, res) => {
+    const { redirect } = req.query;
     const authUrl = oauth2Client.generateAuthUrl({
         access_type: "offline",
         scope: ["profile", "email"],
+        state: JSON.stringify({redirect})
     });
     res.redirect(authUrl);
 });
 
 googleRouter.get("/callback", async (req, res, next) => {
     try {
-        const { code } = req.query;
+        const { code, state } = req.query;
         const { tokens } = await oauth2Client.getToken(code);
 
         oauth2Client.setCredentials(tokens);
@@ -55,25 +57,32 @@ googleRouter.get("/callback", async (req, res, next) => {
             secure: process.env.NODE_ENV === "production",
             sameSite: "Strict",
         });
-        res.status(200).json({
-            success: true,
-            statusCode: 200,
-            data: {
-                token: accessToken,
-                refreshToken: user.refreshToken,
-                user: {
-                    id: user._id.toString(),
-                    username: user.username,
-                    email: user.email,
-                    name: user.name,
-                    tasks: user.tasks,
-                    createdAt: user.createdAt,
-                    updatedAt: user.updatedAt,
+        const { redirect } = state ? JSON.parse(state) : {};
+        if (redirect === "false")
+            return res.status(200).json({
+                success: true,
+                statusCode: 200,
+                data: {
+                    token: accessToken,
+                    refreshToken: user.refreshToken,
+                    user: {
+                        id: user._id.toString(),
+                        username: user.username,
+                        email: user.email,
+                        name: user.name,
+                        tasks: user.tasks,
+                        createdAt: user.createdAt,
+                        updatedAt: user.updatedAt,
+                    },
                 },
-            },
-        });
+            });
+        res.redirect(
+            `http://localhost:5173/auth/callback?id=${user._id.toString()}&username=${
+                user.username
+            }&accessToken=${accessToken}`
+        );
     } catch (err) {
-        next(err)
+        next(err);
     }
 });
 
