@@ -6,9 +6,7 @@ import { NavLink, useNavigate } from "react-router";
 
 import loginUser, { resetAuth } from "../redux/actions/authActions";
 import { useDispatch, useSelector } from "react-redux";
-import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
-import api from "../api/axiosInstance";
+
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -47,7 +45,7 @@ const Login = () => {
     };
 
     const login = async () => {
-      window.location.href = "http://localhost:4000/api/auth/google";
+        window.location.href = "http://localhost:4000/api/auth/google";
     };
 
     return (
@@ -154,7 +152,7 @@ const Login = () => {
                     />
                 </div>
                 <p className=" w-full text-sm text-center">
-                    Don't have an account?{" "}
+                    Don't have an account?
                     <NavLink className="text-teal-700 font-medium" to="/signup">
                         Signup
                     </NavLink>
