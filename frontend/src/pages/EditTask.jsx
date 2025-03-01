@@ -151,7 +151,7 @@ const EditTask = () => {
                             })}
                         </div>
                         <div>
-                            <div onClick={handleSave} className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-md p-3 cursor-pointer mb-2 w-full">
+                            <div onClick={handleSave} className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-sm p-3 cursor-pointer mb-2 w-full">
                                 <svg
                                     width="24"
                                     height="24"
@@ -189,7 +189,7 @@ const EditTask = () => {
                             </div>
                             <div
                                 onClick={handleDelete}
-                                className="flex justify-center items-center bg-red-600 hover:bg-red-700 rounded-md p-3 cursor-pointer mb-2 w-full"
+                                className="flex justify-center items-center bg-red-600 hover:bg-red-700 rounded-sm p-3 cursor-pointer mb-2 w-full"
                             >
                                 <svg
                                     width="20"

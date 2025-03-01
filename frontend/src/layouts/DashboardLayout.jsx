@@ -44,7 +44,7 @@ const DashboardLayout = ({ children }) => {
               to="/create"
               className={`flex items-center bg-linear-to-r 
                   from-teal-900 to-teal-700
-             rounded-md p-3 cursor-pointer`}
+             rounded-sm p-3 cursor-pointer`}
             >
               <Button
                 type="button"
@@ -76,7 +76,7 @@ const DashboardLayout = ({ children }) => {
             </NavLink>
           ) : (
             <NavLink to="/">
-              <div className="flex justify-center items-center bg-teal-600 hover:bg-teal-700 rounded-md p-3 cursor-pointer">
+              <div className="flex justify-center items-center bg-teal-600 hover:bg-teal-700 rounded-sm p-3 cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -101,7 +101,7 @@ const DashboardLayout = ({ children }) => {
             </NavLink>
           )}
           <div className="flex items-center">
-            <h1 className="hidden sm:flex mr-4 font-semibold text-[#0A2D29]">
+            <h1 className={`hidden sm:flex ${window.location.pathname !== "/settings" && "mr-2"}  font-semibold text-[#0A2D29]`}>
               {localStorage.getItem("username")}
             </h1>
             {window.location.pathname !== "/settings" && <div style={{  backgroundImage: profilePicture && `url(${profilePicture})`, backgroundSize: '100%' }} className={`w-12 rounded-3xl h-12`}></div>}
@@ -109,7 +109,7 @@ const DashboardLayout = ({ children }) => {
         </div>
         <div className="w-full absolute bottom-4 left-1/2 -translate-x-1/2 flex justify-end max-w-6xl mx-auto px-4 xl:px-0">
           <div
-            className="rounded-md hover:bg-teal-800 transition group hover:text-white p-2 flex items-center cursor-pointer"
+            className="rounded-sm hover:bg-teal-800 transition group hover:text-white p-2 flex items-center cursor-pointer"
             onClick={handleLogout}
           >
             <svg

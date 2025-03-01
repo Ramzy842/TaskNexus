@@ -29,7 +29,7 @@ const FormActions = ({ taskData }) => {
     <div className="flex justify-center sm:flex-col sm:items-center gap-x-2">
       <div
         onClick={handleSave}
-        className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-md p-3 cursor-pointer sm:mb-2 w-full"
+        className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-sm p-3 cursor-pointer sm:mb-2 w-full"
       >
         <svg
           width="24"
@@ -67,7 +67,7 @@ const FormActions = ({ taskData }) => {
         />
       </div>
       <div
-        className="flex justify-center items-center bg-yellow-600 hover:bg-yellow-700 rounded-md p-3 cursor-pointer sm:mb-2 w-full"
+        className="flex justify-center items-center bg-yellow-600 hover:bg-yellow-700 rounded-sm p-3 cursor-pointer sm:mb-2 w-full"
         onClick={() => {dispatch(resetTaskCreation()); navigate("/")}}
       >
         <svg

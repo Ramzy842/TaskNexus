@@ -7,17 +7,17 @@ const SkeletonEdit = () => {
     <>
       <div className="sm:w-1/2 sm:max-w-1/2 mb-12 sm:mb-0 flex flex-col gap-2 animate-pulse">
         {taskDetails.map((detail, index) => (
-          <div key={index} className="flex items-center gap-x-2">
-            <div className="p-4 rounded-sm bg-gray-400"></div>
+          <div key={index} className="flex items-center gap-x-2 animate-pulse">
+            <div className="p-4 rounded-sm bg-gray-400 animate-pulse"></div>
             <div
               key={index}
-              className=" w-full cursor-pointer bg-gray-400 rounded-sm p-4 "
+              className=" w-full cursor-pointer bg-gray-400 rounded-sm p-4 animate-pulse"
             ></div>
           </div>
         ))}
       </div>
       <div>
-        <div className="flex justify-center items-center bg-gray-400 rounded-md p-3 cursor-pointer mb-2 w-full">
+        <div className="flex justify-center items-center bg-gray-400 rounded-sm p-3 cursor-pointer mb-2 w-full animate-pulse">
           <svg
             width="24"
             height="24"
@@ -52,10 +52,10 @@ const SkeletonEdit = () => {
             disabled={true}
             type="button"
             text="Save"
-            classNames="text-white font-semibold text-md ml-2 select-none cursor-pointer invisible"
+            classNames="text-white font-semibold text-md ml-2 select-none cursor-pointer invisible animate-pulse"
           />
         </div>
-        <div className="flex justify-center items-center bg-gray-400 rounded-md p-3 cursor-pointer mb-2 w-full">
+        <div className="flex justify-center items-center bg-gray-400 rounded-sm p-3 cursor-pointer mb-2 w-full animate-pulse">
           <svg
             width="20"
             height="20"
@@ -83,7 +83,7 @@ const SkeletonEdit = () => {
             disabled={true}
             type="button"
             text="Delete"
-            classNames="text-white font-semibold text-md ml-2 select-none cursor-pointer invisible"
+            classNames="text-white font-semibold text-md ml-2 select-none cursor-pointer invisible animate-pulse"
           />
         </div>
       </div>

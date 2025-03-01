@@ -15,7 +15,7 @@ function App() {
     const task = { id: 1, title: "Random Task", description: "Do something", status: "In Progress", dueDate: "07-06-2000" }
     return (
         <Routes>
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/settings" element={<ProtectedRoute element={<Settings />} />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

@@ -7,18 +7,18 @@ const SkeletonCard = () => {
     >
       <div>
         <p
-          className={`sm:hidden select-none mb-0.5 font-medium px-2 py-1 rounded-sm text-xs bg-gray-300 h-5 w-12 sm:w-24`}
+          className={`sm:hidden select-none mb-0.5 font-medium px-2 py-1 rounded-sm text-xs bg-gray-300 h-5 w-12 sm:w-24 animate-pulse`}
         ></p>
-        <p className={`text-sm truncate bg-gray-400 h-6 w-24 sm:w-48 rounded-sm`}></p>
+        <p className={`text-sm truncate bg-gray-400 h-6 w-24 sm:w-48 rounded-sm animate-pulse`}></p>
       </div>
-      <div className="flex items-center justify-center ">
+      <div className="flex items-center justify-center animate-pulse ">
         <p
-          className={`hidden sm:block font-medium px-2 py-1 bg-gray-500 h-4 w-12 rounded-sm text-xs`}
+          className={`hidden sm:block font-medium px-2 py-1 bg-gray-500 h-4 w-12 rounded-sm text-xs animate-pulse`}
         ></p>
-        <div className="flex items-center justify-center ml-2 gap-x-2">
-            <div className="h-4 w-4 bg-gray-200 rounded-sm"></div>
-            <div className="h-4 w-4 bg-gray-300 rounded-sm"></div>
-            <div className="h-4 w-4 bg-gray-400 rounded-sm"></div>
+        <div className="flex items-center justify-center ml-2 gap-x-2 animate-pulse">
+            <div className="h-4 w-4 bg-gray-200 rounded-sm animate-pulse"></div>
+            <div className="h-4 w-4 bg-gray-300 rounded-sm animate-pulse"></div>
+            <div className="h-4 w-4 bg-gray-400 rounded-sm animate-pulse"></div>
         </div>
       </div>
     </div>
