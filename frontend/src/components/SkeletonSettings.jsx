@@ -15,9 +15,9 @@ const SkeletonAccInfoCard = () => {
 
 const SkeletonPasswordChange = () => {
   return (
-    <div className="bg-gray-300 rounded-sm md:py-1 md:px-1 md:pl-4 md:flex items-center justify-between mb-4 animate-pulse">
-      <h1 className="h-8 w-56 bg-gray-400/30 mb-1 md:mb-0 rounded-sm animate-pulse"></h1>
-      <div className="flex justify-center items-center bg-gray-400/30 rounded-sm py-2 px-4 h-10 w-48 animate-pulse"></div>
+    <div className="bg-gray-300 p-2 rounded-sm md:py-1 md:px-1 md:pl-4 md:flex items-center justify-between mb-4 animate-pulse">
+      <h1 className="h-5 md:h-8 w-1/2 md:w-56 bg-gray-400/30 mb-1 md:mb-0 rounded-sm animate-pulse"></h1>
+      <div className="flex justify-center items-center bg-gray-400/30 rounded-sm py-2 px-4 h-10 w-full md:w-48 animate-pulse"></div>
     </div>
   );
 };

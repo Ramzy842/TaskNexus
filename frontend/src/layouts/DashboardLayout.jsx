@@ -101,7 +101,7 @@ const DashboardLayout = ({ children }) => {
             </NavLink>
           )}
           <div className="flex items-center">
-            <h1 className={`hidden sm:flex ${window.location.pathname !== "/settings" && "mr-2"}  font-semibold text-[#0A2D29]`}>
+            <h1 className={`hidden sm:flex ${window.location.pathname !== "/settings" && "mr-2"} font-semibold text-[#0A2D29]`}>
               {localStorage.getItem("username")}
             </h1>
             {window.location.pathname !== "/settings" && <div style={{  backgroundImage: profilePicture && `url(${profilePicture})`, backgroundSize: '100%' }} className={`w-12 rounded-3xl h-12`}></div>}
