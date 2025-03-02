@@ -9,9 +9,9 @@ const getUser = async (id) => {
     }
 }
 
-const updateUser = async (id) => {
+const updateUser = async (id, data) => {
     try {
-        const res = await api.put(`/users/${id}`);
+        const res = await api.put(`/users/${id}`, data);
         return res.data;
     } catch (error) {
         return error.response.data;

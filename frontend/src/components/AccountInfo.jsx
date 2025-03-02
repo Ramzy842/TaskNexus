@@ -8,9 +8,9 @@ const AccountInfo = () => {
   useEffect(() => {
     if (user.user) {
       setInfo([
-        { id: 0, title: "Name", value: user.user.name },
-        { id: 1, title: "Username", value: user.user.username },
-        { id: 2, title: "Email", value: user.user.email },
+        { id: 0, title: "Name", value: user.user.name, placeholder: "Enter your new name" },
+        { id: 1, title: "Username", value: user.user.username, placeholder: "Enter your new username" },
+        { id: 2, title: "Email", value: user.user.email, placeholder: "Enter your new email" },
       ]);
     }
   }, [user]);
@@ -18,8 +18,8 @@ const AccountInfo = () => {
   return (
     <div className="mb-4">
       {info.map((el) => {
-        const { id, title, value } = el;
-        return <AccountInfoCard key={id} title={title} value={value} />
+        const { id, title, value, placeholder } = el;
+        return <AccountInfoCard key={id} placeholder={placeholder} title={title} value={value} />
       })}
     </div>
   );
