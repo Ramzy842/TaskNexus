@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "./Button";
 
-const SkeletonAccInfoCard = () => {
+export const SkeletonAccInfoCard = () => {
   return (
     <div className="flex items-center mb-2 justify-between animate-pulse">
       <div>
@@ -13,7 +13,7 @@ const SkeletonAccInfoCard = () => {
   );
 };
 
-const SkeletonPasswordChange = () => {
+export const SkeletonPasswordChange = () => {
   return (
     <div className="bg-gray-300 p-2 rounded-sm md:py-1 md:px-1 md:pl-4 md:flex items-center justify-between mb-4 animate-pulse">
       <h1 className="h-5 md:h-8 w-1/2 md:w-56 bg-gray-400/30 mb-1 md:mb-0 rounded-sm animate-pulse"></h1>

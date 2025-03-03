@@ -23,6 +23,7 @@ function App() {
             <Route element={<ProtectedRoute element={<Home />} />} index />
             <Route element={<ProtectedRoute element={<CreateTask />} />} path="create" />
             <Route path="tasks/:id/edit" element={<ProtectedRoute element={<EditTask task={task} />} />} />
+            {/* <Route path="*" element={<NotFound />} /> */}
             <Route path="*" element={<NotFound />} />
         </Routes>
     );

@@ -1,13 +1,13 @@
 import React from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
 import AccountInfo from "../components/AccountInfo";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import Button from "../components/Button";
 import SkeletonSettings from "../components/SkeletonSettings";
 
-const PasswordChange = ({ user }) => {
+const PasswordChange = ({ loading}) => {
   return (
-    !user.loading && (
+    !loading && (
       <div className="bg-cyan-950 rounded-sm p-2 md:py-1 md:px-1 md:pl-4 md:flex items-center justify-between mb-4">
         <h1 className="text-white text-sm font-semibold mb-1 md:mb-0">
           Password and Authentication
@@ -25,9 +25,9 @@ const PasswordChange = ({ user }) => {
   );
 };
 
-const RemoveAccount = ({ user }) => {
+const RemoveAccount = ({ loading}) => {
   return (
-    !user.loading && (
+    !loading && (
       <div className="flex md:flex-col justify-between items-start">
         <div className="flex flex-col md:mb-2">
           <h1 className="font-semibold text-sm text-teal-900 uppercase">
@@ -54,12 +54,12 @@ const RemoveAccount = ({ user }) => {
 
 const Settings = () => {
   const profilePicture = localStorage.getItem("profilePicture");
-  const user = useSelector((state) => state.user);
-
+  const loading = useSelector(state => state.user.loading)
+  console.log("Rerendering parent settings");
   return (
     <DashboardLayout>
       <h1 className="font-medium text-xl text-teal-950 mb-4">My Account</h1>
-      {user.loading ? (
+      {loading ? (
         <SkeletonSettings />
       ) : (
         <>
@@ -75,8 +75,8 @@ const Settings = () => {
             </div>
           </div>
           <AccountInfo />
-          <PasswordChange user={user} />
-          <RemoveAccount user={user} />
+          <PasswordChange loading={loading}  />
+          <RemoveAccount loading={loading}/>
         </>
       )}
     </DashboardLayout>

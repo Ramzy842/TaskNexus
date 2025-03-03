@@ -57,6 +57,7 @@ const updateUserDataSuccess = (updateUser, message) => {
 };
 
 const updateUserDataFailure = (error) => {
+  console.log(error);
   return {
     type: UPDATE_USER_FAILURE,
     payload: error,
@@ -70,8 +71,12 @@ const updateUserData = (data) => {
       const res = await updateUser(localStorage.getItem("id"), data);
       console.log(res);
       // this is where it's failing
-      dispatch(updateUserDataSuccess(res.data, res.message));
-      console.log(res.data);
+      if (res.errors)
+        dispatch(updateUserDataFailure(res.errors))
+      else if (!res.success && res.message)
+        dispatch(updateUserDataFailure())
+      else
+        dispatch(updateUserDataSuccess(res.data, res.message));
       if (res.data)
         localStorage.setItem("username", res.data.username)
     } catch (error) {

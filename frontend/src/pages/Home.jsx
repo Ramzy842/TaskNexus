@@ -1,12 +1,18 @@
 import TaskList from "../components/TaskList";
 import DashboardLayout from "../layouts/DashboardLayout";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import SkeletonCard from "../components/SkeletonCard";
+import { useEffect } from "react";
+import { getTasks } from "../redux/actions/taskActions";
 
 const Home = () => {
   const tasks = useSelector((state) => state.tasks.tasks);
   const loading = useSelector((state) => state.tasks.loading);
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getTasks());
+}, []);
   return (
     <DashboardLayout>
       <div className="flex items-center mb-2">

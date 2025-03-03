@@ -12,9 +12,7 @@ const DashboardLayout = ({ children }) => {
   const dispatch = useDispatch();
   const profilePicture = localStorage.getItem("profilePicture") 
   console.log(profilePicture);
-  useEffect(() => {
-    dispatch(getTasks());
-  }, []);
+  
   useEffect(() => {
     const id = localStorage.getItem("id");
     dispatch(getUserData(id));
