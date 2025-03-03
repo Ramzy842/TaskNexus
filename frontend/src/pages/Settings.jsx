@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
 import AccountInfo from "../components/AccountInfo";
-import { shallowEqual, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import Button from "../components/Button";
 import SkeletonSettings from "../components/SkeletonSettings";
 import Input from "../components/Input";

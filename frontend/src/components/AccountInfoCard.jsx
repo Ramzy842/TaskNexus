@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import  {  useEffect, useState } from "react";
 import Button from "./Button";
 import Input from "./Input";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +8,7 @@ import { SkeletonAccInfoCard } from "./SkeletonSettings";
 const AccountInfoCard = ({ title, value, placeholder,info, setInfo}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedCount, setEditedCount] = useState(0);
-  const [inputVal, setInputVal] = useState("");
+  const [inputVal, setInputVal] = useState(value);
   const [errors, setErrors] = useState(null);
   const error = useSelector((state) => state.user.error);
   const loading = useSelector(state => state.user.isEditingLoading)

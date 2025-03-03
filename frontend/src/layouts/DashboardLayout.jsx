@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router";
 import { logout } from "../services/auth";
 import { getUserData, resetUser } from "../redux/actions/userActions";
 import { useDispatch} from "react-redux";
-import { getTasks, resetTasks } from "../redux/actions/taskActions";
+import { resetTasks } from "../redux/actions/taskActions";
 import { resetAuth } from "../redux/actions/authActions";
 
 const DashboardLayout = ({ children }) => {
