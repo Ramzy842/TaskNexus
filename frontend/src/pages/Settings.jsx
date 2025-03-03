@@ -1,31 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
 import AccountInfo from "../components/AccountInfo";
 import { shallowEqual, useSelector } from "react-redux";
 import Button from "../components/Button";
 import SkeletonSettings from "../components/SkeletonSettings";
+import Input from "../components/Input";
 
-const PasswordChange = ({ loading}) => {
+const PasswordChange = ({ loading }) => {
+  const [edit, setEdit] = useState(false);
   return (
     !loading && (
-      <div className="bg-cyan-950 rounded-sm p-2 md:py-1 md:px-1 md:pl-4 md:flex items-center justify-between mb-4">
-        <h1 className="text-white text-sm font-semibold mb-1 md:mb-0">
-          Password and Authentication
-        </h1>
-        <div className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-sm py-2 px-4 cursor-pointer">
-          <img src="/src/assets/edit-settings.svg" alt="edit" />
-          <Button
-            type="button"
-            text="Change Password"
-            classNames="text-white font-semibold text-sm ml-2 select-none cursor-pointer"
-          />
+      <div className={`bg-cyan-950 mb-4 ${edit ? "pb-4" : ""}`}>
+        <div className=" rounded-sm p-2 md:py-1 md:px-1 md:pl-4 md:flex items-center justify-between mb-4">
+          <h1 className="text-white text-sm font-semibold mb-1 md:mb-0">
+            Password and Authentication
+          </h1>
+          <div onClick={() => setEdit(!edit)} className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-sm py-2 px-4 cursor-pointer">
+            <img src="/src/assets/edit-settings.svg" alt="edit" />
+            <Button
+              type="button"
+              text={edit ? "Cancel" : "Change Password"}
+              classNames="text-white font-semibold text-sm ml-2 select-none cursor-pointer"
+            />
+          </div>
         </div>
+        {edit && <form action="#" className="">
+          <Input label="Enter you old password" labelClass="text-white font-semibold text-xs pl-4 mb-1" classNames=" bg-white rounded-sm mx-4 md:py-2 md:px-1 text-xs w-sm outline-none border-b-2 border-transparent focus:border-blue-400 mb-2" />
+          <Input label="Enter you new password" labelClass="text-white font-semibold text-xs pl-4 mb-1" classNames=" bg-white rounded-sm mx-4 md:py-2 md:px-1 text-xs w-sm outline-none border-b-2 border-transparent focus:border-blue-400" />
+        </form>} 
       </div>
     )
   );
 };
 
-const RemoveAccount = ({ loading}) => {
+const RemoveAccount = ({ loading }) => {
   return (
     !loading && (
       <div className="flex md:flex-col justify-between items-start">
@@ -54,7 +62,7 @@ const RemoveAccount = ({ loading}) => {
 
 const Settings = () => {
   const profilePicture = localStorage.getItem("profilePicture");
-  const loading = useSelector(state => state.user.loading)
+  const loading = useSelector((state) => state.user.loading);
   console.log("Rerendering parent settings");
   return (
     <DashboardLayout>
@@ -75,8 +83,8 @@ const Settings = () => {
             </div>
           </div>
           <AccountInfo />
-          <PasswordChange loading={loading}  />
-          <RemoveAccount loading={loading}/>
+          <PasswordChange loading={loading} />
+          <RemoveAccount loading={loading} />
         </>
       )}
     </DashboardLayout>
