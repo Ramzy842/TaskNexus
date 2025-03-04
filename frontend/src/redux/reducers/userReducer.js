@@ -4,6 +4,9 @@ import {
   GET_USER_SUCCESS,
   RESET_USER,
   UPDATE_USER_FAILURE,
+  UPDATE_USER_PASSWORD_FAILURE,
+  UPDATE_USER_PASSWORD_REQUEST,
+  UPDATE_USER_PASSWORD_SUCCESS,
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
 } from "../types/userTypes";
@@ -32,6 +35,12 @@ const userReducer = (state = initialState, action) => {
       return {...state, isEditingLoading: false, error: null, user: action.payload.user, message: action.payload.message };
     case UPDATE_USER_FAILURE:
       return { ...state, isEditingLoading: false, error: action.payload, message: null};
+    case UPDATE_USER_PASSWORD_FAILURE:
+      return {...state, isEditingLoading: false, error: action.payload, message: null}
+    case UPDATE_USER_PASSWORD_REQUEST:
+      return {...state, isEditingLoading: true, error: null}
+    case UPDATE_USER_PASSWORD_SUCCESS:
+      return {...state, isEditingLoading: false, error: null, message: action.payload}
     default:
       return state;
   }

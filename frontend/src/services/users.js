@@ -27,4 +27,13 @@ const deleteUser = async (id) => {
     }
 }
 
-export {getUser, updateUser, deleteUser }
+const updatePassword = async (id, data) => {
+    try {
+        const res = await api.put(`/users/${id}/update-password`, data);
+        return res.data;
+    } catch (error) {
+        return error.response.data;
+    }
+}
+
+export {getUser, updateUser, deleteUser, updatePassword }

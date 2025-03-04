@@ -1,18 +1,19 @@
-import  {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "./Button";
 import Input from "./Input";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserData } from "../redux/actions/userActions";
 import { SkeletonAccInfoCard } from "./SkeletonSettings";
 
-const AccountInfoCard = ({ title, value, placeholder,info, setInfo}) => {
+const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedCount, setEditedCount] = useState(0);
   const [inputVal, setInputVal] = useState(value);
   const [errors, setErrors] = useState(null);
   const error = useSelector((state) => state.user.error);
-  const loading = useSelector(state => state.user.isEditingLoading)
+  const loading = useSelector((state) => state.user.isEditingLoading);
   const dispatch = useDispatch();
+  const cred = useSelector((state) => state.user.user[title.toLowerCase()]);
   const handleSave = () => {
     const updatedField = {};
     if (inputVal.length && value !== inputVal) {
@@ -21,15 +22,16 @@ const AccountInfoCard = ({ title, value, placeholder,info, setInfo}) => {
       dispatch(updateUserData(updatedField));
     }
   };
-  const cred = useSelector(state => state.user.user[title.toLowerCase()])
   useEffect(() => {
-    if (cred !== value)
-    {
+    if (cred !== value) {
       setIsEditing(false);
-      const newInfo = info.map(el => el.title === title ? {...el, value: cred} : el);
-      setInfo(newInfo)
+      const newInfo = info.map((el) =>
+        el.title === title ? { ...el, value: cred } : el
+      );
+      setInfo(newInfo);
+      setEditedCount(0);
     }
-  }, [cred])
+  }, [cred]);
   console.log("Rendered and isEditing=", isEditing, "and title is", title);
   useEffect(() => {
     if (!error) return;
@@ -43,27 +45,29 @@ const AccountInfoCard = ({ title, value, placeholder,info, setInfo}) => {
     );
     setErrors(errorsArr.length ? errorsArr : null);
   };
-  if (loading && editedCount)
-    return <SkeletonAccInfoCard />
+  if (loading && editedCount) return <SkeletonAccInfoCard />;
   return (
     <div>
       <div
         className={`flex ${isEditing ? "items-end" : "items-center"}
         mb-2 justify-between`}
       >
-        <div className="w-full">
+        <div className=" max-w-56 md:max-w-sm">
           <p className="text-teal-900 font-semibold">{title}</p>
           {isEditing ? (
             <div className="flex flex-col">
               <Input
                 placeholder={placeholder}
                 value={inputVal}
-                onChange={(e) => {setInputVal(e.target.value); setErrors(null)}}
+                onChange={(e) => {
+                  setInputVal(e.target.value);
+                  setErrors(null);
+                }}
                 classNames={`text-teal-900 font-normal bg-white text-xs py-2 px-2 rounded-sm w-4/5 sm:w-sm md:w-md max-w-lg outline-none border-b border-transparent focus:border-cyan-500`}
               />
             </div>
           ) : (
-            <p className="text-teal-800 font-normal text-sm">{value}</p>
+            <p className="text-teal-800  font-normal text-sm truncate">{value}</p>
           )}
         </div>
 
@@ -83,8 +87,7 @@ const AccountInfoCard = ({ title, value, placeholder,info, setInfo}) => {
             <div
               onClick={() => {
                 setIsEditing(false);
-                setErrors(null)
-                setInputVal("")
+                setErrors(null);
               }}
               className="flex justify-center items-center bg-yellow-600 hover:bg-yellow-700 rounded-sm py-2 px-4 cursor-pointer"
             >
@@ -100,7 +103,7 @@ const AccountInfoCard = ({ title, value, placeholder,info, setInfo}) => {
           <div
             onClick={() => {
               setIsEditing(true);
-              setEditedCount(prev => prev + 1)              
+              setEditedCount((prev) => prev + 1);
             }}
             className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-sm py-2 px-4 cursor-pointer"
           >
@@ -112,7 +115,7 @@ const AccountInfoCard = ({ title, value, placeholder,info, setInfo}) => {
             />
           </div>
         )}
-      </div>  
+      </div>
       {errors && (
         <div className="text-xs bg-red-200 text-red-700 py-1 px-2 rounded-sm  relative flex w-full flex-col">
           <span className="self-end bg-red-500 text-white rounded-sm px-1 font-bold text-xs ">

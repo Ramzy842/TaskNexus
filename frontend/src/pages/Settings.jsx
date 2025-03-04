@@ -1,33 +1,74 @@
-import  { useState } from "react";
+import { useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
 import AccountInfo from "../components/AccountInfo";
-import {  useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../components/Button";
 import SkeletonSettings from "../components/SkeletonSettings";
 import Input from "../components/Input";
+import {
+
+  updateUserPassword,
+} from "../redux/actions/userActions";
 
 const PasswordChange = ({ loading }) => {
   const [edit, setEdit] = useState(false);
+  const [oldPass, setOldPass] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const dispatch = useDispatch();
+  const handlePasswordUpdate = () => {
+    console.log(oldPass, newPass);
+    dispatch(updateUserPassword(oldPass, newPass));
+  };
   return (
     !loading && (
       <div className={`bg-cyan-950 mb-4 ${edit ? "pb-4" : ""}`}>
-        <div className=" rounded-sm p-2 md:py-1 md:px-1 md:pl-4 md:flex items-center justify-between mb-4">
+        <div className=" rounded-sm p-2 md:py-1 md:px-1 md:pl-4 md:flex items-center justify-between mb-2">
           <h1 className="text-white text-sm font-semibold mb-1 md:mb-0">
             Password and Authentication
           </h1>
-          <div onClick={() => setEdit(!edit)} className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-sm py-2 px-4 cursor-pointer">
-            <img src="/src/assets/edit-settings.svg" alt="edit" />
+          <div
+            onClick={() => setEdit(!edit)}
+            className={`flex justify-center items-center ${
+              edit
+                ? "bg-yellow-600 hover:bg-yellow-700"
+                : "bg-cyan-600 hover:bg-cyan-700"
+            } rounded-sm py-2 px-4 cursor-pointer`}
+          >
+            {!edit && <img src="/src/assets/edit-settings.svg" alt="edit" />}
             <Button
               type="button"
               text={edit ? "Cancel" : "Change Password"}
-              classNames="text-white font-semibold text-sm ml-2 select-none cursor-pointer"
+              classNames={`text-white font-semibold text-sm ${
+                !edit && "ml-2"
+              } select-none cursor-pointer`}
             />
           </div>
         </div>
-        {edit && <form action="#" className="">
-          <Input label="Enter you old password" labelClass="text-white font-semibold text-xs pl-4 mb-1" classNames=" bg-white rounded-sm mx-4 md:py-2 md:px-1 text-xs w-sm outline-none border-b-2 border-transparent focus:border-blue-400 mb-2" />
-          <Input label="Enter you new password" labelClass="text-white font-semibold text-xs pl-4 mb-1" classNames=" bg-white rounded-sm mx-4 md:py-2 md:px-1 text-xs w-sm outline-none border-b-2 border-transparent focus:border-blue-400" />
-        </form>} 
+        {edit && (
+          <form action="#" className="p-4 w-full">
+            <Input
+              onChange={(e) => setOldPass(e.target.value)}
+              value={oldPass}
+              label="Enter you old password"
+              labelClass="text-white font-medium text-xs mb-2"
+              classNames=" bg-white rounded-sm py-2 px-2 text-xs md:w-sm outline-none border-b-2 border-transparent focus:border-blue-400 mb-2"
+            />
+            <Input
+              onChange={(e) => setNewPass(e.target.value)}
+              value={newPass}
+              label="Enter you new password"
+              labelClass="text-white font-medium text-xs mb-2"
+              classNames=" bg-white rounded-sm py-2 px-2 text-xs md:w-sm outline-none border-b-2 border-transparent focus:border-blue-400 mb-2"
+            />
+            <div onClick={handlePasswordUpdate} className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-sm py-2 px-4 cursor-pointer w-full md:w-sm">
+              <Button
+                type="button"
+                text="Save"
+                classNames="text-white font-semibold text-sm  select-none cursor-pointer"
+              />
+            </div>
+          </form>
+        )}
       </div>
     )
   );
