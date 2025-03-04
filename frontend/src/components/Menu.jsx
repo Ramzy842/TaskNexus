@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Link, useNavigate } from "react-router";
 import { resetAuth } from "../redux/actions/authActions";
 import { resetTasks } from "../redux/actions/taskActions";
@@ -25,7 +25,7 @@ const Menu = () => {
     }
   };
   return (
-    <ul className="absolute w-[120px] max-w-[160px] 2xl:w-full top-full mt-2 2xl:mt-0 right-0 2xl:top-0 2xl:-right-4/5 rounded-sm overflow-hidden bg-gray-900 ">
+    <ul className="absolute w-[120px] max-w-[160px]  top-full mt-2 right-0 rounded-sm overflow-hidden bg-gray-900 ">
       <Link
         to="/settings"
         className=""

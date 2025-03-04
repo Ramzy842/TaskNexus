@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import AccountInfoCard from "./AccountInfoCard";
 
-const AccountInfo = () => {
+const AccountInfo = ({showInfo}) => {
     const user = useSelector((state) => state.user.user);
     const isEditingLoading = useSelector(
         (state) => state.user.isEditingLoading
@@ -41,6 +41,7 @@ const AccountInfo = () => {
                     <AccountInfoCard
                         info={info}
                         setInfo={setInfo}
+                        showInfo={showInfo}
                         key={id}
                         placeholder={placeholder}
                         title={title}

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateUserData } from "../redux/actions/userActions";
 import { SkeletonAccInfoCard } from "./SkeletonSettings";
 
-const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
+const AccountInfoCard = ({ title, value, placeholder, info, setInfo, showInfo }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedCount, setEditedCount] = useState(0);
   const [inputVal, setInputVal] = useState(value);
@@ -46,8 +46,7 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
     setErrors(errorsArr.length ? errorsArr : null);
   };
   if (loading && editedCount) return <SkeletonAccInfoCard />;
-  return (
-    <div>
+  return !showInfo && title === "Email" ? <></> : <div>
       <div
         className={`flex ${isEditing ? "items-end" : "items-center"}
         mb-2 justify-between`}
@@ -131,7 +130,7 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
         </div>
       )}
     </div>
-  );
+  
 };
 
 export default AccountInfoCard;

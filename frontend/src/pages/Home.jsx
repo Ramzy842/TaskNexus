@@ -23,7 +23,7 @@ const Home = () => {
           className="select-none"
         />
       </div>
-      <div className="overflow-y-auto h-[520px] md:h-[1024px] ">
+      <div className="overflow-y-auto h-[520px] md:h-[768px] ">
         {loading ? (
           <>
             <SkeletonCard />
