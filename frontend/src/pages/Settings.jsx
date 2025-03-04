@@ -99,6 +99,7 @@ const PasswordChange = ({ loading }) => {
 };
 
 const RemoveAccount = ({ loading }) => {
+    const [showConfirmation, setShowConfirmation] = useState(false)
     return (
         !loading && (
             <div className="flex md:flex-col justify-between items-start">
@@ -113,7 +114,7 @@ const RemoveAccount = ({ loading }) => {
                         removed from our system.
                     </p>
                 </div>
-                <div className="flex justify-center md:justify-between gap-4 items-center bg-[#E3123F] hover:bg-red-700 rounded-sm py-2 px-8 md:px-4 cursor-pointer">
+                <div onClick={() => setShowConfirmation(true)} className="flex justify-center md:justify-between gap-4 items-center bg-[#E3123F] hover:bg-red-700 rounded-sm py-2 px-8 md:px-4 cursor-pointer">
                     <Button
                         type="button"
                         text="Delete Account"
@@ -125,7 +126,7 @@ const RemoveAccount = ({ loading }) => {
                         alt="edit"
                     />
                 </div>
-                <DeleteUserConfirmation />
+                {showConfirmation && <DeleteUserConfirmation setShowConfirmation={setShowConfirmation} /> } 
             </div>
         )
     );

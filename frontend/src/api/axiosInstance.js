@@ -35,6 +35,8 @@ api.interceptors.response.use(response => response, async (error) => {
         } catch (refreshError) {
             localStorage.removeItem("accessToken");
             localStorage.removeItem("id");
+            localStorage.removeItem("username")
+            localStorage.removeItem("profilePicture")
             window.location.href = "/login";
             return Promise.reject(refreshError);
         }
