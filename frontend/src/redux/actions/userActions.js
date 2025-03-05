@@ -11,6 +11,7 @@ import {
   REMOVE_USER_FAILURE,
   REMOVE_USER_REQUEST,
   REMOVE_USER_SUCCESS,
+  RESET_PASSWORD_UPDATE,
   RESET_USER,
   UPDATE_USER_FAILURE,
   UPDATE_USER_PASSWORD_FAILURE,
@@ -121,15 +122,24 @@ const updateUserPassword = (oldPassword, newPassword) => {
         oldPassword,
         newPassword,
       });
-      if (!res.success && res.message)
+      if (res.errors) dispatch(updateUserPasswordFailure(res.errors));
+      else if (!res.success && res.message)
         dispatch(updateUserPasswordFailure([res.message]));
       else if (res.success && res.message)
+      {
         dispatch(updateUserPasswordSuccess(res.message));
+      }
     } catch (error) {
       dispatch(updateUserPasswordFailure(error));
     }
   };
 };
+
+const reset_password_update = () => {
+  return {
+    type: RESET_PASSWORD_UPDATE
+  }
+}
 
 const removeUserRequest = () => {
   return {
@@ -186,4 +196,5 @@ export {
   updateUserData,
   updateUserPassword,
   removeUserData,
+  reset_password_update
 };

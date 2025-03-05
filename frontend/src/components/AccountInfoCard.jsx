@@ -13,7 +13,7 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo, showInfo })
   const error = useSelector((state) => state.user.error);
   const loading = useSelector((state) => state.user.isEditingLoading);
   const dispatch = useDispatch();
-  const cred = useSelector((state) => state.user.user[title.toLowerCase()]);
+  const cred = useSelector((state) => state.user.user?.[title.toLowerCase()] ?? "");
   const handleSave = () => {
     const updatedField = {};
     if (inputVal.length && value !== inputVal) {
@@ -45,10 +45,10 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo, showInfo })
     );
     setErrors(errorsArr.length ? errorsArr : null);
   };
-  if (loading && editedCount) return <SkeletonAccInfoCard />;
+  if ((loading && editedCount)) return <SkeletonAccInfoCard />;
   return !showInfo && title === "Email" ? <></> : <div>
       <div
-        className={`flex ${isEditing ? "items-end" : "items-center"}
+        className={`flex items-center
         mb-2 justify-between`}
       >
         <div className=" max-w-56 md:max-w-sm">
@@ -62,7 +62,7 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo, showInfo })
                   setInputVal(e.target.value);
                   setErrors(null);
                 }}
-                classNames={`text-teal-900 font-normal bg-white text-xs py-2 px-2 rounded-sm w-4/5 sm:w-sm md:w-md max-w-lg outline-none border-b border-transparent focus:border-cyan-500`}
+                classNames={`text-teal-900 font-normal bg-white text-xs py-2 px-2 rounded-sm w-4/5 sm:w-sm md:w-md max-w-lg outline-none `}
               />
             </div>
           ) : (
@@ -87,8 +87,9 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo, showInfo })
               onClick={() => {
                 setIsEditing(false);
                 setErrors(null);
+                setEditedCount(0);
               }}
-              className="flex justify-center items-center bg-yellow-600 hover:bg-yellow-700 rounded-sm py-2 px-4 cursor-pointer"
+              className="flex justify-center items-center bg-red-600 hover:bg-red-700 rounded-sm py-2 px-4 cursor-pointer"
             >
               {/* <img src="/src/assets/remove-acc.svg" alt="save" /> */}
               <Button
@@ -104,7 +105,7 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo, showInfo })
               setIsEditing(true);
               setEditedCount((prev) => prev + 1);
             }}
-            className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-sm py-2 px-4 cursor-pointer"
+            className="flex justify-center items-center bg-teal-700 hover:bg-teal-800 rounded-sm py-2 px-4 cursor-pointer"
           >
             <img src="/src/assets/edit-settings.svg" alt="edit" />
             <Button

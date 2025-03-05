@@ -9,6 +9,7 @@ import {
   UPDATE_USER_PASSWORD_SUCCESS,
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
+  RESET_PASSWORD_UPDATE
 } from "../types/userTypes";
 
 const initialState = {
@@ -41,6 +42,8 @@ const userReducer = (state = initialState, action) => {
       return {...state, isEditingLoading: true, error: null}
     case UPDATE_USER_PASSWORD_SUCCESS:
       return {...state, isEditingLoading: false, error: null, message: action.payload}
+    case RESET_PASSWORD_UPDATE:
+      return {...state, isEditingLoading: false, error: null, message: null}
     default:
       return state;
   }

@@ -28,8 +28,7 @@ const DashboardLayout = ({ children }) => {
           {window.location.pathname === "/" ? (
             <NavLink
               to="/create"
-              className={`w-36 flex items-center bg-linear-to-r 
-                  from-teal-900 to-teal-700
+              className={`w-36 flex items-center bg-teal-600 hover:bg-teal-700
              rounded-sm  p-3 cursor-pointer`}
             >
               <Button

@@ -41,10 +41,15 @@ const loginUser = (email, password) => {
     dispatch(loginRequest());
     try {
       const res = await login(email, password);
-      if (res.errors) {
-        dispatch(loginFailure({ errors: res.errors, message: "" }));
+      console.log(res);
+      if (res.error)
+      {
+        dispatch(loginFailure({ errors: null, message: res.error }));
       }
-      if (res.message) {
+      else if (res.errors) {
+        dispatch(loginFailure({ errors: res.errors, message: null }));
+      }
+      else if (!res.success && res.message) {
         dispatch(loginFailure({ errors: null, message: res.message }));
       } else if (res.data) {
         localStorage.setItem("accessToken", res.data.token);
