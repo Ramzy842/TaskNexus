@@ -13,7 +13,7 @@ const TaskCard = ({ id, title, status }) => {
     }
     return (
         <div
-            className={`border-b bg-white  w-full rounded-sm flex justify-between items-center py-2 px-4 mb-1 shadow-[0_0_8px_-2px_rgba(0,200,100,0.25)] border-transparent`}
+            className={` bg-white  w-full rounded-sm flex justify-between items-center py-2 px-4 mb-1 shadow-[0_0_8px_-2px_rgba(0,200,100,0.25)]`}
         >
             <div className="flex flex-col items-start">
                 <p
@@ -59,11 +59,7 @@ const TaskCard = ({ id, title, status }) => {
                     )}
                     <svg
                         onClick={handleDelete}
-                        className={`${
-                            status === "Completed"
-                                ? "bg-teal-900 rounded-sm"
-                                : ""
-                        } cursor-pointer`}
+                        className={`cursor-pointer`}
                         width="20"
                         height="20"
                         viewBox="0 0 20 20"
@@ -72,17 +68,13 @@ const TaskCard = ({ id, title, status }) => {
                     >
                         <path
                             d="M15 5L5 15"
-                            stroke={`${
-                                status === "Completed" ? "#fff" : "#000"
-                            }`}
+                            stroke={`#000`}
                             strokeLinecap="round"
                             strokeLinejoin="round"
                         />
                         <path
                             d="M5 5L15 15"
-                            stroke={`${
-                                status === "Completed" ? "#fff" : "#000"
-                            }`}
+                            stroke={`#000`}
                             strokeLinecap="round"
                             strokeLinejoin="round"
                         />

@@ -24,7 +24,7 @@ const AuthLayout = ({ children }) => {
 				</NavLink>
 			</div>
 			{loading && dimensions &&  <div style={{top: `${dimensions.height}px`}} className={`absolute   h-2 w-full bg-gradient-to-r from-teal-500 from-10% via-teal-500 via-50% to-emerald-500 to-90% animate-pulse`}></div>}
-			<div className="bg-[#E3EAE9] flex justify-center flex-col items-center w-full">{children}</div>
+			<div className="bg-linear-to-bl from-[#E3EAE9] to-[#A3C4C4] flex justify-center flex-col items-center w-full">{children}</div>
 		</div>
 	);
 };

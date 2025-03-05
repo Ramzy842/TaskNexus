@@ -91,8 +91,7 @@ const Signup = () => {
           classNames="bg-white text-black rounded-sm text-sm w-full p-2 outline-none"
           value={username}
           onChange={(e) => {
-            if (message)
-                setMessage("")
+            if (message) setMessage("");
             setUsernameErrors(null);
             setUsername(e.target.value);
           }}
@@ -104,9 +103,16 @@ const Signup = () => {
             </span>
             <div>
               {usernameErrors.map((error, index) => (
-                <p key={index} className="text-white">
-                  - {error}
-                </p>
+                <div key={index} className="flex items-start mb-2">
+                  <img
+                    src="/src/assets/x-circle.svg"
+                    className="mr-1"
+                    alt="error"
+                  />
+                  <p key={index} className="text-white">
+                    {error}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
@@ -119,8 +125,7 @@ const Signup = () => {
           classNames="bg-white text-black rounded-sm text-sm w-full p-2 outline-none"
           value={name}
           onChange={(e) => {
-            if (message)
-                setMessage("")
+            if (message) setMessage("");
             setNameErrors(null);
             setName(e.target.value);
           }}
@@ -132,9 +137,16 @@ const Signup = () => {
             </span>
             <div>
               {nameErrors.map((error, index) => (
-                <p key={index} className="text-white">
-                  - {error}
-                </p>
+                <div key={index} className="flex items-start mb-2">
+                  <img
+                    src="/src/assets/x-circle.svg"
+                    className="mr-1"
+                    alt="error"
+                  />
+                  <p key={index} className="text-white">
+                    {error}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
@@ -147,8 +159,7 @@ const Signup = () => {
           classNames="bg-white text-black rounded-sm text-sm  w-full p-2 outline-none "
           value={email}
           onChange={(e) => {
-            if (message)
-                setMessage("")
+            if (message) setMessage("");
             setEmailErrors(null);
             setEmail(e.target.value);
           }}
@@ -160,9 +171,16 @@ const Signup = () => {
             </span>
             <div>
               {emailErrors.map((error, index) => (
-                <p key={index} className="text-white">
-                  - {error}
-                </p>
+                <div key={index} className="flex items-start mb-2">
+                  <img
+                    src="/src/assets/x-circle.svg"
+                    className="mr-1"
+                    alt="error"
+                  />
+                  <p key={index} className="text-white">
+                    {error}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
@@ -178,8 +196,7 @@ const Signup = () => {
           setShowPassword={setShowPassword}
           showPassword={showPassword}
           onChange={(e) => {
-            if (message)
-                setMessage("")
+            if (message) setMessage("");
             setPasswordErrors(null);
             setPassword(e.target.value);
           }}
@@ -192,9 +209,16 @@ const Signup = () => {
             </span>
             <div className="">
               {passwordErrors.map((error, index) => (
-                <p key={index} className="text-white">
-                  - {error}
-                </p>
+                <div key={index} className="flex items-start mb-2">
+                  <img
+                    src="/src/assets/x-circle.svg"
+                    className="mr-1"
+                    alt="error"
+                  />
+                  <p key={index} className="text-white">
+                    {error}
+                  </p>
+                </div>
               ))}
             </div>
           </div>

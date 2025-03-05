@@ -11,7 +11,7 @@ const Input = ({
   ...rest
 }) => {
   return (
-    <div className="flex flex-col mb-4 relative">
+    <div className="flex flex-col mb-4 relative ">
       <label className={`mb-1 text-sm ${labelClass}`} htmlFor={label}>
         {label}
       </label>

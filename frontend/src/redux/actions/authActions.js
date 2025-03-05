@@ -56,6 +56,7 @@ const loginUser = (email, password) => {
         localStorage.setItem("id", res.data.user.id)
         localStorage.setItem("username", res.data.user.username)
         localStorage.setItem("profilePicture", res.data.user.profilePicture)
+        localStorage.setItem("isGoogleAcc", false)
         dispatch(loginSuccess(res.data.user));
       }
     } catch (error) {

@@ -15,6 +15,7 @@ const AuthCallback = () => {
         localStorage.setItem("id", id);
         localStorage.setItem("username", username);
         localStorage.setItem("profilePicture", profilePicture)
+        localStorage.setItem("isGoogleAcc", true)
         navigate("/");
       } 
       else {

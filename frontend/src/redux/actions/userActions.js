@@ -176,6 +176,7 @@ const removeUserData = () => {
         localStorage.removeItem("id");
         localStorage.removeItem("username");
         localStorage.removeItem("profilePicture");
+        localStorage.removeItem("isGoogleAcc")
         window.location.href = "/login";
       }
     } catch (error) {

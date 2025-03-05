@@ -19,7 +19,7 @@ const DashboardLayout = ({ children }) => {
   }, [dispatch]);
 
   return (
-    <div className="grid grid-rows-[auto_1fr] min-h-screen bg-[#E3EAE9] p-4">
+    <div className="grid grid-rows-[auto_1fr] min-h-screen bg-linear-to-bl from-[#E3EAE9] to-[#A3C4C4] p-4">
       <div className="max-w-6xl m-auto w-full">
         <div
           className={` flex justify-between
@@ -28,7 +28,7 @@ const DashboardLayout = ({ children }) => {
           {window.location.pathname === "/" ? (
             <NavLink
               to="/create"
-              className={`w-36 flex items-center bg-teal-600 hover:bg-teal-700
+              className={`w-36 flex items-center bg-teal-600 hover:bg-teal-700 shadow-md
              rounded-sm  p-3 cursor-pointer`}
             >
               <Button
@@ -110,7 +110,7 @@ const DashboardLayout = ({ children }) => {
                 alt="toggle-menu"
               />
             </div>
-            {showMenu && <Menu />}
+            {showMenu && <Menu setShowMenu={setShowMenu} />}
           </div>
         </div>
       </div>

@@ -10,6 +10,7 @@ import {
   updateUserPassword,
 } from "../redux/actions/userActions";
 import DeleteUserConfirmation from "../components/DeleteUserConfirmation";
+import ProfileImageUploader from "../components/ProfileImageUploader";
 
 const PasswordChange = ({ loading }) => {
   const [edit, setEdit] = useState(false);
@@ -222,9 +223,7 @@ const RemoveAccount = ({ loading }) => {
 const Settings = () => {
   const profilePicture = localStorage.getItem("profilePicture");
   const loading = useSelector((state) => state.user.loading);
-  const user = useSelector((state) => state.user.user);
-  console.log("Rerendering parent settings");
-  const showInfo = user ? !Object.hasOwn(user, "googleId") : null;
+  const isGoogleAcc = JSON.parse(localStorage.getItem("isGoogleAcc"))
   return (
     <DashboardLayout>
       <h1 className="font-medium text-xl text-teal-950 mb-4">My Account</h1>
@@ -232,19 +231,9 @@ const Settings = () => {
         <SkeletonSettings />
       ) : (
         <>
-          <div className="w-full flex justify-center ">
-            <div
-              style={{
-                backgroundImage: profilePicture && `url(${profilePicture})`,
-                backgroundSize: "100%",
-              }}
-              className={`relative w-24 rounded-3xl group rounded-full overflow-hidden bg-clip-border h-24 md:h-32 md:w-32 mb-4`}
-            >
-              <div className="bg-gray-800 top-0 right-0 bottom-0 left-0 absolute opacity-0 group-hover:opacity-80 bg-[url('/src/assets/edit-settings.svg')] bg-no-repeat bg-center cursor-pointer"></div>
-            </div>
-          </div>
-          <AccountInfo showInfo={showInfo} />
-          {showInfo && <PasswordChange loading={loading} />}
+          <ProfileImageUploader profilePicture={profilePicture} />
+          <AccountInfo />
+          {!isGoogleAcc && <PasswordChange loading={loading} />}
           <RemoveAccount loading={loading} />
         </>
       )}

@@ -67,7 +67,6 @@ const Login = () => {
           classNames="bg-white text-black block p-2 w-full text-sm outline-none rounded-sm"
           value={email}
           onChange={(e) => {
-            
             setEmailErrors(null);
             setEmail(e.target.value);
           }}
@@ -80,9 +79,12 @@ const Login = () => {
             </span>
             <div>
               {emailErrors.map((error, index) => (
-                <p key={index} className="text-white">
-                  - {error}
-                </p>
+                <div key={index} className="flex items-start mb-2">
+                  <img src="/src/assets/x-circle.svg" className="mr-1" alt="error" /> 
+                  <p key={index} className="text-white">
+                    {error}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
@@ -110,9 +112,12 @@ const Login = () => {
             </span>
             <div>
               {passwordErrors.map((error, index) => (
+                <div key={index} className="flex items-start mb-2">
+                <img src="/src/assets/x-circle.svg" className="mr-1" alt="error" /> 
                 <p key={index} className="text-white">
-                  - {error}
+                  {error}
                 </p>
+              </div>
               ))}
             </div>
           </div>
@@ -127,10 +132,10 @@ const Login = () => {
           classNames="text-white bg-[#124242] w-full py-2 rounded-sm cursor-pointer font-medium text-base hover:bg-teal-900"
         />
         <div className="flex flex-col items-center">
-          <p className="font-normal bg-[#E3EAE9] z-2 text-[#124242] text-sm my-4 text-center px-2">
+          <p className="font-normal bg-[#70A9A9] z-2 text-[#124242] text-sm my-4 text-center px-2 text-teal-200 rounded-sm select-none">
             Or continue with
           </p>
-          <div className="h-[1.5px] bg-teal-800 w-full relative bottom-6.5"></div>
+          <div className="h-[1.5px] bg-[#70A9A9] w-full relative bottom-6.5"></div>
         </div>
 
         <div
@@ -141,10 +146,10 @@ const Login = () => {
           <Button
             type="button"
             text={"Log in with Google"}
-            classNames=" bg-transparent text-[#124242] group-hover:cursor-pointer w-full h-full bg-red-400 text-center text-sm font-medium tracking-wide"
+            classNames=" bg-transparent text-[#124242] group-hover:cursor-pointer w-full h-full bg-red-400 text-center text-sm font-medium tracking-wide "
           />
         </div>
-        <p className=" w-full text-sm text-center">
+        <p className=" w-full text-sm text-center select-none">
           Don't have an account?
           <NavLink
             className="ml-1 hover:text-teal-900 hover:underline text-teal-700 font-medium"
