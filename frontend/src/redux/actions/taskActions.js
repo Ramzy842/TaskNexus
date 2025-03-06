@@ -4,7 +4,8 @@ import {
     removeTask,
     updateTask,
 } from "../../services/tasks";
-import { getUser } from "../../services/users";
+import { retrieveTasks } from "../../services/users";
+
 import {
     ADD_TASK_FAILURE,
     ADD_TASK_REQUEST,
@@ -74,8 +75,12 @@ const getTasks = () => {
         dispatch(getTasksRequest());
         try {
             const id = localStorage.getItem("id");
-            const res = await getUser(id);
-            dispatch(getTasksSuccess(res.data.tasks));
+            const res = await retrieveTasks(id);
+            console.log(res);
+            if (!res.success && res.error)
+                dispatch(getTaskFailure(res.error))
+            else
+                dispatch(getTasksSuccess(res.data));
         } catch (error) {
             dispatch(getTasksFailure(error));
         }
@@ -87,7 +92,10 @@ const getTaskData = (id) => {
         dispatch(getTaskRequest());
         try {
             const res = await getTask(id);
-            dispatch(getTaskSuccess(res.data));
+            if (!res.success && res.error)
+                dispatch(getTaskFailure(res.error))
+            else
+                dispatch(getTaskSuccess(res.data));
         } catch (error) {
             dispatch(getTaskFailure(error.response.data.message));
         }
@@ -127,8 +135,10 @@ const addTask = (title, description, dueDate, status) => {
                 dueDate,
                 status,
             });
-            console.log(res);
-            dispatch(addTaskSuccess(res.message));
+            if (!res.success && res.error)
+                dispatch(addTaskFailure(res.error));
+            else
+                dispatch(addTaskSuccess(res.message));
         } catch (error) {
             dispatch(addTaskFailure(error.response.data.errors));
         }
@@ -203,6 +213,9 @@ const editTask = (id, data) => {
         dispatch(editTaskRequest());
         try {
             const res = await updateTask(id, data);
+            if (!res.success && res.error)
+                dispatch(editTaskFailure(res.error))
+            else
             dispatch(editTaskSuccess(res.data, res.message));
             dispatch(getTaskData(id));
             dispatch(getTasks())

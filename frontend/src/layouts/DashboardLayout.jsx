@@ -8,14 +8,10 @@ import { useDispatch } from "react-redux";
 import Menu from "../components/Menu";
 
 const DashboardLayout = ({ children }) => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const profilePicture = localStorage.getItem("profilePicture");
-  
-  useEffect(() => {
-    const id = localStorage.getItem("id");
-    dispatch(getUserData(id));
-  }, [dispatch]);
+
 
   return (
     <div className="grid grid-rows-[auto_1fr] min-h-screen bg-linear-to-bl from-[#E3EAE9] to-[#A3C4C4] p-4">

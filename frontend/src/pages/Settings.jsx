@@ -6,6 +6,7 @@ import Button from "../components/Button";
 import SkeletonSettings from "../components/SkeletonSettings";
 import Input from "../components/Input";
 import {
+  getUserData,
   reset_password_update,
   updateUserPassword,
 } from "../redux/actions/userActions";
@@ -48,7 +49,7 @@ const PasswordChange = ({ loading }) => {
       setNewPass("");
       setTimeout(() => {
         dispatch(reset_password_update());
-        setEdit(false)
+        setEdit(false);
       }, 3000);
     }
   }, [message]);
@@ -104,7 +105,10 @@ const PasswordChange = ({ loading }) => {
                 maxlength="32"
                 src="/src/assets/lock.svg"
                 type={showOldPassword ? "text" : "password"}
-                onChange={(e) => {setOldPasswordErrors(null); setOldPass(e.target.value)}}
+                onChange={(e) => {
+                  setOldPasswordErrors(null);
+                  setOldPass(e.target.value);
+                }}
                 value={oldPass}
                 setShowPassword={setShowOldPassword}
                 showPassword={showOldPassword}
@@ -130,7 +134,10 @@ const PasswordChange = ({ loading }) => {
                 type={showNewPassword ? "text" : "password"}
                 src="/src/assets/lock.svg"
                 maxlength="32"
-                onChange={(e) => {setNewPasswordErrors(null);setNewPass(e.target.value)}}
+                onChange={(e) => {
+                  setNewPasswordErrors(null);
+                  setNewPass(e.target.value);
+                }}
                 value={newPass}
                 setShowPassword={setShowNewPassword}
                 showPassword={showNewPassword}
@@ -223,7 +230,13 @@ const RemoveAccount = ({ loading }) => {
 const Settings = () => {
   const profilePicture = localStorage.getItem("profilePicture");
   const loading = useSelector((state) => state.user.loading);
-  const isGoogleAcc = JSON.parse(localStorage.getItem("isGoogleAcc"))
+  const isGoogleAcc = JSON.parse(localStorage.getItem("isGoogleAcc"));
+  const dispatch = useDispatch()
+  useEffect(() => {
+    const id = localStorage.getItem("id");
+    dispatch(getUserData(id));
+  }, []);
+
   return (
     <DashboardLayout>
       <h1 className="font-medium text-xl text-teal-950 mb-4">My Account</h1>

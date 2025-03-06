@@ -40,7 +40,7 @@ const limiter = {
             error: "Too many logout attempts. Please try again later.",
         },
         windowMs: 30 * 60 * 1000, // 30 minutes
-        limit: isTestEnv ? 1000 : 5,
+        limit: isTestEnv ? 1000 : 10,
         standardHeaders: true,
         legacyHeaders: false,
     }),
@@ -49,8 +49,18 @@ const limiter = {
             success: false,
             error: "Too many requests for user-related requests. Please try again later.",
         },
-        windowMs: 60 * 60 * 1000, // 1h
+        windowMs: 30 * 60 * 1000, // 30min
         limit: isTestEnv ? 1000 : 20,
+        standardHeaders: true,
+        legacyHeaders: false,
+    }),
+    getTasksLimit: rateLimit({
+        message: {
+            success: false,
+            error: "Too many requests for tasks retrieval. Please slow down!",
+        },
+        windowMs: 1 * 60 * 1000, // 1m
+        limit: isTestEnv ? 1000 : 30,
         standardHeaders: true,
         legacyHeaders: false,
     }),
@@ -59,7 +69,7 @@ const limiter = {
             success: false,
             error: "Too many task-related requests. Please try again later.",
         },
-        windowMs: 60 * 60 * 1000, // 1h
+        windowMs: 15 * 60 * 1000, // 1h
         limit: isTestEnv ? 1000 : 30,
         standardHeaders: true,
         legacyHeaders: false,

@@ -62,7 +62,7 @@ const TaskCreate = () => {
     return (
         <form className="flex flex-col justify-start sm:flex-row sm:items-start sm:justify-between mb-4 ">
             <div className=" mb-4 sm:mb-0 w-full sm:w-1/2">
-                {taskDetails.map((detail) => {
+                {taskDetails?.map((detail) => {
                     const {
                         id,
                         placeholder,

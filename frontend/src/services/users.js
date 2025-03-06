@@ -36,4 +36,13 @@ const updatePassword = async (id, data) => {
     }
 }
 
-export {getUser, updateUser, deleteUser, updatePassword }
+const retrieveTasks = async(id) => {
+    try {
+        const res = await api.get(`/users/${id}/tasks`);
+        return res.data
+    } catch (error) {
+        return error.response.data;
+    }
+}
+
+export {getUser, updateUser, deleteUser, updatePassword , retrieveTasks}

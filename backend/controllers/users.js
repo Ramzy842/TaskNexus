@@ -10,15 +10,16 @@ const {
   validateUsernameUpdate,
   validateEmailUpdate,
   validateNameUpdate,
-  validatePasswordUpdate,
   validateOldPasswordUpdate,
   validateNewPasswordUpdate,
 } = require("../utils/usersValidators");
 const { getHashedPassword, createUser } = require("../utils/users");
 const { responseMessages } = require("../utils/responseMessages");
 const bcrypt = require("bcrypt");
+const { limiter } = require("../utils/config");
 usersRouter.post(
   "/",
+  limiter.users,
   [validateUsername, validateName, validateEmail, validatePassword],
   async (req, res, next) => {
     const result = validationResult(req);
@@ -61,7 +62,7 @@ usersRouter.post(
   }
 );
 
-usersRouter.get("/", async (req, res, next) => {
+usersRouter.get("/", limiter.users, async (req, res, next) => {
   try {
     const users = await User.find({}).populate("tasks");
     res.status(200).json({
@@ -74,7 +75,7 @@ usersRouter.get("/", async (req, res, next) => {
   }
 });
 
-usersRouter.get("/:id", verifyToken, async (req, res, next) => {
+usersRouter.get("/:id", limiter.users, verifyToken, async (req, res, next) => {
   try {
     if (req.params.id !== req.user.id)
       return res.status(403).json({
@@ -102,6 +103,7 @@ usersRouter.get("/:id", verifyToken, async (req, res, next) => {
 
 usersRouter.put(
   "/:id",
+  limiter.users,
   [validateUsernameUpdate, validateEmailUpdate, validateNameUpdate],
   verifyToken,
   async (req, res, next) => {
@@ -196,6 +198,7 @@ usersRouter.delete("/:id", verifyToken, async (req, res, next) => {
 
 usersRouter.put(
   "/:id/update-password",
+  limiter.users,
   [validateOldPasswordUpdate, validateNewPasswordUpdate],
   verifyToken,
   async (req, res, next) => {
@@ -239,6 +242,37 @@ usersRouter.put(
         success: true,
         statusCode: 200,
         message: "Password updated successfully.",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+usersRouter.get(
+  "/:id/tasks",
+  limiter.getTasksLimit,
+  verifyToken,
+  async (req, res, next) => {
+    try {
+      if (req.params.id !== req.user.id)
+        return res.status(403).json({
+          success: false,
+          statusCode: 403,
+          message: responseMessages.users.accessUnauthorized,
+        });
+      const user = await User.findById(req.params.id).populate("tasks");
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          statusCode: 404,
+          message: responseMessages.users.toRetrieveNotFound,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        statusCode: 200,
+        data: user.tasks,
       });
     } catch (error) {
       next(error);

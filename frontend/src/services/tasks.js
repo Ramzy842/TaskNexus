@@ -16,4 +16,4 @@ const getTask = async (id) => request("get", `/tasks/${id}`);
 const updateTask = async (id, payload) => request("put", `/tasks/${id}`, payload);
 const removeTask = async (id) => request("delete", `/tasks/${id}`)
 
-export { createTask, getTask, removeTask, updateTask }
+export { createTask, getTask, removeTask, updateTask  }
