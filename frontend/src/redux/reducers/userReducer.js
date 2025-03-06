@@ -27,7 +27,7 @@ const userReducer = (state = initialState, action) => {
     case GET_USER_SUCCESS:
       return { ...state, loading: false, error: null, user: action.payload };
     case GET_USER_FAILURE:
-      return { ...state,loading: false, error: action.payload, user: null };
+      return { ...state,loading: false, error: action.payload.error, user: null, message: action.payload.message };
     case RESET_USER:
       return initialState;
     case UPDATE_USER_REQUEST:

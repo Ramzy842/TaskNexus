@@ -47,7 +47,6 @@ const Login = () => {
   const login = async () => {
     window.location.href = "http://localhost:4000/api/auth/google";
   };
-
   return (
     <AuthLayout>
       <form action="#" className="flex flex-col w-4/5 sm:max-w-xs sm:w-full">
