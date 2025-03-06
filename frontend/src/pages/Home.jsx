@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import SkeletonCard from "../components/SkeletonCard";
 import { useEffect } from "react";
-import { getTasks } from "../redux/actions/taskActions";
+import { getTasks, resetTasks } from "../redux/actions/taskActions";
 import { resetUser } from "../redux/actions/userActions";
 
 const Home = () => {

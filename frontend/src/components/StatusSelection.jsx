@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 const StatusSelection = ({value, handler  }) => {
+    const [val, setVal] = useState(value)
     const statuses = [
         {
             id: 0,
@@ -18,7 +19,7 @@ const StatusSelection = ({value, handler  }) => {
             styles: "bg-green-100 text-green-700 hover:bg-green-300 px-4",
         },
     ];
-    const status = statuses.find(stat => stat.status === value)
+    const status = statuses.find(stat => stat.status === val)
     const [selected, setSelected] = useState(status);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     return (

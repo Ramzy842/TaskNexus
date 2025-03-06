@@ -11,7 +11,7 @@ const DashboardLayout = ({ children }) => {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const profilePicture = localStorage.getItem("profilePicture");
-
+  
   useEffect(() => {
     const id = localStorage.getItem("id");
     dispatch(getUserData(id));

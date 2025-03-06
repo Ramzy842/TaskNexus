@@ -1,18 +1,21 @@
 import Button from "./Button";
 import { createTask } from "../services/tasks";
 import { useDispatch, useSelector } from "react-redux";
-import { addTask, getTasks, resetTaskCreation } from "../redux/actions/taskActions";
+import {
+  addTask,
+  getTasks,
+  resetTaskCreation,
+} from "../redux/actions/taskActions";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
 const FormActions = ({ taskData }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
-  const tasksState = useSelector(state => state.tasks);
+  const navigate = useNavigate();
+  const tasksState = useSelector((state) => state.tasks);
   useEffect(() => {
-    if (tasksState.message)
-      navigate("/")
-  }, [tasksState])
+    if (tasksState.message) navigate("/");
+  }, [tasksState]);
   const handleSave = () => {
     console.log("SAVING DATA: ", taskData);
     dispatch(
@@ -20,16 +23,15 @@ const FormActions = ({ taskData }) => {
         taskData.title,
         taskData.description,
         taskData.dueDate,
-        taskData.status,
+        taskData.status
       )
     );
-    
   };
   return (
     <div className="flex justify-center sm:flex-col sm:items-center gap-x-2">
       <div
         onClick={handleSave}
-        className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-sm p-3 cursor-pointer sm:mb-2 w-full"
+        className=" flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-sm p-3 cursor-pointer sm:mb-2 w-full"
       >
         <svg
           width="24"
@@ -63,12 +65,15 @@ const FormActions = ({ taskData }) => {
         <Button
           type="button"
           text="Save"
-          classNames="text-white font-semibold text-md ml-2 select-none cursor-pointer"
+          classNames="text-white font-semibold text-md ml-2 select-none cursor-pointer "
         />
       </div>
       <div
         className="flex justify-center items-center bg-red-600 hover:bg-red-700 rounded-sm p-3 cursor-pointer sm:mb-2 w-full"
-        onClick={() => {dispatch(resetTaskCreation()); navigate("/")}}
+        onClick={() => {
+          dispatch(resetTaskCreation());
+          navigate("/");
+        }}
       >
         <svg
           width="24"

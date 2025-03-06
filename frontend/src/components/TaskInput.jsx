@@ -17,12 +17,13 @@ const TaskInput = ({
   ...rest
 }) => {
   const [inputErrors, setInputErrors] = useState(null);
-  let errors = useSelector((state) => state.tasks.creationErrors);
+  let creationErrors = useSelector((state) => state.tasks.creationErrors);
+  let editingErrors = useSelector(state => state.tasks.error)
   let loading = useSelector(state => state.tasks.isCreating)
   useEffect(() => {
-    if (errors)
+    if (creationErrors || editingErrors)
     {
-      const filteredErrors = errors.filter((error) =>
+      const filteredErrors = (creationErrors ? creationErrors : editingErrors).filter((error) =>
         new RegExp(`\\b${target}\\b`, "i").test(error)
       );
       if (filteredErrors && filteredErrors.length)
@@ -32,7 +33,10 @@ const TaskInput = ({
     }
     else
       setInputErrors(null)
-  }, [errors, loading, target]);
+    console.log("Creating errors:", creationErrors);
+    console.log("Editing errors:", editingErrors);
+  }, [creationErrors, editingErrors, loading, target]);
+
   return (
     <div className="flex items-center gap-x-2 mb-2">
       <img src={iconSrc} height={24} width={24} alt={inputName} />
@@ -49,14 +53,19 @@ const TaskInput = ({
             {...rest}
           />
         )}
-        {!editMode && inputErrors && target !== "status" && (
-          <div className="text-xs bg-red-200 text-red-700 pb-2 pl-2 mb-2 rounded-xs relative flex flex-col bg-red-300">
+        {inputErrors && target !== "status" && (
+          <div className="text-xs bg-red-700 text-red-700 py-2 px-2 mb-2 rounded-xs relative flex flex-col">
             <span className="self-end bg-red-500 text-white rounded-sm mt-1 mr-1 px-1 font-bold text-xs ">
               {inputErrors.length}
             </span>
             <div>
               {inputErrors.map((error, index) => (
-                <p key={index}>- {error}</p>
+                <div key={index} className="flex items-start mb-2">
+                <img src="/src/assets/x-circle.svg" className="mr-1" alt="error" /> 
+                <p key={index} className="text-white">
+                  {error}
+                </p>
+              </div>
               ))}
             </div>
           </div>

@@ -7,6 +7,8 @@ import {
     deleteTaskFailure,
     editTask,
     getTaskData,
+    resetTaskCreation,
+    resetTasks,
 } from "../redux/actions/taskActions";
 import SkeletonEdit from "../components/SkeletonEdit";
 import Button from "../components/Button";
@@ -15,21 +17,15 @@ import { removeTask } from "../services/tasks";
 
 const EditTask = () => {
     let params = useParams();
-    const [taskDetails, setTaskDetails] = useState([]);
+    const [taskDetails, setTaskDetails] = useState(null);
     const dispatch = useDispatch();
     const task = useSelector((state) => state.tasks.task);
-    const loading = useSelector((state) => state.tasks.loading);
     const id = params.id;
     const navigate = useNavigate();
-    const error = useSelector((state) => state.tasks.error);
     useEffect(() => {
-        dispatch(getTaskData(id));             
+        dispatch(getTaskData(id));        
     }, [dispatch, id]);
-    useEffect(() => {
-        if (error) {
-            navigate("/");
-        }
-    }, [error, navigate]);
+
     useEffect(() => {
         if (task) {
             const isoDate = task.dueDate;
@@ -41,6 +37,7 @@ const EditTask = () => {
                     iconSrc: "/src/assets/title.svg",
                     type: "text",
                     value: task.title,
+                    target: "Title",
                 },
                 {
                     id: 1,
@@ -48,6 +45,7 @@ const EditTask = () => {
                     iconSrc: "/src/assets/description.svg",
                     type: "text",
                     value: task.description,
+                    target: "Description",
                 },
                 {
                     id: 2,
@@ -55,6 +53,7 @@ const EditTask = () => {
                     iconSrc: "/src/assets/duedate.svg",
                     type: "date",
                     value: formattedDate,
+                    target: "DueDate",
                 },
                 {
                     id: 3,
@@ -62,13 +61,11 @@ const EditTask = () => {
                     iconSrc: "/src/assets/status.svg",
                     type: "select",
                     value: task.status,
+                    target: "Status",
                 },
             ]);
         }
     }, [task]);
-    useEffect(() => {
-        console.log(taskDetails);
-    }, [taskDetails]);
     const handleDelete = async () => {
         try {
             await removeTask(id);
@@ -116,7 +113,7 @@ const EditTask = () => {
     return (
         <DashboardLayout>
             <div className=" mt-2 sm:flex justify-between items-start gap-x-8">
-                {loading && !task ? (
+                {!taskDetails ? (
                     <SkeletonEdit />
                 ) : (
                     <>
@@ -128,6 +125,7 @@ const EditTask = () => {
                                     iconSrc,
                                     type,
                                     value,
+                                    target
                                 } = detail;
                                 return (
                                     <TaskInput
@@ -143,9 +141,9 @@ const EditTask = () => {
                                             )
                                         }
                                         statusHandler={handleStatusChange}
-                                        
+                                        target={target}
                                         iconSrc={iconSrc}
-                                        classNames="text-[#212121] text-sm font-normal border-b border-transparent focus:border-teal-700 outline-none w-full cursor-pointer bg-white rounded-sm  p-2"
+                                        classNames="mb-2 text-[#212121] text-sm font-normal border-b border-transparent focus:border-teal-700 outline-none w-full cursor-pointer bg-white rounded-sm  p-2"
                                     />
                                 );
                             })}

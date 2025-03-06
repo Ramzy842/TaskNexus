@@ -85,7 +85,7 @@ const TaskCreate = () => {
                             placeholder={placeholder}
                             iconSrc={iconSrc}
                             errors={errors}
-                            classNames="text-[#212121] text-sm font-normal border-b border-transparent focus:border-teal-700 outline-none w-full cursor-pointer bg-white rounded-sm p-2"
+                            classNames="mb-2 text-[#212121] text-sm font-normal border-b border-transparent focus:border-teal-700 outline-none w-full cursor-pointer bg-white rounded-sm p-2"
                         />
                     );
                 })}

@@ -123,7 +123,7 @@ const tasksReducer = (state = initialState, action) => {
         case EDIT_TASK_FAILURE:
             return {
                 ...state,
-                message: action.payload,
+                error: action.payload,
                 loading: false,
             };
         case EDIT_TASK_SUCCESS:
