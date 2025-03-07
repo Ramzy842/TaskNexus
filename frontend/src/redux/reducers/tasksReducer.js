@@ -19,13 +19,14 @@ import {
 } from "../types/taskTypes";
 
 const initialState = {
-    tasks: [],
+    tasks: null,
     task: null,
     error: null,
     loading: false,
     message: null,
     isCreating: false,
     creationErrors: null,
+    prevTasks: null
 };
 
 const tasksReducer = (state = initialState, action) => {
@@ -39,6 +40,7 @@ const tasksReducer = (state = initialState, action) => {
                 message: null,
                 error: null,
                 tasks: action.payload,
+                prevTasks: action.payload
             };
         case GET_TASKS_FAILURE:
             return {
@@ -134,7 +136,7 @@ const tasksReducer = (state = initialState, action) => {
                 loading: false,
             };
         case RESET_TASKS:
-            return initialState
+            return {...initialState, prevTasks: state.prevTasks }
         default:
             return state;
     }

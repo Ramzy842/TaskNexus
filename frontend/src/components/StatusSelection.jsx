@@ -6,17 +6,17 @@ const StatusSelection = ({value, handler  }) => {
         {
             id: 0,
             status: "To Do",
-            styles: "bg-yellow-100 text-yellow-700 hover:bg-yellow-300 px-4",
+            styles: "bg-yellow-600 text-yellow-100 hover:bg-yellow-700 px-4",
         },
         {
             id: 1,
             status: "In Progress",
-            styles: "bg-blue-100 text-blue-700  hover:bg-blue-300 px-4",
+            styles: "bg-blue-600 text-blue-100  hover:bg-blue-700 px-4",
         },
         {
             id: 2,
             status: "Completed",
-            styles: "bg-green-100 text-green-700 hover:bg-green-300 px-4",
+            styles: "bg-teal-600 text-teal-100 hover:bg-teal-700 px-4",
         },
     ];
     const status = statuses.find(stat => stat.status === val)
@@ -26,13 +26,13 @@ const StatusSelection = ({value, handler  }) => {
         <div>
             <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                type="button"
-                className={`cursor-pointer ${selected.styles} px-2 py-1 rounded-sm text-xs font-medium border`}
+                type="button"   
+                className={`cursor-pointer ${selected.styles} px-2 py-1.5  ${!isMenuOpen ? "rounded-sm" : "rounded-t-xs"} text-xs font-medium w-28`}
             >
                 {selected.status}
             </button>
             {isMenuOpen && (
-                <div className="flex flex-col absolute">
+                <div className="flex flex-col absolute rounded-sm">
                     {statuses
                         .filter((status) => status.status !== selected.status)
                         .map((stat) => {
@@ -41,14 +41,12 @@ const StatusSelection = ({value, handler  }) => {
                                 <button
                                     key={id}
                                     onClick={() => {
-                                        console.log("setting", statuses[id]);
                                         setSelected(statuses[id]);
-                                        console.log(handler);
                                         handler(statuses[id].status)
                                         setIsMenuOpen(false);
                                     }}
                                     type="button"
-                                    className={`cursor-pointer ${styles} px-2 py-1 rounded-sm text-xs font-medium`}
+                                    className={`cursor-pointer ${styles} px-2 py-1.5 text-xs font-medium w-28`}
                                 >
                                     {status}
                                 </button>

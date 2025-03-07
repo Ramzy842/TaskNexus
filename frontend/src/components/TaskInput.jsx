@@ -54,7 +54,7 @@ const TaskInput = ({
           />
         )}
         {inputErrors && target !== "status" && (
-          <div className="text-xs bg-red-700 text-red-700 py-2 px-2 mb-2 rounded-xs relative flex flex-col">
+          <div className="text-xs bg-[#E3123F] text-red-700 py-2 px-2 mb-2 rounded-xs relative flex flex-col">
             <span className="self-end bg-red-500 text-white rounded-sm mt-1 mr-1 px-1 font-bold text-xs ">
               {inputErrors.length}
             </span>

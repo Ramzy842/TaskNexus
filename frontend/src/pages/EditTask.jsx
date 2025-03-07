@@ -117,7 +117,7 @@ const EditTask = () => {
                     <SkeletonEdit />
                 ) : (
                     <>
-                        <div className="sm:w-1/2 sm:max-w-1/2 mb-12 sm:mb-0">
+                        <div className="sm:w-1/2 sm:max-w-1/2 mb-16 sm:mb-0">
                             {taskDetails.map((detail, index) => {
                                 const {
                                     id,
@@ -143,7 +143,7 @@ const EditTask = () => {
                                         statusHandler={handleStatusChange}
                                         target={target}
                                         iconSrc={iconSrc}
-                                        classNames="mb-2 text-[#212121] text-sm font-normal border-b border-transparent focus:border-teal-700 outline-none w-full cursor-pointer bg-white rounded-sm  p-2"
+                                        classNames="mb-1 text-[#212121] text-sm font-normal border-b border-transparent focus:border-teal-700 outline-none w-full cursor-pointer bg-white rounded-sm  p-2"
                                     />
                                 );
                             })}
@@ -187,7 +187,7 @@ const EditTask = () => {
                             </div>
                             <div
                                 onClick={handleDelete}
-                                className="flex justify-center items-center bg-red-600 hover:bg-red-700 rounded-sm p-3 cursor-pointer mb-2 w-full"
+                                className="flex justify-center items-center bg-[#E3123F] hover:bg-red-700 rounded-sm p-3 cursor-pointer mb-2 w-full"
                             >
                                 <svg
                                     width="20"

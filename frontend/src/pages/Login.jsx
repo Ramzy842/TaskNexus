@@ -60,6 +60,7 @@ const Login = () => {
         )}
         <Input
           src="/src/assets/mail.svg"
+          labelClass="text-teal-900 font-normal"
           label="Email"
           type="text"
           placeholder=""
@@ -72,7 +73,7 @@ const Login = () => {
         />
 
         {emailErrors && (
-          <div className="text-xs bg-red-700 text-red-700 py-2 px-2 mb-2 rounded-xs relative flex flex-col">
+          <div className="text-xs bg-[#E3123F] text-red-700 py-2 px-2 mb-2 rounded-xs relative flex flex-col">
             <span className="self-end bg-red-500 text-white rounded-sm px-1 font-bold text-xs ">
               {emailErrors.length}
             </span>
@@ -91,6 +92,7 @@ const Login = () => {
 
         <Input
           src="/src/assets/lock.svg"
+          labelClass="text-teal-900 font-normal"
           setShowPassword={setShowPassword}
           showPassword={showPassword}
           label="Password"
@@ -105,7 +107,7 @@ const Login = () => {
         />
 
         {passwordErrors && (
-          <div className="text-xs bg-red-700 text-red-700 py-2 px-2 mb-2 rounded-xs relative flex flex-col">
+          <div className="text-xs bg-[#E3123F] text-red-700 py-2 px-2 mb-2 rounded-xs relative flex flex-col">
             <span className="self-end bg-red-500 text-white rounded-sm px-1 font-bold text-xs ">
               {passwordErrors.length}
             </span>
@@ -131,7 +133,7 @@ const Login = () => {
           classNames="text-white bg-[#124242] w-full py-2 rounded-sm cursor-pointer font-medium text-base hover:bg-teal-900"
         />
         <div className="flex flex-col items-center">
-          <p className="font-normal bg-[#70A9A9] z-2 text-[#124242] text-sm my-4 text-center px-2 text-teal-200 rounded-sm select-none">
+          <p className="font-normal bg-[#70A9A9] z-2 text-[#124242] text-sm my-4 text-center px-3 text-teal-200 rounded-sm select-none">
             Or continue with
           </p>
           <div className="h-[1.5px] bg-[#70A9A9] w-full relative bottom-6.5"></div>

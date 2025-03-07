@@ -15,6 +15,7 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
   const isGoogleAcc = JSON.parse(localStorage.getItem("isGoogleAcc"))
   const dispatch = useDispatch();
   const cred = useSelector((state) => state.user.user?.[title.toLowerCase()] ?? "");
+
   const handleSave = () => {
     const updatedField = {};
     if (inputVal.length && value !== inputVal) {
@@ -23,6 +24,7 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
       dispatch(updateUserData(updatedField));
     }
   };
+
   useEffect(() => {
     if (cred !== value) {
       setIsEditing(false);
@@ -33,7 +35,7 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
       setEditedCount(0);
     }
   }, [cred]);
-  console.log("Rendered and isEditing=", isEditing, "and title is", title);
+
   useEffect(() => {
     if (!error) return;
     handleErrors(error);
@@ -46,6 +48,7 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
     );
     setErrors(errorsArr.length ? errorsArr : null);
   };
+
   if ((loading && editedCount)) return <SkeletonAccInfoCard />;
   return isGoogleAcc && title === "Email" ? <></> : <div>
       <div
@@ -90,7 +93,7 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
                 setErrors(null);
                 setEditedCount(0);
               }}
-              className="flex justify-center items-center bg-red-600 hover:bg-red-700 rounded-sm py-2 px-4 cursor-pointer"
+              className="flex justify-center items-center bg-[#E3123F] hover:bg-red-700 rounded-sm py-2 px-4 cursor-pointer"
             >
               {/* <img src="/src/assets/remove-acc.svg" alt="save" /> */}
               <Button

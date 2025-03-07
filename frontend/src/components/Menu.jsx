@@ -16,6 +16,7 @@ const Menu = ({setShowMenu}) => {
       localStorage.removeItem("username");
       localStorage.removeItem("profilePicture");
       localStorage.removeItem("isGoogleAcc")
+      localStorage.removeItem("errorExpireTime")
       dispatch(resetAuth());
       dispatch(resetTasks());
       dispatch(resetUser());
@@ -25,7 +26,7 @@ const Menu = ({setShowMenu}) => {
     }
   };
   return (
-    <ul className="absolute w-[120px] max-w-[160px]  top-full mt-2 right-0 rounded-sm overflow-hidden bg-teal-900 ">
+    <ul className="absolute w-[120px] max-w-[160px]  top-full mt-2 right-0 rounded-sm overflow-hidden bg-teal-900 z-30">
       <Link onClick={() => setShowMenu(false)} to="/settings" className="">
         <li  className="flex items-center p-2 justify-center text-white text-xs md:text-sm group rounded-b-md hover:bg-teal-700 cursor-pointer uppercase font-medium border-b border-transparent hover:border-teal-600">
           <img src="/src/assets/settings.svg" className="mr-2" alt="settings" />

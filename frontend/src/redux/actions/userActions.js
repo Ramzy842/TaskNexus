@@ -178,6 +178,7 @@ const removeUserData = () => {
                 localStorage.removeItem("username");
                 localStorage.removeItem("profilePicture");
                 localStorage.removeItem("isGoogleAcc");
+                localStorage.removeItem("errorExpireTime")
                 window.location.href = "/login";
             }
         } catch (error) {

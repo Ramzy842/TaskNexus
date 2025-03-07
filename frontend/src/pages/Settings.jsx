@@ -117,15 +117,22 @@ const PasswordChange = ({ loading }) => {
                 classNames="rounded-sm py-2 px-2 text-xs w-full md:w-sm outline-none "
               />
               {oldPasswordErrors && (
-                <div className="text-xs bg-red-700 text-red-700 py-2 px-2 mb-2 rounded-xs relative flex flex-col w-sm">
+                <div className="text-xs bg-[#E3123F] text-red-700 py-2 px-2 mb-2 rounded-xs relative flex flex-col w-sm">
                   <span className="self-end bg-red-500 text-white rounded-sm px-1 font-bold text-xs ">
                     {oldPasswordErrors.length}
                   </span>
                   <div>
                     {oldPasswordErrors.map((error, index) => (
-                      <p key={index} className="text-white">
-                        - {error}
-                      </p>
+                      <div key={index} className="flex items-start mb-2">
+                        <img
+                          src="/src/assets/x-circle.svg"
+                          className="mr-1"
+                          alt="error"
+                        />
+                        <p key={index} className="text-white">
+                          {error}
+                        </p>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -146,15 +153,22 @@ const PasswordChange = ({ loading }) => {
                 classNames="rounded-sm py-2 px-2 text-xs w-full md:w-sm outline-none "
               />
               {newPasswordErrors && (
-                <div className="text-xs bg-red-700 text-red-700 py-2 px-2 mb-2 rounded-xs relative flex flex-col w-sm">
+                <div className="text-xs bg-[#E3123F] text-red-700 py-2 px-2 mb-2 rounded-xs relative flex flex-col w-sm">
                   <span className="self-end bg-red-500 text-white rounded-sm px-1 font-bold text-xs ">
                     {newPasswordErrors.length}
                   </span>
                   <div>
                     {newPasswordErrors.map((error, index) => (
-                      <p key={index} className="text-white">
-                        - {error}
-                      </p>
+                      <div key={index} className="flex items-start mb-2">
+                        <img
+                          src="/src/assets/x-circle.svg"
+                          className="mr-1"
+                          alt="error"
+                        />
+                        <p key={index} className="text-white">
+                          {error}
+                        </p>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -198,7 +212,7 @@ const RemoveAccount = ({ loading }) => {
   return (
     !loading && (
       <div className="flex flex-col justify-between items-start">
-        <div className="flex flex-col mb-2">
+        <div className="flex flex-col mb-4">
           <h1 className="font-semibold text-sm text-teal-900 uppercase">
             Account Removal
           </h1>
@@ -231,7 +245,7 @@ const Settings = () => {
   const profilePicture = localStorage.getItem("profilePicture");
   const loading = useSelector((state) => state.user.loading);
   const isGoogleAcc = JSON.parse(localStorage.getItem("isGoogleAcc"));
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
     const id = localStorage.getItem("id");
     dispatch(getUserData(id));

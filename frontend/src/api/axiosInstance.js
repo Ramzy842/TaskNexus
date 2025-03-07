@@ -38,6 +38,7 @@ api.interceptors.response.use(response => response, async (error) => {
             localStorage.removeItem("username")
             localStorage.removeItem("profilePicture")
             localStorage.removeItem("isGoogleAcc")
+            localStorage.removeItem("errorExpireTime")
             window.location.href = "/login";
             return Promise.reject(refreshError);
         }

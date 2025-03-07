@@ -41,12 +41,12 @@ const SkeletonAccInfo = () => {
 
 const SkeletonRemoveAccount = () => {
   return (
-    <div className="flex md:flex-col justify-between items-start animate-pulse">
-      <div className="flex flex-col md:mb-2 w-full animate-pulse">
+    <div className="flex flex-col justify-between items-start animate-pulse">
+      <div className="flex flex-col mb-4 w-full animate-pulse">
         <h1 className="bg-gray-400 w-36 h-4 rounded-sm mb-1 animate-pulse"></h1>
         <p className="w-11/12 bg-gray-400 h-8 rounded-sm animate-pulse"></p>
       </div>
-      <div className="bg-gray-400 rounded-sm py-2 px-8 md:px-4 w-48 h-12 animate-pulse"></div>
+      <div className="bg-gray-400 rounded-sm py-2 px-8 md:px-4 w-full md:w-48 h-12 animate-pulse"></div>
     </div>
   );
 };
