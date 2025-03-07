@@ -20,7 +20,7 @@ const TaskCard = ({ id, title, status }) => {
         <div
             className={`w-full rounded-sm flex justify-between items-center py-2 px-4 mb-1 shadow-[0_0_8px_-2px_rgba(0,200,200,0.50)] bg-[#E3EAE9] rounded-md bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-20 border border-gray-100`}
         >
-            <div className="flex flex-col items-start  w-40 sm:w-sm md:w-md md:w-xl">
+            <div className="flex flex-col items-start  w-40 sm:w-sm md:w-sm md:w-lg lg:w-2xl">
                 <p
                     className={`sm:hidden select-none mb-1 font-medium ${
                         status === "Completed"
@@ -46,7 +46,7 @@ const TaskCard = ({ id, title, status }) => {
                 >
                     {status}
                 </p>
-                <div className="flex items-center justify-center ml-2 gap-x-2">
+                <div className="flex items-center justify-end ml-2 gap-x-2 max-w-30 min-w-30">
                     <NavLink to={`/tasks/${id}/edit`}>
                         <img
                             src="./src/assets/edit.svg"
@@ -86,6 +86,7 @@ const TaskCard = ({ id, title, status }) => {
                             strokeWidth="2px"
                         />
                     </svg>
+                    <img src="/src/assets/drag.svg" className="cursor-pointer"  alt="drag" />
                     {/* <img src="./src/assets/x.svg" alt="Delete icon" className="cursor-pointer" onClick={() => console.log("Delete")} /> */}
                 </div>
             </div>

@@ -250,7 +250,7 @@ const Settings = () => {
     const id = localStorage.getItem("id");
     dispatch(getUserData(id));
   }, []);
-
+  
   return (
     <DashboardLayout>
       <h1 className="font-medium text-xl text-teal-950 mb-4">My Account</h1>

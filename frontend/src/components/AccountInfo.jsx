@@ -32,7 +32,7 @@ const AccountInfo = () => {
               ]
             : []
     );
-
+    
     console.log("Rendering parent AccountInfo");
     return (
         <div className="mb-4">

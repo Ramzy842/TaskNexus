@@ -3,7 +3,7 @@ import Button from "../components/Button";
 import { NavLink } from "react-router";
 
 import { getUserData } from "../redux/actions/userActions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Menu from "../components/Menu";
 
@@ -11,8 +11,12 @@ const DashboardLayout = ({ children }) => {
   // const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const profilePicture = localStorage.getItem("profilePicture");
-
-
+  const [username, setUsername] = useState(localStorage.getItem("username"))
+  const user = useSelector((state) => state.user.user)
+  useEffect(() => {
+    if (user && username !== user.username)
+      setUsername(user.username)
+  }, [user])
   return (
     <div className="grid grid-rows-[auto_1fr] min-h-screen bg-linear-to-bl from-[#E3EAE9] to-[#A3C4C4] p-4">
       <div className="max-w-6xl m-auto w-full">
@@ -85,7 +89,7 @@ const DashboardLayout = ({ children }) => {
               <h1
                 className={`hidden sm:text-normal sm:flex font-semibold text-[#0A2D29] mr-2`}
               >
-                {localStorage.getItem("username")}
+                {username}
               </h1>
               <div
                 style={{

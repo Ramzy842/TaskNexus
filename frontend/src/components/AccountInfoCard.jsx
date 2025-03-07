@@ -48,7 +48,6 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
     );
     setErrors(errorsArr.length ? errorsArr : null);
   };
-
   if ((loading && editedCount)) return <SkeletonAccInfoCard />;
   return isGoogleAcc && title === "Email" ? <></> : <div>
       <div
