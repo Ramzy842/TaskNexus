@@ -253,7 +253,7 @@ const Settings = () => {
   
   return (
     <DashboardLayout>
-      <h1 className="font-medium text-xl text-teal-950 mb-4">My Account</h1>
+      <h1 className="font-medium text-xl text-teal-900 mb-4">My Account</h1>
       {loading ? (
         <SkeletonSettings />
       ) : (

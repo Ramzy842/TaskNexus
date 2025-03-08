@@ -1,10 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router";
 import { deleteTask, editTask } from "../redux/actions/taskActions";
-import { useEffect } from "react";
-import { Reorder, useDragControls } from "framer-motion";
-
-const TaskCard = ({ id, title, status, task, container }) => {
+import { useSortable } from "@dnd-kit/sortable";
+import {CSS} from "@dnd-kit/utilities"
+const TaskCard = ({ id, title, status }) => {
+  const { listeners, attributes, setNodeRef, transform, transition } =
+    useSortable({id});
+  const style = {transition, transform: CSS.Transform.toString(transform) }
   const dispatch = useDispatch();
   const handleDelete = () => {
     dispatch(deleteTask(id));
@@ -12,19 +14,13 @@ const TaskCard = ({ id, title, status, task, container }) => {
   const handleCompleted = () => {
     dispatch(editTask(id, { status: "Completed" }));
   };
-  const controls = useDragControls();
   return (
-    <Reorder.Item
-      dragTransition={{
-        bounceStiffness: 500, // Higher stiffness means less bouncing
-        bounceDamping: 100, // Lower damping results in less snap-back
-      }}
-      value={task}
-      //   dragListener={false}
-      //   dragControls={controls}
-      //   dragConstraints={container}
-      //   dragElastic={0.1}
-      className={`w-full rounded-sm flex justify-between items-center py-2 px-4 mb-1 shadow-[0_0_8px_-2px_rgba(0,200,200,0.50)] bg-[#E3EAE9] bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-20 border border-gray-100`}
+    <div style={style} ref={setNodeRef} {...attributes} {...listeners}
+      // dragTransition={{
+      //   bounceStiffness: 500, // Higher stiffness means less bouncing
+      //   bounceDamping: 100, // Lower damping results in less snap-back
+      // }}
+      className={`touch-none w-full rounded-sm flex justify-between items-center py-2 px-4 mb-1 shadow-[0_0_8px_-2px_rgba(0,200,200,0.50)] bg-[#E3EAE9] bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-20 border border-gray-100`}
     >
       <div className="flex flex-col items-start  w-40 sm:w-sm md:w-sm md:w-lg lg:w-2xl">
         <p
@@ -38,7 +34,9 @@ const TaskCard = ({ id, title, status, task, container }) => {
         >
           {status}
         </p>
-        <p className={`text-sm text-teal-950 truncate w-11/12 lg:w-full`}>
+        <p
+          className={`text-sm font-medium text-teal-900 truncate w-11/12 lg:w-full`}
+        >
           {title}
         </p>
       </div>
@@ -57,7 +55,7 @@ const TaskCard = ({ id, title, status, task, container }) => {
         <div className="flex items-center justify-end gap-x-2 max-w-30 min-w-28">
           <NavLink to={`/tasks/${id}/edit`}>
             <img
-            //   draggable="false"
+              draggable="false"
               src="./src/assets/edit.svg"
               alt="edit icon"
               className="cursor-pointer"
@@ -101,19 +99,12 @@ const TaskCard = ({ id, title, status, task, container }) => {
           <img
             src="/src/assets/drag.svg"
             draggable="false"
-            // onPointerDown={(e) => {
-            //   console.log(e.stopPropagation());
-            //   controls.start(e);
-            // }}
-            className="pointer-events-auto"
+            className="pointer-events-auto cursor-pointer"
             alt="drag"
           />
-          {/* <p className="select-none cursor-pointer" >Drag</p> */}
-
-          {/* <img src="./src/assets/x.svg" alt="Delete icon" className="cursor-pointer" onClick={() => console.log("Delete")} /> */}
         </div>
       </div>
-    </Reorder.Item>
+    </div>
   );
 };
 

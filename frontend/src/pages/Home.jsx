@@ -63,7 +63,7 @@ const Home = () => {
       {!error && (
         <>
           <div className="flex items-center mb-2">
-            <h1 className="font-medium text-lg mr-2 text-teal-950 select-none">
+            <h1 className="font-medium text-lg mr-2 text-[#f2ffff] select-none">
               My tasks
             </h1>
             <img

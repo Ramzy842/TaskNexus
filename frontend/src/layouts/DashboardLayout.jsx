@@ -87,7 +87,7 @@ const DashboardLayout = ({ children }) => {
           <div className=" relative">
             <div className={`flex items-center `}>
               <h1
-                className={`hidden sm:text-normal sm:flex font-semibold text-[#0A2D29] mr-2`}
+                className={`hidden sm:text-normal sm:flex font-semibold text-teal-900 mr-2`}
               >
                 {username}
               </h1>
@@ -113,7 +113,7 @@ const DashboardLayout = ({ children }) => {
           </div>
         </div>
       </div>
-      <div className="max-w-6xl mx-auto w-full">{children}</div>
+      <div className="max-w-6xl overflow-x-hidden mx-auto w-full">{children}</div>
     </div>
   );
 };
