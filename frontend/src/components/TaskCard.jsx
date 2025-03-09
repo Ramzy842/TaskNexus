@@ -2,11 +2,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router";
 import { deleteTask, editTask } from "../redux/actions/taskActions";
 import { useSortable } from "@dnd-kit/sortable";
-import {CSS} from "@dnd-kit/utilities"
+import { CSS } from "@dnd-kit/utilities";
 const TaskCard = ({ id, title, status }) => {
-  const { listeners, attributes, setNodeRef, transform, transition } =
-    useSortable({id});
-  const style = {transition, transform: CSS.Transform.toString(transform) }
+  const {
+    listeners,
+    attributes,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+  const style = {
+    transition,
+    background: isDragging && "rgb(227,234,233)",
+    background: isDragging && "linear-gradient(120deg, rgba(227,234,233,1) 0%, rgba(163,196,196,1) 100%)",
+    opacity: isDragging ? 0.8 : 1,
+    transform: CSS.Transform.toString(transform),
+  };
   const dispatch = useDispatch();
   const handleDelete = () => {
     dispatch(deleteTask(id));
@@ -15,7 +27,10 @@ const TaskCard = ({ id, title, status }) => {
     dispatch(editTask(id, { status: "Completed" }));
   };
   return (
-    <div style={style} ref={setNodeRef} {...attributes} {...listeners}
+    <div
+      style={style}
+      ref={setNodeRef}
+      
       // dragTransition={{
       //   bounceStiffness: 500, // Higher stiffness means less bouncing
       //   bounceDamping: 100, // Lower damping results in less snap-back
@@ -97,10 +112,13 @@ const TaskCard = ({ id, title, status }) => {
           </svg>
 
           <img
-            src="/src/assets/drag.svg"
+          {...attributes}
+          {...listeners}
+          role="button"
+            src="/src/assets/handle.svg"
             draggable="false"
             className="pointer-events-auto cursor-pointer"
-            alt="drag"
+            alt="handle"
           />
         </div>
       </div>

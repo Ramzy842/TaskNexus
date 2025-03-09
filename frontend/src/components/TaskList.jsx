@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskCard from "./TaskCard";
 import {
   DndContext,
@@ -15,6 +15,10 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import {
+  restrictToParentElement,
+  restrictToVerticalAxis,
+} from "@dnd-kit/modifiers";
 const TaskList = ({ prevTasks, tasks }) => {
   const [tasksList, setTasksList] = useState(tasks ? tasks : prevTasks);
   const getTaskPosition = (id) => tasksList.findIndex((el) => el.id === id);
@@ -27,6 +31,9 @@ const TaskList = ({ prevTasks, tasks }) => {
       return arrayMove(tasks, originalPosition, newPosition);
     });
   };
+  useEffect(() => {
+    console.log(tasksList);
+  }, [tasksList])
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(TouchSensor),
@@ -36,6 +43,7 @@ const TaskList = ({ prevTasks, tasks }) => {
   );
   return tasksList ? (
     <DndContext
+      modifiers={[restrictToVerticalAxis, restrictToParentElement]}
       sensors={sensors}
       onDragEnd={handleDragEnd}
       collisionDetection={closestCorners}

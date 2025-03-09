@@ -1,13 +1,35 @@
 @import url("https://fonts.googleapis.com/css2?family=Radio+Canada:ital,wght@0,300..700;1,300..700&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import "tailwindcss";
 
-
 * {
-    box-sizing: border-box;
-    font-family: "Poppins", serif;
+  box-sizing: border-box;
+  font-family: "Poppins", serif;
 }
 
 @theme {
-    --font-radCan: "Radio Canada", serif;
+  --font-radCan: "Radio Canada", serif;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px ;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background:  #E3EAE9;
+  border-radius: 2px ;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background:  #A3C4C4;
 }
