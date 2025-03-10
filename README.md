@@ -85,7 +85,7 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
    CLIENT_SECRET=<Client Secret from Google Developer Console>
    MONGO_USERNAME=<MongoDB database username>
    MONGO_PASSWORD=<MongoDB database password>
-   PORT=4000
+   PORT=<Server port>
    AWS_ACCESS_KEY_ID=<Your AWS Access Key>
    AWS_SECRET_ACCESS_KEY=<Your AWS Secret Access Key>
    AWS_REGION=<Your AWS Region>
