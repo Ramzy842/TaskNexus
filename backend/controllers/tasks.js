@@ -68,24 +68,25 @@ tasksRouter.post(
     try {
       const { title, description, status, dueDate } = req.body;
       const user = await User.findById(req.user.id);
-    //   if (!user) {
-    //     return res.status(404).json({
-    //       success: true,
-    //       statusCode: 404,
-    //       message: responseMessages.users.accessUnauthorized,
-    //     });
-    //   }
-    //   const lastTask = await Task.findOne({ userId: req.user.id }).sort(
-    //     "-order"
-    //   );
-    //   const newOrder = lastTask ? lastTask.order + 1 : 0;
+      if (!user) {
+        return res.status(404).json({
+          success: true,
+          statusCode: 404,
+          message: responseMessages.users.accessUnauthorized,
+        });
+      }
+      const lastTask = await Task.findOne({ userId: req.user.id }).sort(
+        "-order"
+      );
+      console.log(lastTask);
+      const newOrder = lastTask ? lastTask.order + 1 : 0;
       const newTask = new Task({
         title,
         description,
         status,
         dueDate,
         userId: user.id,
-        // order: newOrder,
+        order: newOrder,
       });
       const task = await newTask.save();
       user.tasks = user.tasks.concat(task.id);
@@ -173,19 +174,6 @@ tasksRouter.delete("/:id", verifyToken, async (req, res, next) => {
       });
   } catch (error) {
     next(error);
-  }
-});
-
-tasksRouter.put("/reorder", verifyToken, async (req, res, next) => {
-  const { updatedTasks } = req.body;
-
-  try {
-    for (let x = 0; x < updatedTasks.length; x++) {
-      await Task.findByIdAndUpdate(updatedTasks[x].id, { order: x });
-    }
-    res.status(200).json({ message: "Tasks reordered successfully" });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to reorder tasks" });
   }
 });
 

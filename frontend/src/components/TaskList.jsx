@@ -19,21 +19,24 @@ import {
   restrictToParentElement,
   restrictToVerticalAxis,
 } from "@dnd-kit/modifiers";
+
 const TaskList = ({ prevTasks, tasks }) => {
   const [tasksList, setTasksList] = useState(tasks ? tasks : prevTasks);
   const getTaskPosition = (id) => tasksList.findIndex((el) => el.id === id);
-  const handleDragEnd = (event) => {
+  const handleDragEnd = async (event) => {
     const { active, over } = event;
     if (active.id === over.id) return;
+    let orderedTasks = null;
     setTasksList((tasks) => {
       const originalPosition = getTaskPosition(active.id);
       const newPosition = getTaskPosition(over.id);
-      return arrayMove(tasks, originalPosition, newPosition);
+      orderedTasks = arrayMove(tasks, originalPosition, newPosition);
+      return orderedTasks;
     });
   };
   useEffect(() => {
     console.log(tasksList);
-  }, [tasksList])
+  }, [tasksList]);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(TouchSensor),
