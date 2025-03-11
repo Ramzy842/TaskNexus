@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 
-const ProfileImageUploader = ({profilePicture}) => {
-  const [pic, setPic] = useState(null)
+const ProfileImageUploader = ({ profilePicture }) => {
+  const [pic, setPic] = useState(null);
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setPic(imageUrl);
+      /*
+      Frontend: Send the image to your backend API → POST /users/:id/profile-picture.
+      Backend:
+        Upload to S3
+        Get the S3 URL
+        Update the user in MongoDB in the same request
+        Return the updated user object with the new profilePicture
+      */
     }
   };
   return (
