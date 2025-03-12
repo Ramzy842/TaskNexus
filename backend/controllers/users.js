@@ -262,7 +262,7 @@ usersRouter.get(
           statusCode: 403,
           message: responseMessages.users.accessUnauthorized,
         });
-      const user = await User.findById(req.params.id).populate("tasks");
+      const user = await User.findById(req.params.id).populate({path: 'tasks', options: { sort: { 'createdAt': -1 } }});
       if (!user) {
         return res.status(404).json({
           success: false,
