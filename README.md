@@ -68,7 +68,7 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
    ```
 2. Navigate to the project directory:
    ```sh
-   cd task-tracker
+   cd TaskNexus
    ```
 3. Install dependencies:
    ```sh
