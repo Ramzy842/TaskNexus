@@ -2,6 +2,7 @@ const usersRouter = require("express").Router();
 const User = require("../models/User");
 const { validationResult } = require("express-validator");
 const { verifyToken } = require("../utils/middleware");
+const multer = require("multer")
 const {
   validateUsername,
   validateName,
@@ -279,5 +280,10 @@ usersRouter.get(
     }
   }
 );
+
+usersRouter.post("/:id/profile-picture",verifyToken, (req, res, next) => {
+  const {image} = req.body;
+  console.log(image);
+})
 
 module.exports = usersRouter;

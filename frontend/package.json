@@ -17,6 +17,7 @@
     "@tailwindcss/vite": "^4.0.4",
     "axios": "^1.7.9",
     "motion": "^12.4.10",
+    "multer": "^1.4.5-lts.1",
     "postcss": "^8.5.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
