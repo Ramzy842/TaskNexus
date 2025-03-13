@@ -2,7 +2,11 @@ const usersRouter = require("express").Router();
 const User = require("../models/User");
 const { validationResult } = require("express-validator");
 const { verifyToken } = require("../utils/middleware");
-const multer = require("multer")
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+
 const {
   validateUsername,
   validateName,
@@ -17,7 +21,12 @@ const {
 const { getHashedPassword, createUser } = require("../utils/users");
 const { responseMessages } = require("../utils/responseMessages");
 const bcrypt = require("bcrypt");
-const { limiter } = require("../utils/config");
+const {
+  limiter,
+  aws_accessKey,
+  aws_secretAccessKey,
+  client,
+} = require("../utils/config");
 usersRouter.post(
   "/",
   limiter.users,
@@ -262,7 +271,10 @@ usersRouter.get(
           statusCode: 403,
           message: responseMessages.users.accessUnauthorized,
         });
-      const user = await User.findById(req.params.id).populate({path: 'tasks', options: { sort: { 'createdAt': -1 } }});
+      const user = await User.findById(req.params.id).populate({
+        path: "tasks",
+        options: { sort: { createdAt: -1 } },
+      });
       if (!user) {
         return res.status(404).json({
           success: false,
@@ -281,9 +293,22 @@ usersRouter.get(
   }
 );
 
-usersRouter.post("/:id/profile-picture",verifyToken, (req, res, next) => {
-  const {image} = req.body;
-  console.log(image);
-})
+usersRouter.post(
+  "/:id/profile-picture",
+  verifyToken,
+  upload.single("avatar"),
+  (req, res, next) => {
+    if (req.params.id !== req.user.id)
+      return res.status(403).json({
+        success: false,
+        statusCode: 403,
+        message:
+          "You are not authorized to update this user's profile picture.",
+      });
+    const avatar = req.file;
+    console.log(avatar);
+    console.log(client);
+  }
+);
 
 module.exports = usersRouter;

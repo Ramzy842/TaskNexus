@@ -15,10 +15,12 @@ const ProfileImageUploader = ({ profilePicture }) => {
         Return the updated user object with the new profilePicture
       */
       const formData = new FormData();
-      formData.append("image", file);
+      formData.append("avatar", file);
       try {
+        const id = localStorage.getItem("id");
+        console.log(id);
         const res = await api.post(
-          `/users/${localStorage.getItem("id")}/profile-picture`,
+          `/users/${id}/profile-picture`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -36,7 +38,7 @@ const ProfileImageUploader = ({ profilePicture }) => {
       {/* Hidden file input */}
       <input
         type="file"
-        name="profile-picture"
+        name="avatar"
         accept="image/*"
         className="hidden"
         id="profileImageInput"
