@@ -5,7 +5,8 @@ const { verifyToken } = require("../utils/middleware");
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { GetObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 
 const {
   validateUsername,
@@ -21,12 +22,8 @@ const {
 const { getHashedPassword, createUser } = require("../utils/users");
 const { responseMessages } = require("../utils/responseMessages");
 const bcrypt = require("bcrypt");
-const {
-  limiter,
-  aws_accessKey,
-  aws_secretAccessKey,
-  client,
-} = require("../utils/config");
+const { limiter, client, s3_bucketName } = require("../utils/config");
+const { PutObjectCommand } = require("@aws-sdk/client-s3");
 usersRouter.post(
   "/",
   limiter.users,
@@ -297,7 +294,7 @@ usersRouter.post(
   "/:id/profile-picture",
   verifyToken,
   upload.single("avatar"),
-  (req, res, next) => {
+  async (req, res, next) => {
     if (req.params.id !== req.user.id)
       return res.status(403).json({
         success: false,
@@ -305,9 +302,75 @@ usersRouter.post(
         message:
           "You are not authorized to update this user's profile picture.",
       });
-    const avatar = req.file;
-    console.log(avatar);
-    console.log(client);
+    try {
+      const avatar = req.file;
+      const params = {
+        Bucket: s3_bucketName,
+        Key: `profile-picture-${req.user.id}`,
+        Body: avatar.buffer,
+        ContentType: avatar.mimetype,
+      };
+      const command = new PutObjectCommand(params);
+      await client.send(command);
+      const getObjectParams = {
+        Bucket: s3_bucketName,
+        Key: `profile-picture-${req.user.id}`,
+      };
+      const getCommand = new GetObjectCommand(getObjectParams);
+      const url = await getSignedUrl(client, getCommand, { expiresIn: 3600 });
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        { profilePicture: url },
+        { new: true }
+      );
+      res.status(200).json({
+        success: true,
+        statusCode: 200,
+        data: updatedUser,
+        message: responseMessages.users.updateSuccess,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+usersRouter.delete(
+  "/:id/profile-picture",
+  verifyToken,
+  async (req, res, next) => {
+    if (req.params.id !== req.user.id)
+      return res.status(403).json({
+        success: false,
+        statusCode: 403,
+        message:
+          "You are not authorized to update this user's profile picture.",
+      });
+    try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          statusCode: 404,
+          message: "The user you're trying to delete their profile picture does not exist.",
+        });
+      }
+      const params = {
+        Bucket: s3_bucketName,
+        Key: `profile-picture-${req.user.id}`,
+      };
+      const deleteCommand = new DeleteObjectCommand(params);
+      await client.send(deleteCommand)
+      user.profilePicture = "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png";
+      await user.save()
+      res.status(200).json({
+        success: true,
+        statusCode: 200,
+        message: "Profile picture deleted successfully.",
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 );
 

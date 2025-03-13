@@ -1,8 +1,23 @@
 import { useEffect, useState } from "react";
 import api from "../api/axiosInstance";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserData } from "../redux/actions/userActions";
 
 const ProfileImageUploader = ({ profilePicture }) => {
-  const [pic, setPic] = useState(null);
+  const [pic, setPic] = useState(profilePicture);
+  const user = useSelector((state) => state.user.user);
+  useEffect(() => {
+    if (user && user.profilePicture !== pic) setPic(user.profilePicture);
+  }, [user]);
+  const dispatch = useDispatch();
+  const handleDeleteImage = async () => {
+    const id = localStorage.getItem("id")
+    console.log("Deleting image...");
+    await api.delete(`/users/${id}/profile-picture`);
+    console.log("Profile pic deleted");
+    localStorage.setItem("profilePicture", "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png")
+    dispatch(getUserData(id))
+  }
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -19,15 +34,13 @@ const ProfileImageUploader = ({ profilePicture }) => {
       try {
         const id = localStorage.getItem("id");
         console.log(id);
-        const res = await api.post(
-          `/users/${id}/profile-picture`,
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
+        const res = await api.post(`/users/${id}/profile-picture`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         console.log(res);
-        setPic(res.data.profilePicture);
+        localStorage.setItem("profilePicture", res.data.data.profilePicture);
+        setPic(res.data.data.profilePicture);
+        dispatch(getUserData(localStorage.getItem("id")));
       } catch (error) {
         console.log(error);
       }
@@ -44,21 +57,39 @@ const ProfileImageUploader = ({ profilePicture }) => {
         id="profileImageInput"
         onChange={handleImageChange}
       />
-
+  
       {/* Profile Image Container */}
-      <label htmlFor="profileImageInput" className="cursor-pointer">
+      <div className="relative">
         <div
           style={{
-            backgroundImage: profilePicture ? `url(${profilePicture})` : "none",
+            backgroundImage: pic ? `url(${pic})` : "none",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
           className="shadow-2xl relative w-24 md:w-32 h-24 md:h-32 rounded-full overflow-hidden bg-gray-300 group"
         >
           {/* Hover Overlay */}
-          <div className="transition duration-200 absolute inset-0 opacity-0 group-hover:opacity-80 bg-gray-800 bg-[url('/src/assets/edit-settings.svg')] bg-no-repeat bg-center"></div>
+          <div className="transition duration-200 absolute inset-0 opacity-0 group-hover:opacity-80 bg-gray-800 flex items-center justify-center gap-4">
+            {/* Edit Button (Only triggers file input) */}
+            <label htmlFor="profileImageInput" className="cursor-pointer bg-blue-500 rounded-sm p-1 flex items-center justify-center">
+              <img
+                src="/src/assets/edit-profile-pic.svg"
+                alt="Edit"
+                className="w-6 h-6 hover:opacity-100 transition duration-200 select-none"
+              />
+            </label>
+  
+            {/* Delete Button (Normal button) */}
+            <button onClick={handleDeleteImage} className="cursor-pointer bg-red-500 rounded-sm p-1">
+              <img
+                src="/src/assets/remove-acc.svg"
+                alt="Delete"
+                className="w-6 h-6 hover:opacity-100 transition duration-200 select-none"
+              />
+            </button>
+          </div>
         </div>
-      </label>
+      </div>
     </div>
   );
 };
