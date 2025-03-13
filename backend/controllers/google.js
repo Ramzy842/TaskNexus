@@ -43,6 +43,9 @@ googleRouter.get("/callback", async (req, res, next) => {
             });
             await user.save();
         }
+        if (!user)
+            user.profilePicture = picture
+        await user.save();
         const userForToken = {
             username: user.username,
             email: user.email,
@@ -51,7 +54,6 @@ googleRouter.get("/callback", async (req, res, next) => {
         const accessToken = generateAccessToken(userForToken);
         const refreshToken = generateRefreshToken(userForToken);
         user.refreshToken = refreshToken;
-        user.profilePicture = picture
         await user.save();
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
