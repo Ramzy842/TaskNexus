@@ -6,6 +6,10 @@ import {
   updateUser,
 } from "../../services/users";
 import {
+  CLEAR_MESSAGES,
+  DELETE_PROFILE_PIC_FAILURE,
+  DELETE_PROFILE_PIC_REQUEST,
+  DELETE_PROFILE_PIC_SUCCESS,
   GET_USER_FAILURE,
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
@@ -25,10 +29,10 @@ import {
   UPDATE_USER_SUCCESS,
 } from "../types/userTypes";
 
-const getUserSuccess = (user) => {
+const getUserSuccess = (user, profilePicture) => {
   return {
     type: GET_USER_SUCCESS,
-    payload: user,
+    payload: { user, profilePicture },
   };
 };
 const getUserRequest = () => {
@@ -51,7 +55,20 @@ const getUserData = (id) => {
       const res = await getUser(id);
       if (res.error) {
         dispatch(getUserFailure(null, res.error));
-      } else dispatch(getUserSuccess(res.data));
+      } else {
+        console.log(res.data);
+        if (
+          res.data.profilePicture !==
+          "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png"
+        ) {
+          const profilePicture = await api.get(
+            `/users/${localStorage.getItem("id")}/profile-picture`
+          );
+          dispatch(
+            getUserSuccess(res.data, profilePicture.data.data.profilePictureUrl)
+          );
+        } else dispatch(getUserSuccess(res.data, res.data.profilePicture));
+      }
     } catch (error) {
       dispatch(getUserFailure(error, null));
     }
@@ -183,7 +200,7 @@ const removeUserData = () => {
         localStorage.removeItem("profilePicture");
         localStorage.removeItem("isGoogleAcc");
         localStorage.removeItem("errorExpireTime");
-        localStorage.removeItem("expiresAt")
+        localStorage.removeItem("expiresAt");
         window.location.href = "/login";
       }
     } catch (error) {
@@ -203,7 +220,7 @@ const updateProfilePictureSuccess = (message, profilePicture) => {
     type: UPDATE_PROFILE_PICTURE_SUCCESS,
     payload: {
       message,
-      profilePicture
+      profilePicture,
     },
   };
 };
@@ -221,15 +238,69 @@ const updateProfilePicture = (formData) => {
   return async (dispatch) => {
     dispatch(updateProfilePictureRequest());
     try {
-      await api.post(`/users/${localStorage.getItem("id")}/profile-picture`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      const res = await api.get(`/users/${localStorage.getItem("id")}/profile-picture`);
+      await api.post(
+        `/users/${localStorage.getItem("id")}/profile-picture`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      const res = await api.get(
+        `/users/${localStorage.getItem("id")}/profile-picture`
+      );
       const profilePicture = res.data.data.profilePictureUrl;
       localStorage.setItem("profilePicture", profilePicture);
-      dispatch(updateProfilePictureSuccess("Profile picture updated successfully!", profilePicture))
+      dispatch(
+        updateProfilePictureSuccess(
+          "Profile picture updated successfully!",
+          profilePicture
+        )
+      );
     } catch (err) {
-      dispatch(updateProfilePictureFailure(err))
+      dispatch(updateProfilePictureFailure(err));
+    }
+  };
+};
+
+const deleteProfilePicRequest = () => {
+  return {
+    type: DELETE_PROFILE_PIC_REQUEST,
+  };
+};
+
+const deleteProfilePicSuccess = (profilePic, message, success) => {
+  return {
+    type: DELETE_PROFILE_PIC_SUCCESS,
+    payload: {
+      message,
+      success,
+      profilePic
+    },
+  };
+};
+
+const deleteProfilePicFailure = (error) => {
+  return {
+    type: DELETE_PROFILE_PIC_FAILURE,
+    payload: {
+      error,
+    },
+  };
+};
+
+const deleteProfilePic = () => {
+  return async (dispatch) => {
+    dispatch(deleteProfilePicRequest());
+    try {
+      const id = localStorage.getItem("id");
+      const res = await api.delete(`/users/${id}/profile-picture`);
+      const defaultPic = "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png"
+      console.log(res.data)
+      dispatch(deleteProfilePicSuccess(defaultPic, res.data.message, res.data.success))
+      localStorage.setItem("profilePicture", defaultPic)
+      // dispatch(getUserData(id));
+    } catch (error) {
+      dispatch(deleteProfilePicFailure(error))
     }
   };
 };
@@ -240,6 +311,11 @@ const resetUser = () => {
   };
 };
 
+const clearMessages = () => {
+  return {
+    type: CLEAR_MESSAGES,
+  };
+};
 export {
   getUserData,
   resetUser,
@@ -247,5 +323,7 @@ export {
   updateUserPassword,
   removeUserData,
   reset_password_update,
-  updateProfilePicture
+  updateProfilePicture,
+  clearMessages,
+  deleteProfilePic
 };

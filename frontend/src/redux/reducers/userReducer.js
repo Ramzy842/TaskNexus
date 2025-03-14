@@ -13,6 +13,10 @@ import {
   UPDATE_PROFILE_PICTURE_REQUEST,
   UPDATE_PROFILE_PICTURE_SUCCESS,
   UPDATE_PROFILE_PICTURE_FAILURE,
+  CLEAR_MESSAGES,
+  DELETE_PROFILE_PIC_REQUEST,
+  DELETE_PROFILE_PIC_SUCCESS,
+  DELETE_PROFILE_PIC_FAILURE
 } from "../types/userTypes";
 
 const initialState = {
@@ -20,9 +24,11 @@ const initialState = {
   error: null,
   loading: false,
   message: null,
+  passwordMessage: null,
   isEditingLoading: false,
   isEditingImage: false,
-  profilePicture: null
+  profilePicture: null,
+  success: null
 };
 
 const userReducer = (state = initialState, action) => {
@@ -30,7 +36,7 @@ const userReducer = (state = initialState, action) => {
     case GET_USER_REQUEST:
       return { ...state, loading: true, error: null };
     case GET_USER_SUCCESS:
-      return { ...state, loading: false, error: null, user: action.payload };
+      return { ...state, loading: false, error: null, user: action.payload.user, profilePicture: action.payload.profilePicture };
     case GET_USER_FAILURE:
       return {
         ...state,
@@ -66,22 +72,30 @@ const userReducer = (state = initialState, action) => {
         message: null,
       };
     case UPDATE_USER_PASSWORD_REQUEST:
-      return { ...state, isEditingLoading: true, error: null };
+      return { ...state, isEditingLoading: true, error: null, passwordMessage: null };
     case UPDATE_USER_PASSWORD_SUCCESS:
       return {
         ...state,
         isEditingLoading: false,
         error: null,
-        message: action.payload,
+        passwordMessage: action.payload,
       };
     case RESET_PASSWORD_UPDATE:
-      return { ...state, isEditingLoading: false, error: null, message: null };
+      return { ...state, isEditingLoading: false, error: null, passwordMessage: null };
     case UPDATE_PROFILE_PICTURE_REQUEST:
-      return { ...state, isEditingImage: true, message: null, profilePicture: null, error: null };
+      return { ...state, isEditingImage: true, message: null, profilePicture: null, error: null, success: null };
     case UPDATE_PROFILE_PICTURE_SUCCESS:
-      return { ...state, isEditingImage: false, message: action.payload.message, profilePicture: action.payload.profilePicture, error: null};
+      return { ...state, isEditingImage: false, message: action.payload.message, profilePicture: action.payload.profilePicture, error: null, success: true};
     case UPDATE_PROFILE_PICTURE_FAILURE:
-      return {...state, isEditingImage: false, error: action.payload.error, message: null, profilePicture: null}
+      return {...state, isEditingImage: false, error: action.payload.error, message: null, profilePicture: state.profilePicture, success: false}
+    case DELETE_PROFILE_PIC_REQUEST:
+      return {...state, isEditingImage: true, message: null}
+    case DELETE_PROFILE_PIC_SUCCESS:
+      return {...state, isEditingImage: false, message: action.payload.message, success: action.payload.success, profilePicture: action.payload.profilePic}
+    case DELETE_PROFILE_PIC_FAILURE:
+      return {...state, isEditingImage: false, message: null, success: false, error: action.payload.error}
+    case CLEAR_MESSAGES:
+      return {...state, message: null, passwordMessage: null}
     default:
       return state;
   }

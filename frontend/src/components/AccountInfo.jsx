@@ -7,7 +7,6 @@ const AccountInfo = () => {
     const isEditingLoading = useSelector(
         (state) => state.user.isEditingLoading
     );
-    
     const [info, setInfo] = useState(
         !isEditingLoading && user
             ? [

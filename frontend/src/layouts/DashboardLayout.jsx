@@ -2,44 +2,29 @@ import { useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
 import { NavLink } from "react-router";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Menu from "../components/Menu";
 import api from "../api/axiosInstance";
+import { getUserData } from "../redux/actions/userActions";
 
 const DashboardLayout = ({ children }) => {
   const user = useSelector((state) => state.user.user);
   const [showMenu, setShowMenu] = useState(false);
-  const [profilePicture, setProfilePicture] = useState(
-    localStorage.getItem("profilePicture")
-  );
+  const isEditingImage = useSelector((state) => state.user.isEditingImage);
+  const profilePicture = useSelector((state) => state.user.profilePicture);
   const [username, setUsername] = useState(localStorage.getItem("username"));
-  const [expiresAt, setExpiresAt] = useState(
-    parseInt(localStorage.getItem("expiresAt"), 10) || 0 // Ensure valid number
-  );
-
+  const dispatch = useDispatch();
+  useEffect(() => {
+      dispatch(getUserData(localStorage.getItem("id")));
+  }, []);
   useEffect(() => {
     if (user && username !== user.username) {
       setUsername(user.username);
-      localStorage.setItem("username", user.username);
-      api
-        .get(`/users/${localStorage.getItem("id")}/profile-picture`)
-        .then((profilePic) =>
-          localStorage.setItem(
-            "profilePicture",
-            profilePic.data.data.profilePictureUrl
-          )
-        );
     }
   }, [user]);
-  const profilePic = useSelector(state => state.user.profilePicture)
-  const message = useSelector(state => state.user.message)
-  useEffect(() => {
-    if (message === "Profile picture updated successfully!")
-    {
-      setProfilePicture(profilePic)
-    }
-  }, [message])
+  // const profilePic = useSelector((state) => state.user.profilePicture);
+  // const message = useSelector((state) => state.user.message);
   // const fetchProfilePicture = async () => {
   //   const now = Date.now();
 
@@ -73,7 +58,9 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="grid grid-rows-[auto_1fr] min-h-screen bg-linear-to-bl from-[#E3EAE9] to-[#A3C4C4] p-4">
       {/* Gradient Bar */}
-      <div className="absolute left-0 right-0 top-0 h-2 w-full bg-gradient-to-r from-red-500 from-10% via-green-500 via-50% to-blue-500 to-90% animate-pulse"></div>
+      {isEditingImage && (
+        <div className="absolute left-0 right-0 top-0 h-2 w-full bg-gradient-to-r from-red-500 from-10% via-green-500 via-50% to-blue-500 to-90% animate-pulse"></div>
+      )}
 
       <div className="max-w-6xl m-auto w-full">
         <div className="flex justify-between items-center mb-4">
@@ -164,7 +151,7 @@ const DashboardLayout = ({ children }) => {
         </div>
       </div>
 
-      <div className="max-w-6xl overflow-x-hidden mx-auto w-full">
+      <div className="max-w-6xl overflow-x-hidden mx-auto w-full relative">
         {children}
       </div>
     </div>

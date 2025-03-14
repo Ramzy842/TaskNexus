@@ -64,8 +64,8 @@ const limiter = {
       error:
         "Too many requests for user-related requests. Please try again later.",
     },
-    windowMs: 30 * 60 * 1000, // 30min
-    limit: isTestEnv ? 1000 : 20,
+    windowMs: 1 * 60 * 1000, // 30min
+    limit: isTestEnv ? 1000 : 60,
     standardHeaders: true,
     legacyHeaders: false,
   }),

@@ -6,6 +6,7 @@ import Button from "../components/Button";
 import SkeletonSettings from "../components/SkeletonSettings";
 import Input from "../components/Input";
 import {
+  clearMessages,
   getUserData,
   reset_password_update,
   updateUserPassword,
@@ -22,7 +23,7 @@ const PasswordChange = ({ loading }) => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [newPasswordErrors, setNewPasswordErrors] = useState(null);
   const errors = useSelector((state) => state.user.error);
-  const message = useSelector((state) => state.user.message);
+  const message = useSelector((state) => state.user.passwordMessage);
   const dispatch = useDispatch();
   const handlePasswordUpdate = () => {
     console.log(oldPass, newPass);
@@ -242,17 +243,31 @@ const RemoveAccount = ({ loading }) => {
 };
 
 const Settings = () => {
-  const profilePicture = localStorage.getItem("profilePicture");
   const loading = useSelector((state) => state.user.loading);
   const isGoogleAcc = JSON.parse(localStorage.getItem("isGoogleAcc"));
+  const message = useSelector((state) => state.user.message);
+  const success = useSelector((state) => state.user.success);
   const dispatch = useDispatch();
   useEffect(() => {
-    const id = localStorage.getItem("id");
-    dispatch(getUserData(id));
-  }, []);
-  
+    if (message === "Profile picture deleted successfully.") {
+      setTimeout(() => {
+        dispatch(clearMessages());
+      }, 5000);
+    }
+  }, [message]);
   return (
     <DashboardLayout>
+      {message && (
+        <p
+          className={`absolute bottom-0 right-0  border-b-4 ${
+            success
+              ? "bg-teal-800 border-teal-400 text-white"
+              : " bg-red-800 border-red-400 text-white"
+          } text-xs w-full md:w-sm rounded-xs p-4`}
+        >
+          {message}
+        </p>
+      )}
       <h1 className="font-medium text-xl text-teal-900 mb-4">My Account</h1>
       {loading ? (
         <SkeletonSettings />
