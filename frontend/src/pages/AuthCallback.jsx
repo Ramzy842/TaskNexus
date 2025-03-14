@@ -12,18 +12,16 @@ const AuthCallback = () => {
     const username = params.get("username");
     if (accessToken && id && username) {
       localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("id", id);
       localStorage.setItem("username", username);
       localStorage.setItem("isGoogleAcc", true);
-      // api
-      //   .get(`/users/${id}/profile-picture`)
-      //   .then((profilePicture) =>
-      //     localStorage.setItem(
-      //       "profilePicture",
-      //       profilePicture.data.data.profilePictureUrl
-      //     )
-      //   );
-      navigate("/");
+      localStorage.setItem("id", id);
+      api.get(`/users/${id}/profile-picture`).then((profilePicture) => {
+        localStorage.setItem(
+          "profilePicture",
+          profilePicture.data.data.profilePictureUrl
+        );
+        navigate("/");
+      });
     } else {
       navigate("/login");
     }
