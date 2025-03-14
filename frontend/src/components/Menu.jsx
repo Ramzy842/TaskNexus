@@ -17,6 +17,7 @@ const Menu = ({setShowMenu}) => {
       localStorage.removeItem("profilePicture");
       localStorage.removeItem("isGoogleAcc")
       localStorage.removeItem("errorExpireTime")
+      localStorage.removeItem("expiresAt")
       dispatch(resetAuth());
       dispatch(resetTasks());
       dispatch(resetUser());

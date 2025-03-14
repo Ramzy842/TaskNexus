@@ -258,7 +258,7 @@ const Settings = () => {
         <SkeletonSettings />
       ) : (
         <>
-          <ProfileImageUploader profilePicture={profilePicture} />
+          <ProfileImageUploader />
           <AccountInfo />
           {!isGoogleAcc && <PasswordChange loading={loading} />}
           <RemoveAccount loading={loading} />

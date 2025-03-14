@@ -1,29 +1,35 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router';
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
+import api from "../api/axiosInstance";
 
 const AuthCallback = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-      const params = new URLSearchParams(window.location.search);
-      const accessToken = params.get("accessToken");
-      const id = params.get("id");
-      const username = params.get("username")
-      const profilePicture = params.get("profilePicture")
-      if (accessToken && id && username) {
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("id", id);
-        localStorage.setItem("username", username);
-        localStorage.setItem("profilePicture", profilePicture)
-        localStorage.setItem("isGoogleAcc", true)
-        navigate("/");
-      } 
-      else {
-        navigate("/login");
-      }
-    }, [navigate]);
-  
-    return <p>Logging you in...</p>;
-}
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const accessToken = params.get("accessToken");
+    const id = params.get("id");
+    const username = params.get("username");
+    if (accessToken && id && username) {
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("id", id);
+      localStorage.setItem("username", username);
+      localStorage.setItem("isGoogleAcc", true);
+      // api
+      //   .get(`/users/${id}/profile-picture`)
+      //   .then((profilePicture) =>
+      //     localStorage.setItem(
+      //       "profilePicture",
+      //       profilePicture.data.data.profilePictureUrl
+      //     )
+      //   );
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  }, [navigate]);
 
-export default AuthCallback
+  return <p>Logging you in...</p>;
+};
+
+export default AuthCallback;

@@ -41,11 +41,9 @@ googleRouter.get("/callback", async (req, res, next) => {
                 email,
                 googleId,
             });
+            user.profilePicture = picture
             await user.save();
         }
-        if (!user)
-            user.profilePicture = picture
-        await user.save();
         const userForToken = {
             username: user.username,
             email: user.email,

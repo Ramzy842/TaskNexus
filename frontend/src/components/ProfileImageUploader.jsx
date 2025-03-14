@@ -3,12 +3,8 @@ import api from "../api/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserData } from "../redux/actions/userActions";
 
-const ProfileImageUploader = ({ profilePicture }) => {
-  const [pic, setPic] = useState(profilePicture);
-  const user = useSelector((state) => state.user.user);
-  useEffect(() => {
-    if (user && user.profilePicture !== pic) setPic(user.profilePicture);
-  }, [user]);
+const ProfileImageUploader = () => {
+  const [pic, setPic] = useState(localStorage.getItem("profilePicture"));
   const dispatch = useDispatch();
   const handleDeleteImage = async () => {
     const id = localStorage.getItem("id")
@@ -21,25 +17,17 @@ const ProfileImageUploader = ({ profilePicture }) => {
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      /*
-      Frontend: Send the image to your backend API → POST /users/:id/profile-picture.
-      Backend:
-        Upload to S3
-        Get the S3 URL
-        Update the user in MongoDB in the same request
-        Return the updated user object with the new profilePicture
-      */
       const formData = new FormData();
       formData.append("avatar", file);
       try {
         const id = localStorage.getItem("id");
-        console.log(id);
-        const res = await api.post(`/users/${id}/profile-picture`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
+        await api.post(`/users/${id}/profile-picture`, formData, {
+          headers: { "Content-Type": "multipart/form-da ta" },
         });
-        console.log(res);
-        localStorage.setItem("profilePicture", res.data.data.profilePicture);
-        setPic(res.data.data.profilePicture);
+        const profilePicture = await api.get(`/users/${id}/profile-picture`)
+        console.log(profilePicture.data.data.profilePictureUrl);
+        localStorage.setItem("profilePicture", profilePicture.data.data.profilePictureUrl);
+        setPic(profilePicture.data.data.profilePictureUrl);
         dispatch(getUserData(localStorage.getItem("id")));
       } catch (error) {
         console.log(error);
@@ -80,7 +68,7 @@ const ProfileImageUploader = ({ profilePicture }) => {
             </label>
   
             {/* Delete Button (Normal button) */}
-            <button onClick={handleDeleteImage} className="cursor-pointer bg-red-500 rounded-sm p-1">
+            <button onClick={handleDeleteImage} className="cursor-pointer bg-red-500 hover:bg-red-600 rounded-sm p-1">
               <img
                 src="/src/assets/remove-acc.svg"
                 alt="Delete"

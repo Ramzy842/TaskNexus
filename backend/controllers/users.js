@@ -205,7 +205,7 @@ usersRouter.delete("/:id", verifyToken, async (req, res, next) => {
 
 usersRouter.put(
   "/:id/update-password",
-  limiter.users,
+  // limiter.users,
   [validateOldPasswordUpdate, validateNewPasswordUpdate],
   verifyToken,
   async (req, res, next) => {
@@ -312,21 +312,15 @@ usersRouter.post(
       };
       const command = new PutObjectCommand(params);
       await client.send(command);
-      const getObjectParams = {
-        Bucket: s3_bucketName,
-        Key: `profile-picture-${req.user.id}`,
-      };
-      const getCommand = new GetObjectCommand(getObjectParams);
-      const url = await getSignedUrl(client, getCommand, { expiresIn: 3600 });
-      const updatedUser = await User.findByIdAndUpdate(
+      const imageKey = `profile-picture-${req.user.id}`;
+      await User.findByIdAndUpdate(
         req.params.id,
-        { profilePicture: url },
+        { profilePicture: imageKey },
         { new: true }
       );
       res.status(200).json({
         success: true,
         statusCode: 200,
-        data: updatedUser,
         message: responseMessages.users.updateSuccess,
       });
     } catch (error) {
@@ -352,7 +346,8 @@ usersRouter.delete(
         return res.status(404).json({
           success: false,
           statusCode: 404,
-          message: "The user you're trying to delete their profile picture does not exist.",
+          message:
+            "The user you're trying to delete their profile picture does not exist.",
         });
       }
       const params = {
@@ -360,12 +355,13 @@ usersRouter.delete(
         Key: `profile-picture-${req.user.id}`,
       };
       const deleteCommand = new DeleteObjectCommand(params);
-      await client.send(deleteCommand)
-      user.profilePicture = "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png";
-      await user.save()
-      res.status(200).json({
+      await client.send(deleteCommand);
+      user.profilePicture =
+        "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png";
+      await user.save();
+      res.status(204).json({
         success: true,
-        statusCode: 200,
+        statusCode: 204,
         message: "Profile picture deleted successfully.",
       });
     } catch (error) {
@@ -373,5 +369,41 @@ usersRouter.delete(
     }
   }
 );
+
+usersRouter.get("/:id/profile-picture", verifyToken, async (req, res, next) => {
+  if (req.params.id !== req.user.id)
+      return res.status(403).json({
+        success: false,
+        statusCode: 403,
+        message:
+          "You are not authorized to access this user's profile picture.",
+      });
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user || !user.profilePicture) {
+      return res.status(404).json({
+        success: false,
+        statusCode: 404,
+        message: "Profile picture not found.",
+      });
+    }
+
+    const getObjectParams = {
+      Bucket: s3_bucketName,
+      Key: user.profilePicture,
+    };
+    const expiresIn = 3600;
+    const getCommand = new GetObjectCommand(getObjectParams);
+    const url = await getSignedUrl(client, getCommand, { expiresIn });
+
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      data: { profilePictureUrl: url, expiresAt: Date.now() + expiresIn * 1000 },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = usersRouter;

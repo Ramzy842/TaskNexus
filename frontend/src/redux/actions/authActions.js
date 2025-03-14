@@ -55,7 +55,8 @@ const loginUser = (email, password) => {
         localStorage.setItem("accessToken", res.data.token);
         localStorage.setItem("id", res.data.user.id)
         localStorage.setItem("username", res.data.user.username)
-        localStorage.setItem("profilePicture", res.data.user.profilePicture)
+        const profilePicture = await api.get(`/users/${id}/profile-picture`)
+        localStorage.setItem("profilePicture", profilePicture.data.data.profilePictureUrl)
         localStorage.setItem("isGoogleAcc", false)
         dispatch(loginSuccess(res.data.user));
       }
