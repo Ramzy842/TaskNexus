@@ -10,18 +10,30 @@ const AuthCallback = () => {
     const accessToken = params.get("accessToken");
     const id = params.get("id");
     const username = params.get("username");
+    const profilePicture = params.get("profilePicture");
     if (accessToken && id && username) {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("username", username);
       localStorage.setItem("isGoogleAcc", true);
       localStorage.setItem("id", id);
-      api.get(`/users/${id}/profile-picture`).then((profilePicture) => {
+      if (
+        profilePicture !==
+        "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png"
+      ) {
+        api.get(`/users/${id}/profile-picture`).then((profilePicture) => {
+          localStorage.setItem(
+            "profilePicture",
+            profilePicture.data.data.profilePictureUrl
+          );
+          navigate("/");
+        });
+      } else {
         localStorage.setItem(
           "profilePicture",
-          profilePicture.data.data.profilePictureUrl
+          "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png"
         );
         navigate("/");
-      });
+      }
     } else {
       navigate("/login");
     }

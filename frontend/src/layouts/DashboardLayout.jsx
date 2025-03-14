@@ -26,6 +26,17 @@ const DashboardLayout = ({ children }) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setProfilePicture(localStorage.getItem("profilePicture"));
+    };
+  
+    window.addEventListener("storage", handleStorageChange);
+  
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
   // const fetchProfilePicture = async () => {
   //   const now = Date.now();
 

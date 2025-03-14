@@ -25,7 +25,6 @@ const ProfileImageUploader = () => {
           headers: { "Content-Type": "multipart/form-da ta" },
         });
         const profilePicture = await api.get(`/users/${id}/profile-picture`)
-        console.log(profilePicture.data.data.profilePictureUrl);
         localStorage.setItem("profilePicture", profilePicture.data.data.profilePictureUrl);
         setPic(profilePicture.data.data.profilePictureUrl);
         dispatch(getUserData(localStorage.getItem("id")));
