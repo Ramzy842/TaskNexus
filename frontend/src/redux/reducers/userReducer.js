@@ -22,6 +22,7 @@ const initialState = {
   message: null,
   isEditingLoading: false,
   isEditingImage: false,
+  profilePicture: null
 };
 
 const userReducer = (state = initialState, action) => {
@@ -76,11 +77,11 @@ const userReducer = (state = initialState, action) => {
     case RESET_PASSWORD_UPDATE:
       return { ...state, isEditingLoading: false, error: null, message: null };
     case UPDATE_PROFILE_PICTURE_REQUEST:
-      return { ...state, isEditingImage: true };
+      return { ...state, isEditingImage: true, message: null, profilePicture: null, error: null };
     case UPDATE_PROFILE_PICTURE_SUCCESS:
-      return { ...state, isEditingImage: false, message: action.payload.message };
+      return { ...state, isEditingImage: false, message: action.payload.message, profilePicture: action.payload.profilePicture, error: null};
     case UPDATE_PROFILE_PICTURE_FAILURE:
-      return {...state, isEditingImage: false, error: action.payload.error}
+      return {...state, isEditingImage: false, error: action.payload.error, message: null, profilePicture: null}
     default:
       return state;
   }

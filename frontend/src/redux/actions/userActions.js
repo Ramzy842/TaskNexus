@@ -1,3 +1,4 @@
+import api from "../../api/axiosInstance";
 import {
   deleteUser,
   getUser,
@@ -197,11 +198,12 @@ const updateProfilePictureRequest = () => {
   };
 };
 
-const updateProfilePictureSuccess = (message) => {
+const updateProfilePictureSuccess = (message, profilePicture) => {
   return {
     type: UPDATE_PROFILE_PICTURE_SUCCESS,
     payload: {
       message,
+      profilePicture
     },
   };
 };
@@ -215,15 +217,20 @@ const updateProfilePictureFailure = (error) => {
   };
 };
 
-const updateProfilePicture = (id, formData) => {
+const updateProfilePicture = (formData) => {
   return async (dispatch) => {
     dispatch(updateProfilePictureRequest());
     try {
-      await api.post(`/users/${id}/profile-picture`, formData, {
+      await api.post(`/users/${localStorage.getItem("id")}/profile-picture`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
-    } catch (err) {}
+      const res = await api.get(`/users/${localStorage.getItem("id")}/profile-picture`);
+      const profilePicture = res.data.data.profilePictureUrl;
+      localStorage.setItem("profilePicture", profilePicture);
+      dispatch(updateProfilePictureSuccess("Profile picture updated successfully!", profilePicture))
+    } catch (err) {
+      dispatch(updateProfilePictureFailure(err))
+    }
   };
 };
 
@@ -240,4 +247,5 @@ export {
   updateUserPassword,
   removeUserData,
   reset_password_update,
+  updateProfilePicture
 };

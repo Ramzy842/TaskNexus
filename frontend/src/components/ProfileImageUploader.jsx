@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserData } from "../redux/actions/userActions";
+import { getUserData, updateProfilePicture } from "../redux/actions/userActions";
 
 const ProfileImageUploader = () => {
   const [pic, setPic] = useState(localStorage.getItem("profilePicture"));
@@ -19,20 +19,31 @@ const ProfileImageUploader = () => {
     if (file) {
       const formData = new FormData();
       formData.append("avatar", file);
-      try {
-        const id = localStorage.getItem("id");
-        await api.post(`/users/${id}/profile-picture`, formData, {
-          headers: { "Content-Type": "multipart/form-da ta" },
-        });
-        const profilePicture = await api.get(`/users/${id}/profile-picture`)
-        localStorage.setItem("profilePicture", profilePicture.data.data.profilePictureUrl);
-        setPic(profilePicture.data.data.profilePictureUrl);
-        dispatch(getUserData(localStorage.getItem("id")));
-      } catch (error) {
-        console.log(error);
-      }
+      dispatch(updateProfilePicture(formData))
+      // try {
+      //   const id = localStorage.getItem("id");
+      //   await api.post(`/users/${id}/profile-picture`, formData, {
+      //     headers: { "Content-Type": "multipart/form-da ta" },
+      //   });
+      //   const profilePicture = await api.get(`/users/${id}/profile-picture`)
+      //   localStorage.setItem("profilePicture", profilePicture.data.data.profilePictureUrl);
+      //   setPic(profilePicture.data.data.profilePictureUrl);
+      //   dispatch(getUserData(localStorage.getItem("id")));
+      // } catch (error) {
+      //   console.log(error);
+      // }
     }
   };
+  const message = useSelector(state => state.user.message)
+  const profilePic = useSelector(state => state.user.profilePicture)
+  useEffect(() => {
+    if (message === "Profile picture updated successfully!")
+    {
+      localStorage.setItem("profilePicture", profilePic)
+      setPic(profilePic)
+    }
+  }, [message])
+
   return (
     <div className="w-full flex justify-center transition duration-300">
       {/* Hidden file input */}
@@ -49,7 +60,7 @@ const ProfileImageUploader = () => {
       <div className="relative">
         <div
           style={{
-            backgroundImage: pic ? `url(${pic})` : "none",
+            backgroundImage: pic && `url(${pic})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
