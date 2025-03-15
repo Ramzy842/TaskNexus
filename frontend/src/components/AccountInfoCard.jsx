@@ -6,6 +6,7 @@ import { updateUserData } from "../redux/actions/userActions";
 import { SkeletonAccInfoCard } from "./SkeletonSettings";
 
 const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
+  const originalValue = value;
   const [isEditing, setIsEditing] = useState(false);
   const [editedCount, setEditedCount] = useState(0);
   const [inputVal, setInputVal] = useState(value);
@@ -91,6 +92,7 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
                 setIsEditing(false);
                 setErrors(null);
                 setEditedCount(0);
+                setInputVal(originalValue)
               }}
               className="flex justify-center items-center bg-[#E3123F] hover:bg-red-700 rounded-sm py-2 px-4 cursor-pointer"
             >

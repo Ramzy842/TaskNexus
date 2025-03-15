@@ -70,7 +70,7 @@ const getTaskFailure = (error) => {
 
 const getTasks = () => {
   return async (dispatch) => {
-    dispatch(resetTasks());
+    // dispatch(resetTasks());
     dispatch(getTasksRequest());
     try {
       const id = localStorage.getItem("id");
@@ -209,8 +209,8 @@ const editTask = (id, data) => {
       if (!res.success && res.error) dispatch(editTaskFailure(res.error));
       else {
         dispatch(editTaskSuccess(res.data, res.message));
-        dispatch(getTaskData(id));
-        dispatch(getTasks())
+        // dispatch(getTaskData(id));
+        // dispatch(getTasks())
       }
     } catch (error) {
       console.log(error.response.data.errors);

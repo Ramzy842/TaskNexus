@@ -19,9 +19,11 @@ import {
   restrictToParentElement,
   restrictToVerticalAxis,
 } from "@dnd-kit/modifiers";
+import { useSelector } from "react-redux";
 
-const TaskList = ({ prevTasks, tasks }) => {
-  const [tasksList, setTasksList] = useState(tasks ? tasks : prevTasks);
+const TaskList = () => {
+  const tasks = useSelector(state => state.tasks.tasks)
+  const [tasksList, setTasksList] = useState(tasks);
   const getTaskPosition = (id) => tasksList.findIndex((el) => el.id === id);
   const handleDragEnd = async (event) => {
     const { active, over } = event;
@@ -35,8 +37,9 @@ const TaskList = ({ prevTasks, tasks }) => {
     });
   };
   useEffect(() => {
-    console.log(tasksList);
-  }, [tasksList]);
+    if (tasks)
+      setTasksList(tasks)
+  }, [tasks]);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(TouchSensor),

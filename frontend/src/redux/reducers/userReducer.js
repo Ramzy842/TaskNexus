@@ -56,6 +56,7 @@ const userReducer = (state = initialState, action) => {
         error: null,
         user: action.payload.user,
         message: action.payload.message,
+        success: true
       };
     case UPDATE_USER_FAILURE:
       return {

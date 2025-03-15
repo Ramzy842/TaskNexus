@@ -87,6 +87,7 @@ const updateUserDataSuccess = (updateUser, message) => {
     payload: {
       user: updateUser,
       message,
+      success: true
     },
   };
 };

@@ -360,7 +360,7 @@ usersRouter.delete(
         "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png";
       await user.save();
       res.status(200).json({
-        success: false,
+        success: true,
         statusCode: 200,
         message: "Profile picture deleted successfully.",
       });

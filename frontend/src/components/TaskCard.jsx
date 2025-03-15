@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router";
-import { deleteTask, editTask } from "../redux/actions/taskActions";
+import { deleteTask, editTask, getTasks } from "../redux/actions/taskActions";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 const TaskCard = ({ id, title, status }) => {
@@ -23,8 +23,9 @@ const TaskCard = ({ id, title, status }) => {
   const handleDelete = () => {
     dispatch(deleteTask(id));
   };
-  const handleCompleted = () => {
-    dispatch(editTask(id, { status: "Completed" }));
+  const handleCompleted = async () => {
+    await dispatch(editTask(id, { status: "Completed" }));
+    dispatch(getTasks())
   };
   return (
     <div

@@ -8,13 +8,12 @@ import { getTasks } from "../redux/actions/taskActions";
 
 const Home = () => {
   const prevTasks = useSelector((state) => state.tasks.prevTasks);
-  const tasks = useSelector((state) => state.tasks.tasks);
   const loading = useSelector((state) => state.tasks.loading);
   const error = useSelector((state) => state.tasks.error);
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log(prevTasks);
-    console.log(tasks);
+    // console.log(prevTasks);
+    // console.log(tasks);
     dispatch(getTasks());
   }, []);
 
@@ -81,7 +80,7 @@ const Home = () => {
                 <SkeletonCard />
               </>
             ) : (
-              <TaskList tasks={tasks} prevTasks={prevTasks} />
+              <TaskList />
             )}
           </div>
         </>

@@ -12,6 +12,8 @@ const DashboardLayout = ({ children }) => {
   const user = useSelector((state) => state.user.user);
   const [showMenu, setShowMenu] = useState(false);
   const isEditingImage = useSelector((state) => state.user.isEditingImage);
+  const isEditingLoading = useSelector((state) => state.user.isEditingLoading);
+  const loading = useSelector((state) => state.user.loading);
   const profilePicture = useSelector((state) => state.user.profilePicture);
   const [username, setUsername] = useState(localStorage.getItem("username"));
   const dispatch = useDispatch();
@@ -58,8 +60,8 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="grid grid-rows-[auto_1fr] min-h-screen bg-linear-to-bl from-[#E3EAE9] to-[#A3C4C4] p-4">
       {/* Gradient Bar */}
-      {isEditingImage && (
-        <div className="absolute left-0 right-0 top-0 h-2 w-full bg-gradient-to-r from-red-500 from-10% via-green-500 via-50% to-blue-500 to-90% animate-pulse"></div>
+      {(isEditingImage || isEditingLoading || loading) && (
+        <div className="absolute left-0 right-0 top-0 h-2 w-full bg-gradient-to-r from-teal-500 from-10% via-teal-500 via-50% to-emerald-500 to-90% animate-pulse"></div>
       )}
 
       <div className="max-w-6xl m-auto w-full">
