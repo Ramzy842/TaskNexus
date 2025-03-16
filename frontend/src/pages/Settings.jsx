@@ -240,21 +240,20 @@ const RemoveAccount = ({ loading }) => {
 const Settings = () => {
   const loading = useSelector((state) => state.user.loading);
   const isGoogleAcc = JSON.parse(localStorage.getItem("isGoogleAcc"));
-  const message = useSelector((state) => state.user.message);
-  const success = useSelector((state) => state.user.success);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (message) {
-      let timeoutId = setTimeout(() => {
-        dispatch(clearMessages());
-      }, 5000);
-      return () => clearTimeout(timeoutId);
-    }
+
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   if (message) {
+  //     let timeoutId = setTimeout(() => {
+  //       dispatch(clearMessages());
+  //     }, 5000);
+  //     return () => clearTimeout(timeoutId);
+  //   }
     
-  }, [message]);
+  // }, [message]);
   return (
     <DashboardLayout>
-      {message && (
+      {/* {message && (
         <p
           className={`absolute bottom-0 right-0  border-b-4 ${
             success
@@ -264,7 +263,7 @@ const Settings = () => {
         >
           {message}
         </p>
-      )}
+      )} */}
       <h1 className="font-medium text-xl text-teal-900 mb-4">My Account</h1>
       {loading ? (
         <SkeletonSettings />

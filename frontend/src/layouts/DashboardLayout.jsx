@@ -5,7 +5,8 @@ import { NavLink } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 
 import Menu from "../components/Menu";
-import { getUserData } from "../redux/actions/userActions";
+import { clearMessages, getUserData } from "../redux/actions/userActions";
+import { clearTasksMessage } from "../redux/actions/taskActions";
 
 const DashboardLayout = ({ children }) => {
   const user = useSelector((state) => state.user.user);
@@ -16,46 +17,48 @@ const DashboardLayout = ({ children }) => {
   const loading = useSelector((state) => state.user.loading);
   const profilePicture = useSelector((state) => state.user.profilePicture);
   const [username, setUsername] = useState(localStorage.getItem("username"));
+  const taskCreationMessage = useSelector((state) => state.tasks.message);
+  const userMessage = useSelector((state) => state.user.message);
+  const success = useSelector((state) => state.user.success);
+  const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
+
   useEffect(() => {
-      dispatch(getUserData(localStorage.getItem("id")));
+    console.log(taskCreationMessage);
+    console.log(userMessage);
+    if (taskCreationMessage || userMessage)
+    {
+      setMessage(null)
+    }
+    if (taskCreationMessage)
+      dispatch(clearTasksMessage())
+    else if (userMessage)
+      dispatch(clearMessages())
+    
+    dispatch(getUserData(localStorage.getItem("id")));
   }, []);
+  useEffect(() => {
+    if (taskCreationMessage) {
+      console.log("here");
+      setMessage({ value: taskCreationMessage, success: true });
+    } else if (userMessage) {
+      setMessage({ value: userMessage, success});
+    }
+    if (taskCreationMessage || userMessage) {
+      let timeoutId = setTimeout(() => {
+        setMessage(null);
+        dispatch(clearTasksMessage());
+        dispatch(clearMessages());
+      }, 5000);
+      return () => clearTimeout(timeoutId); // Cleanup previous timeout
+    }
+  }, [taskCreationMessage, userMessage]);
   useEffect(() => {
     if (user && username !== user.username) {
       setUsername(user.username);
     }
   }, [user]);
-  // const profilePic = useSelector((state) => state.user.profilePicture);
-  // const message = useSelector((state) => state.user.message);
-  // const fetchProfilePicture = async () => {
-  //   const now = Date.now();
-
-  //   // Check if the profile picture exists and hasn't expired
-  //   if (profilePicture && now < expiresAt) {
-  //     console.log("✅ Using cached profile picture");
-  //     return;
-  //   }
-
-  //   try {
-  //     const id = localStorage.getItem("id");
-  //     const res = await api.get(`/users/${id}/profile-picture`);
-
-  //     console.log("🔄 Fetching new profile picture...");
-  //     setProfilePicture(res.data.data.profilePictureUrl);
-  //     setExpiresAt(res.data.data.expiresAt);
-
-  //     // Store values in localStorage
-  //     localStorage.setItem("profilePicture", res.data.data.profilePictureUrl);
-  //     localStorage.setItem("expiresAt", res.data.data.expiresAt);
-  //   } catch (error) {
-  //     console.error("❌ Error fetching profile picture:", error);
-  //   }
-  // };
-
-  // Fetch profile picture only when necessary
-  // useEffect(() => {
-  //   fetchProfilePicture();
-  // }, [user]); // Run when the user changes
+  
 
   return (
     <div className="grid grid-rows-[auto_1fr] min-h-screen bg-linear-to-bl from-[#E3EAE9] to-[#A3C4C4] p-4">
@@ -63,7 +66,17 @@ const DashboardLayout = ({ children }) => {
       {(isEditingImage || isEditingLoading || loading || isCreating) && (
         <div className="absolute left-0 right-0 top-0 h-2 w-full bg-gradient-to-r from-teal-500 from-10% via-teal-500 via-50% to-emerald-500 to-90% animate-pulse"></div>
       )}
-
+      {message && (
+        <p
+          className={`absolute bottom-0 right-0  border-b-4 ${
+            message.success
+              ? "bg-teal-800 border-teal-400 text-white"
+              : " bg-red-800 border-red-400 text-white"
+          } text-xs w-full md:w-sm rounded-xs p-4`}
+        >
+          {message.value}
+        </p>
+      )}
       <div className="max-w-6xl m-auto w-full">
         <div className="flex justify-between items-center mb-4">
           {window.location.pathname === "/" ? (
@@ -153,7 +166,7 @@ const DashboardLayout = ({ children }) => {
         </div>
       </div>
 
-      <div className="max-w-6xl overflow-x-hidden mx-auto w-full relative">
+      <div className="max-w-6xl overflow-x-hidden mx-auto w-full">
         {children}
       </div>
     </div>

@@ -19,7 +19,7 @@ import { clearMessages } from "../redux/actions/userActions";
 const EditTask = () => {
   let params = useParams();
   const [taskDetails, setTaskDetails] = useState(null);
-  const [message, setMessage] = useState(null);
+  // const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
   const task = useSelector((state) => state.tasks.task);
   const id = params.id;
@@ -110,31 +110,31 @@ const EditTask = () => {
       dispatch(editTask(id, updatedFields));
     }
   };
-  const taskMessage = useSelector((state) => state.tasks.message);
+  // const taskMessage = useSelector((state) => state.tasks.message);
   
-  useEffect(() => {
-    if (taskMessage) {
-      console.log(message);
-      setMessage(taskMessage);
+  // useEffect(() => {
+  //   if (taskMessage) {
+  //     console.log(message);
+  //     setMessage(taskMessage);
       
-      // Clear any existing timeout
-      let timeoutId = setTimeout(() => {
-        setMessage(null);
-        dispatch(clearTasksMessage());
-      }, 5000);
+  //     // Clear any existing timeout
+  //     let timeoutId = setTimeout(() => {
+  //       setMessage(null);
+  //       dispatch(clearTasksMessage());
+  //     }, 5000);
   
-      return () => clearTimeout(timeoutId); // Cleanup previous timeout
-    }
-  }, [taskMessage]);
+  //     return () => clearTimeout(timeoutId); // Cleanup previous timeout
+  //   }
+  // }, [taskMessage]);
   return (
     <DashboardLayout>
-      {message && (
+      {/* {message && (
         <p
           className={`absolute bottom-0 right-0 border-b-4 bg-teal-800 border-teal-400 text-white text-xs w-full md:w-sm rounded-xs p-4`}
         >
           {message}
         </p>
-      )}
+      )} */}
       <div className=" mt-2 sm:flex justify-between items-start gap-x-8">
         {!taskDetails ? (
           <SkeletonEdit />

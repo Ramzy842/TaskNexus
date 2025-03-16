@@ -24,14 +24,7 @@ const ProfileImageUploader = () => {
       dispatch(updateProfilePicture(formData));
     }
   };
-  const message = useSelector((state) => state.user.message);
   const profilePic = useSelector((state) => state.user.profilePicture);
-  // useEffect(() => {
-  //   if (message) {
-  //     localStorage.setItem("profilePicture", profilePic);
-  //     setPic(profilePic);
-  //   }
-  // }, [message]);
   useEffect(() => {
     setPic(profilePic);
   }, [profilePic]);
