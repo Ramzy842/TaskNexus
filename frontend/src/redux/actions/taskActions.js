@@ -10,6 +10,7 @@ import {
   ADD_TASK_FAILURE,
   ADD_TASK_REQUEST,
   ADD_TASK_SUCCESS,
+  CLEAR_MESSAGE,
   DELETE_TASK_FAILURE,
   DELETE_TASK_REQUEST,
   DELETE_TASK_SUCCESS,
@@ -121,7 +122,7 @@ const addTaskFailure = (error) => {
 
 const addTask = (title, description, dueDate, status) => {
   return async (dispatch) => {
-    dispatch(addTaskRequest);
+    dispatch(addTaskRequest());
     try {
       console.log(title, description, dueDate, status);
       const res = await createTask({
@@ -225,6 +226,12 @@ const resetTasks = () => {
   };
 };
 
+const clearTasksMessage = () => {
+  return {
+    type: CLEAR_MESSAGE
+  }
+}
+
 export {
   getTasks,
   getTaskData,
@@ -234,4 +241,5 @@ export {
   resetTaskCreation,
   deleteTaskFailure,
   resetTasks,
+  clearTasksMessage
 };

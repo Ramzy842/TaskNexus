@@ -12,10 +12,6 @@ import { useNavigate } from "react-router";
 const FormActions = ({ taskData }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const tasksState = useSelector((state) => state.tasks);
-  useEffect(() => {
-    if (tasksState.message) navigate("/");
-  }, [tasksState]);
   const handleSave = () => {
     console.log("SAVING DATA: ", taskData);
     dispatch(

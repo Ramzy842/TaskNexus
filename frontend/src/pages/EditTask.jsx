@@ -4,9 +4,11 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import { useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearTasksMessage,
   deleteTaskFailure,
   editTask,
   getTaskData,
+  resetTasks,
 } from "../redux/actions/taskActions";
 import SkeletonEdit from "../components/SkeletonEdit";
 import Button from "../components/Button";
@@ -20,7 +22,6 @@ const EditTask = () => {
   const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
   const task = useSelector((state) => state.tasks.task);
-  // useEffect(() => {}, [task])
   const id = params.id;
   const navigate = useNavigate();
   useEffect(() => {
@@ -105,6 +106,7 @@ const EditTask = () => {
       updatedFields.status = taskDetails[3].value;
     }
     if (Object.keys(updatedFields).length > 0) {
+      dispatch(clearTasksMessage());
       dispatch(editTask(id, updatedFields));
     }
   };
@@ -114,10 +116,14 @@ const EditTask = () => {
     if (taskMessage) {
       console.log(message);
       setMessage(taskMessage);
-      setTimeout(() => {
-        setMessage(null)
-        dispatch(clearMessages());
+      
+      // Clear any existing timeout
+      let timeoutId = setTimeout(() => {
+        setMessage(null);
+        dispatch(clearTasksMessage());
       }, 5000);
+  
+      return () => clearTimeout(timeoutId); // Cleanup previous timeout
     }
   }, [taskMessage]);
   return (

@@ -91,11 +91,6 @@ const PasswordChange = ({ loading }) => {
           <>
             {message && (
               <p
-                // className={` ${
-                //   success
-                //     ? "bg-green-200 text-green-800"
-                //     : "bg-red-200 text-red-800"
-                // }  text-xs w-full p-2 mb-4`}
                 className={`bg-green-200 text-green-800 text-xs w-full md:w-sm mx-4 rounded-xs p-2`}
               >
                 {message}
@@ -249,11 +244,13 @@ const Settings = () => {
   const success = useSelector((state) => state.user.success);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (message === "Profile picture deleted successfully.") {
-      setTimeout(() => {
+    if (message) {
+      let timeoutId = setTimeout(() => {
         dispatch(clearMessages());
       }, 5000);
+      return () => clearTimeout(timeoutId);
     }
+    
   }, [message]);
   return (
     <DashboardLayout>

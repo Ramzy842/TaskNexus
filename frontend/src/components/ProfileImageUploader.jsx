@@ -20,21 +20,18 @@ const ProfileImageUploader = () => {
     if (file) {
       const formData = new FormData();
       formData.append("avatar", file);
+      dispatch(clearMessages())
       dispatch(updateProfilePicture(formData));
     }
   };
   const message = useSelector((state) => state.user.message);
   const profilePic = useSelector((state) => state.user.profilePicture);
-  useEffect(() => {
-    console.log(message);
-    if (message) {
-      localStorage.setItem("profilePicture", profilePic);
-      setPic(profilePic);
-      setTimeout(() => {
-        dispatch(clearMessages());
-      }, 5000);
-    }
-  }, [message]);
+  // useEffect(() => {
+  //   if (message) {
+  //     localStorage.setItem("profilePicture", profilePic);
+  //     setPic(profilePic);
+  //   }
+  // }, [message]);
   useEffect(() => {
     setPic(profilePic);
   }, [profilePic]);

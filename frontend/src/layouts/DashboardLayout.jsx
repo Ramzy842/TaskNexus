@@ -5,7 +5,6 @@ import { NavLink } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 
 import Menu from "../components/Menu";
-import api from "../api/axiosInstance";
 import { getUserData } from "../redux/actions/userActions";
 
 const DashboardLayout = ({ children }) => {
@@ -13,6 +12,7 @@ const DashboardLayout = ({ children }) => {
   const [showMenu, setShowMenu] = useState(false);
   const isEditingImage = useSelector((state) => state.user.isEditingImage);
   const isEditingLoading = useSelector((state) => state.user.isEditingLoading);
+  const isCreating = useSelector((state) => state.tasks.isCreating);
   const loading = useSelector((state) => state.user.loading);
   const profilePicture = useSelector((state) => state.user.profilePicture);
   const [username, setUsername] = useState(localStorage.getItem("username"));
@@ -60,7 +60,7 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="grid grid-rows-[auto_1fr] min-h-screen bg-linear-to-bl from-[#E3EAE9] to-[#A3C4C4] p-4">
       {/* Gradient Bar */}
-      {(isEditingImage || isEditingLoading || loading) && (
+      {(isEditingImage || isEditingLoading || loading || isCreating) && (
         <div className="absolute left-0 right-0 top-0 h-2 w-full bg-gradient-to-r from-teal-500 from-10% via-teal-500 via-50% to-emerald-500 to-90% animate-pulse"></div>
       )}
 
