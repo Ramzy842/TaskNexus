@@ -6,12 +6,10 @@ import Button from "../components/Button";
 import SkeletonSettings from "../components/SkeletonSettings";
 import Input from "../components/Input";
 import {
-  clearMessages,
-  getUserData,
   reset_password_update,
+  showDeletionConfirmation,
   updateUserPassword,
 } from "../redux/actions/userActions";
-import DeleteUserConfirmation from "../components/DeleteUserConfirmation";
 import ProfileImageUploader from "../components/ProfileImageUploader";
 
 const PasswordChange = ({ loading }) => {
@@ -204,7 +202,7 @@ const PasswordChange = ({ loading }) => {
 };
 
 const RemoveAccount = ({ loading }) => {
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const dispatch = useDispatch()
   return (
     !loading && (
       <div className="flex flex-col justify-between items-start">
@@ -219,7 +217,7 @@ const RemoveAccount = ({ loading }) => {
           </p>
         </div>
         <div
-          onClick={() => setShowConfirmation(true)}
+          onClick={() => dispatch(showDeletionConfirmation()) }
           className="flex justify-center md:justify-between gap-4 items-center bg-[#E3123F] hover:bg-red-700 rounded-sm py-2 px-8 md:px-4 cursor-pointer w-full sm:w-auto"
         >
           <Button
@@ -229,9 +227,6 @@ const RemoveAccount = ({ loading }) => {
           />
           <img src="/src/assets/remove-acc.svg" className="" alt="edit" />
         </div>
-        {showConfirmation && (
-          <DeleteUserConfirmation setShowConfirmation={setShowConfirmation} />
-        )}
       </div>
     )
   );

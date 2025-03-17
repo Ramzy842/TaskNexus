@@ -41,6 +41,7 @@ const loginUser = (email, password) => {
     dispatch(loginRequest());
     try {
       const res = await login(email, password);
+      console.log(res.data);
       console.log(res);
       if (res.error) {
         dispatch(loginFailure({ errors: null, message: res.error }));
@@ -52,21 +53,18 @@ const loginUser = (email, password) => {
         localStorage.setItem("accessToken", res.data.token);
         localStorage.setItem("id", res.data.user.id);
         localStorage.setItem("username", res.data.user.username);
-        if (
-          res.data.user.profilePicture !==
-          "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png"
-        ) {
-          const profilePicture = await api.get(`/users/${localStorage.getItem("id")}/profile-picture`);
+        const defaultAvatar =
+          "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png";
+        if (res.data.user.profilePicture !== defaultAvatar) {
+          const profilePicture = await api.get(
+            `/users/${localStorage.getItem("id")}/profile-picture`
+          );
           console.log(profilePicture);
           localStorage.setItem(
             "profilePicture",
             profilePicture.data.data.profilePictureUrl
           );
-        } else
-          localStorage.setItem(
-            "profilePicture",
-            "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png"
-          );
+        } else localStorage.setItem("profilePicture", defaultAvatar);
         localStorage.setItem("isGoogleAcc", false);
         dispatch(loginSuccess(res.data.user));
       }

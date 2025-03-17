@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import { NavLink } from "react-router";
 
@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Menu from "../components/Menu";
 import { clearMessages, getUserData } from "../redux/actions/userActions";
 import { clearTasksMessage } from "../redux/actions/taskActions";
+import DeleteUserConfirmation from "../components/DeleteUserConfirmation";
 
 const DashboardLayout = ({ children }) => {
   const user = useSelector((state) => state.user.user);
@@ -22,34 +23,31 @@ const DashboardLayout = ({ children }) => {
   const success = useSelector((state) => state.user.success);
   const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
-
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const showDeletionConfirmation = useSelector(
+    (state) => state.user.showDeletionConfirmation
+  );
+  useEffect(() => {
+    setShowConfirmation(showDeletionConfirmation);
+  }, [showDeletionConfirmation]);
+  useEffect(() => {
+    dispatch(getUserData(localStorage.getItem("id")));
+  }, [dispatch]);
   useEffect(() => {
     console.log(taskCreationMessage);
     console.log(userMessage);
-    if (taskCreationMessage || userMessage) {
-      setMessage(null);
-    }
-    if (taskCreationMessage) dispatch(clearTasksMessage());
-    else if (userMessage) dispatch(clearMessages());
-
-    dispatch(getUserData(localStorage.getItem("id")));
-  }, []);
-  useEffect(() => {
     if (taskCreationMessage) {
-      console.log("here");
       setMessage({ value: taskCreationMessage, success: true });
     } else if (userMessage) {
       setMessage({ value: userMessage, success });
     }
-    if (taskCreationMessage || userMessage) {
-      let timeoutId = setTimeout(() => {
-        setMessage(null);
-        dispatch(clearTasksMessage());
-        dispatch(clearMessages());
-      }, 5000);
-      return () => clearTimeout(timeoutId); // Cleanup previous timeout
-    }
-  }, [taskCreationMessage, userMessage]);
+    const timeoutId = setTimeout(() => {
+      setMessage(null);
+      if (taskCreationMessage) dispatch(clearTasksMessage());
+      if (userMessage) dispatch(clearMessages());
+    }, 5000);
+    return () => clearTimeout(timeoutId); // Cleanup previous timeout
+  }, [taskCreationMessage, userMessage, dispatch]);
   useEffect(() => {
     if (user && username !== user.username) {
       setUsername(user.username);
@@ -62,10 +60,8 @@ const DashboardLayout = ({ children }) => {
       {(isEditingImage || isEditingLoading || loading || isCreating) && (
         <div className="absolute left-0 right-0 top-0 h-2 w-full bg-gradient-to-r from-teal-500 from-10% via-teal-500 via-50% to-emerald-500 to-90% animate-pulse"></div>
       )}
-      
 
       <div className="max-w-6xl m-auto w-full relative">
-      
         <div className="flex justify-between items-center mb-4">
           {window.location.pathname === "/" ? (
             <NavLink
@@ -153,20 +149,20 @@ const DashboardLayout = ({ children }) => {
           </div>
         </div>
       </div>
-
+      {showConfirmation && <DeleteUserConfirmation />}
       <div className="max-w-6xl overflow-x-hidden w-full mx-auto relative">
-      {message && (
-        <p
-          className={`z-50 absolute bottom-0 right-0  border-b-4 ${
-            message.success
-              ? "bg-teal-800 border-teal-400 text-white"
-              : " bg-red-800 border-red-400 text-white"
-          } text-xs w-full md:w-sm rounded-xs p-4`}
-        >
-          {message.value}
-        </p>
-      )}
-      
+        {message && (
+          <p
+            className={`z-50 absolute bottom-0 right-0  border-b-4 ${
+              message.success
+                ? "bg-teal-800 border-teal-400 text-white"
+                : " bg-red-800 border-red-400 text-white"
+            } text-xs w-full md:w-sm rounded-xs p-4`}
+          >
+            {message.value}
+          </p>
+        )}
+
         {children}
       </div>
     </div>

@@ -1,19 +1,15 @@
 import Button from "./Button";
-import { createTask } from "../services/tasks";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import {
   addTask,
-  getTasks,
   resetTaskCreation,
 } from "../redux/actions/taskActions";
-import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
 const FormActions = ({ taskData }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleSave = () => {
-    console.log("SAVING DATA: ", taskData);
     dispatch(
       addTask(
         taskData.title,

@@ -13,11 +13,13 @@ import {
   GET_USER_FAILURE,
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
+  HIDE_USER_ACC_DELETION_CONFIRMATION,
   REMOVE_USER_FAILURE,
   REMOVE_USER_REQUEST,
   REMOVE_USER_SUCCESS,
   RESET_PASSWORD_UPDATE,
   RESET_USER,
+  SHOW_USER_ACC_DELETION_CONFIRMATION,
   UPDATE_PROFILE_PICTURE_FAILURE,
   UPDATE_PROFILE_PICTURE_REQUEST,
   UPDATE_PROFILE_PICTURE_SUCCESS,
@@ -56,10 +58,12 @@ const getUserData = (id) => {
       if (res.error) {
         dispatch(getUserFailure(null, res.error));
       } else {
-        console.log(res.data);
+        const defaultAvatar =
+          "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png";
+        const profilePicture = res.data.profilePicture;
         if (
-          res.data.profilePicture !==
-          "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png"
+          profilePicture !== defaultAvatar &&
+          !profilePicture.startsWith("https://lh3.googleusercontent.com")
         ) {
           const profilePicture = await api.get(
             `/users/${localStorage.getItem("id")}/profile-picture`
@@ -67,7 +71,7 @@ const getUserData = (id) => {
           dispatch(
             getUserSuccess(res.data, profilePicture.data.data.profilePictureUrl)
           );
-        } else dispatch(getUserSuccess(res.data, res.data.profilePicture));
+        } else dispatch(getUserSuccess(res.data, profilePicture));
       }
     } catch (error) {
       dispatch(getUserFailure(error, null));
@@ -87,7 +91,7 @@ const updateUserDataSuccess = (updateUser, message) => {
     payload: {
       user: updateUser,
       message,
-      success: true
+      success: true,
     },
   };
 };
@@ -275,7 +279,7 @@ const deleteProfilePicSuccess = (profilePic, message, success) => {
     payload: {
       message,
       success,
-      profilePic
+      profilePic,
     },
   };
 };
@@ -295,14 +299,29 @@ const deleteProfilePic = () => {
     try {
       const id = localStorage.getItem("id");
       const res = await api.delete(`/users/${id}/profile-picture`);
-      const defaultPic = "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png"
-      console.log(res.data)
-      dispatch(deleteProfilePicSuccess(defaultPic, res.data.message, res.data.success))
-      localStorage.setItem("profilePicture", defaultPic)
+      const defaultPic =
+        "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png";
+      console.log(res.data);
+      dispatch(
+        deleteProfilePicSuccess(defaultPic, res.data.message, res.data.success)
+      );
+      localStorage.setItem("profilePicture", defaultPic);
       // dispatch(getUserData(id));
     } catch (error) {
-      dispatch(deleteProfilePicFailure(error))
+      dispatch(deleteProfilePicFailure(error));
     }
+  };
+};
+
+const showDeletionConfirmation = () => {
+  return {
+    type: SHOW_USER_ACC_DELETION_CONFIRMATION,
+  };
+};
+
+const hideDeletionConfirmation = () => {
+  return {
+    type: HIDE_USER_ACC_DELETION_CONFIRMATION,
   };
 };
 
@@ -326,5 +345,7 @@ export {
   reset_password_update,
   updateProfilePicture,
   clearMessages,
-  deleteProfilePic
+  deleteProfilePic,
+  showDeletionConfirmation,
+  hideDeletionConfirmation,
 };

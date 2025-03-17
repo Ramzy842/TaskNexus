@@ -16,9 +16,11 @@ const AuthCallback = () => {
       localStorage.setItem("username", username);
       localStorage.setItem("isGoogleAcc", true);
       localStorage.setItem("id", id);
+      const defaultAvatar =
+        "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png";
       if (
-        profilePicture !==
-        "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png"
+        profilePicture !== defaultAvatar &&
+        !profilePicture.startsWith("https://lh3.googleusercontent.com")
       ) {
         api.get(`/users/${id}/profile-picture`).then((profilePicture) => {
           localStorage.setItem(
@@ -28,10 +30,7 @@ const AuthCallback = () => {
           navigate("/");
         });
       } else {
-        localStorage.setItem(
-          "profilePicture",
-          "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png"
-        );
+        localStorage.setItem("profilePicture", defaultAvatar);
         navigate("/");
       }
     } else {
