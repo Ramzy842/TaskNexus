@@ -19,12 +19,7 @@ const DashboardLayout = ({ children }) => {
   const success = useSelector((state) => state.user.success);
   const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
-  // const [showConfirmation, setShowConfirmation] = useState(false);
   const showDeletionConfirmation = useSelector((state) => state.user.showDeletionConfirmation);
-  
-  // useEffect(() => {
-  //   setShowConfirmation(showDeletionConfirmation);
-  // }, [showDeletionConfirmation]);
   
   useEffect(() => {
     dispatch(getUserData(localStorage.getItem("id")));
