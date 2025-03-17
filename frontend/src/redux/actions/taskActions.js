@@ -208,11 +208,8 @@ const editTask = (id, data) => {
     try {
       const res = await updateTask(id, data);
       if (!res.success && res.error) dispatch(editTaskFailure(res.error));
-      else {
+      else
         dispatch(editTaskSuccess(res.data, res.message));
-        // dispatch(getTaskData(id));
-        // dispatch(getTasks())
-      }
     } catch (error) {
       console.log(error.response.data.errors);
       dispatch(editTaskFailure(error.response.data.errors));
