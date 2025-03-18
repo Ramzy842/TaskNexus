@@ -12,8 +12,6 @@ const AuthLayout = ({ children }) => {
 		if (headerRef.current) {
 			const rect = headerRef.current.getBoundingClientRect();
 			setDimensions(rect);
-			console.log("Header Ref:", headerRef.current);
-			console.log("Header Dimensions:", rect);
 		}
 	}, []);
 	return (

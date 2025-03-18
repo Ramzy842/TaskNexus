@@ -1,35 +1,38 @@
 import { useEffect, useState } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
-
 import { clearMessages, getUserData } from "../redux/actions/userActions";
 import { clearTasksMessage } from "../redux/actions/taskActions";
 import DeleteUserConfirmation from "../components/DeleteUserConfirmation";
 import DashboardHeader from "../components/DashboardHeader";
 
 const DashboardLayout = ({ children }) => {
-  const user = useSelector((state) => state.user.user);
-  const isEditingImage = useSelector((state) => state.user.isEditingImage);
-  const isEditingLoading = useSelector((state) => state.user.isEditingLoading);
-  const isCreating = useSelector((state) => state.tasks.isCreating);
-  const loading = useSelector((state) => state.user.loading);
-  const [username, setUsername] = useState(localStorage.getItem("username"));
-  const taskCreationMessage = useSelector((state) => state.tasks.message);
-  const userMessage = useSelector((state) => state.user.message);
-  const success = useSelector((state) => state.user.success);
+  const [username, setUsername] = useState();
   const [message, setMessage] = useState(null);
+  const {
+    user,
+    isEditingImage,
+    isEditingLoading,
+    message: userMessage,
+    success,
+    showDeletionConfirmation,
+    loading,
+  } = useSelector((state) => state.user);
+  const { isCreating, message: taskCreationMessage } = useSelector(
+    (state) => state.tasks
+  );
   const dispatch = useDispatch();
-  const showDeletionConfirmation = useSelector((state) => state.user.showDeletionConfirmation);
-  
+  const userId = localStorage.getItem("id");
   useEffect(() => {
-    dispatch(getUserData(localStorage.getItem("id")));
-  }, [dispatch]);
-
+    if (userId) dispatch(getUserData(userId));
+  }, [dispatch, userId]);
+  useEffect(() => {
+    const storageUsername = localStorage.getItem("username");
+    if (storageUsername) setUsername(storageUsername);
+  }, []);
   useEffect(() => {
     if (taskCreationMessage)
       setMessage({ value: taskCreationMessage, success: true });
-    else if (userMessage)
-      setMessage({ value: userMessage, success });
+    else if (userMessage) setMessage({ value: userMessage, success });
     const timeoutId = setTimeout(() => {
       setMessage(null);
       if (taskCreationMessage) dispatch(clearTasksMessage());
@@ -37,12 +40,12 @@ const DashboardLayout = ({ children }) => {
     }, 5000);
     return () => clearTimeout(timeoutId);
   }, [taskCreationMessage, userMessage, dispatch]);
-  
+
   useEffect(() => {
     if (user && username !== user.username) {
       setUsername(user.username);
     }
-  }, [user]);
+  }, [user, username]);
 
   return (
     <div className="grid grid-rows-[auto_1fr] min-h-screen bg-linear-to-bl from-[#E3EAE9] to-[#A3C4C4] p-4">
@@ -54,7 +57,7 @@ const DashboardLayout = ({ children }) => {
       <div className="max-w-6xl overflow-x-hidden w-full mx-auto relative">
         {message && (
           <p
-            className={`z-50 absolute bottom-0 right-0  border-b-4 ${
+            className={`z-30 absolute bottom-0 right-0  border-b-4 ${
               message.success
                 ? "bg-teal-800 border-teal-400 text-white"
                 : " bg-red-800 border-red-400 text-white"
