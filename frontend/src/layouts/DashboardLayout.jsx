@@ -4,6 +4,7 @@ import { clearMessages, getUserData } from "../redux/actions/userActions";
 import { clearTasksMessage } from "../redux/actions/taskActions";
 import DeleteUserConfirmation from "../components/DeleteUserConfirmation";
 import DashboardHeader from "../components/DashboardHeader";
+import { useNavigate } from "react-router";
 
 const DashboardLayout = ({ children }) => {
   const [username, setUsername] = useState();
@@ -22,8 +23,13 @@ const DashboardLayout = ({ children }) => {
   );
   const dispatch = useDispatch();
   const userId = localStorage.getItem("id");
+  const navigate = useNavigate();
   useEffect(() => {
-    if (userId) dispatch(getUserData(userId));
+    if (!userId) {
+      localStorage.clear();
+      return navigate("/login");
+    }
+    dispatch(getUserData(userId));
   }, [dispatch, userId]);
   useEffect(() => {
     const storageUsername = localStorage.getItem("username");
