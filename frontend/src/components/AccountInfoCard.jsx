@@ -14,12 +14,11 @@ const Actions = ({
   originalValue,
 }) => {
   return (
-    <div className="flex gap-x-2">
+    <div className="flex gap-x-2 self-end sm:self-auto">
       <div
         onClick={handleSave}
         className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-sm py-2 px-4 cursor-pointer"
       >
-        {/* <img src="/src/assets/save.svg" alt="save" /> */}
         <Button
           type="button"
           text="Save"
@@ -35,7 +34,6 @@ const Actions = ({
         }}
         className="flex justify-center items-center bg-[#E3123F] hover:bg-red-700 rounded-sm py-2 px-4 cursor-pointer"
       >
-        {/* <img src="/src/assets/remove-acc.svg" alt="save" /> */}
         <Button
           type="button"
           text="Cancel"
@@ -61,7 +59,7 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
 
   const handleSave = () => {
     const updatedField = {};
-    if (inputVal.length && value !== inputVal) {
+    if (value !== inputVal) {
       updatedField[title.toLowerCase()] = inputVal;
       console.log(updatedField);
       dispatch(updateUserData(updatedField));
@@ -97,10 +95,10 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
   ) : (
     <div>
       <div
-        className={`flex items-center
+        className={`flex ${isEditing ? "flex-col sm:flex-row sm:items-center" : "items-center" } 
         mb-2 justify-between`}
       >
-        <div className=" max-w-56 md:max-w-sm">
+        <div className="sm:max-w-sm">
           <p className="text-teal-900 font-semibold">{title}</p>
           {isEditing ? (
             <div className="flex flex-col">
@@ -111,7 +109,7 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
                   setInputVal(e.target.value);
                   setErrors(null);
                 }}
-                classNames={`text-teal-900 font-normal bg-white text-xs py-2 px-2 rounded-sm w-4/5 sm:w-sm md:w-md max-w-lg outline-none `}
+                classNames={`text-teal-900 font-normal w-full text-xs p-2 rounded-sm sm:w-sm md:w-md max-w-lg outline-none `}
               />
             </div>
           ) : (
@@ -149,15 +147,22 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
       </div>
 
       {errors && (
-        <div className="text-xs bg-red-200 text-red-700 py-1 px-2 rounded-sm  relative flex w-full flex-col">
+        <div className="text-xs bg-[#E3123F] text-red-700 p-2 mb-2 rounded-xs relative flex flex-col w-full sm:max-w-sm">
           <span className="self-end bg-red-500 text-white rounded-sm px-1 font-bold text-xs ">
             {errors.length}
           </span>
           <div>
             {errors.map((error, index) => (
-              <p key={index} className="">
-                - {error}
-              </p>
+              <div key={index} className="flex items-start mb-2">
+                <img
+                  src="/src/assets/x-circle.svg"
+                  className="mr-1"
+                  alt="error"
+                />
+                <p key={index} className="text-white">
+                  {error}
+                </p>
+              </div>
             ))}
           </div>
         </div>

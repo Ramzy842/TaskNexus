@@ -199,13 +199,7 @@ const removeUserData = () => {
         dispatch(removeUserFailure([res.message]));
       else {
         dispatch(removeUserSuccess(res.message));
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("id");
-        localStorage.removeItem("username");
-        localStorage.removeItem("profilePicture");
-        localStorage.removeItem("isGoogleAcc");
-        localStorage.removeItem("errorExpireTime");
-        localStorage.removeItem("expiresAt");
+        localStorage.clear()
         window.location.href = "/login";
       }
     } catch (error) {
@@ -306,7 +300,6 @@ const deleteProfilePic = () => {
         deleteProfilePicSuccess(defaultPic, res.data.message, res.data.success)
       );
       localStorage.setItem("profilePicture", defaultPic);
-      // dispatch(getUserData(id));
     } catch (error) {
       dispatch(deleteProfilePicFailure(error));
     }

@@ -71,7 +71,6 @@ const getTaskFailure = (error) => {
 
 const getTasks = () => {
   return async (dispatch) => {
-    // dispatch(resetTasks());
     dispatch(getTasksRequest());
     try {
       const id = localStorage.getItem("id");
@@ -97,8 +96,6 @@ const getTaskData = (id) => {
     }
   };
 };
-
-// ------------------------------------------------------------------ //
 
 const addTaskRequest = () => {
   return {
@@ -144,7 +141,6 @@ const resetTaskCreation = () => {
     type: RESET_TASK_CREATION,
   };
 };
-// ------------------------------------------------------------------ //
 
 const deleteTaskRequest = () => {
   return {
@@ -155,6 +151,9 @@ const deleteTaskRequest = () => {
 const deleteTaskSuccess = () => {
   return {
     type: DELETE_TASK_SUCCESS,
+    payload: {
+      message: "Task deleted successfully."
+    }
   };
 };
 
@@ -171,13 +170,11 @@ const deleteTask = (id) => {
     try {
       await removeTask(id);
       dispatch(deleteTaskSuccess());
-      dispatch(getTasks());
     } catch (error) {
       dispatch(deleteTaskFailure(error.response.data.message));
     }
   };
 };
-// ------------------------------------------------------------------ //
 
 const editTaskRequest = () => {
   return {

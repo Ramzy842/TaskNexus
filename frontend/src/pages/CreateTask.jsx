@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
 import TaskCreate from "../components/TaskCreate";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import {
   resetTaskCreation,
 } from "../redux/actions/taskActions";

@@ -20,8 +20,9 @@ const TaskCard = ({ id, title, status }) => {
     transform: CSS.Transform.toString(transform),
   };
   const dispatch = useDispatch();
-  const handleDelete = () => {
-    dispatch(deleteTask(id));
+  const handleDelete = async () => {
+    await dispatch(deleteTask(id));
+    dispatch(getTasks())
   };
   const handleCompleted = async () => {
     await dispatch(editTask(id, { status: "Completed" }));
@@ -31,11 +32,6 @@ const TaskCard = ({ id, title, status }) => {
     <div
       style={style}
       ref={setNodeRef}
-      
-      // dragTransition={{
-      //   bounceStiffness: 500, // Higher stiffness means less bouncing
-      //   bounceDamping: 100, // Lower damping results in less snap-back
-      // }}
       className={`touch-none w-full rounded-sm flex justify-between items-center py-2 px-4 mb-1 shadow-[0_0_8px_-2px_rgba(0,200,200,0.50)] bg-[#E3EAE9] bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-20 border border-gray-100`}
     >
       <div className="flex flex-col items-start  w-40 sm:w-sm md:w-sm md:w-lg lg:w-2xl">
@@ -86,32 +82,13 @@ const TaskCard = ({ id, title, status }) => {
               onClick={handleCompleted}
             />
           )}
-          <svg
+          <img
             draggable="false"
+            alt="delete icon"
+            src="./src/assets/delete-task-card.svg"
             onClick={handleDelete}
             className={`cursor-pointer`}
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15 5L5 15"
-              stroke={`#579999`}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2px"
-            />
-            <path
-              d="M5 5L15 15"
-              stroke={`#579999`}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2px"
-            />
-          </svg>
-
+          />
           <img
           {...attributes}
           {...listeners}

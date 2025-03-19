@@ -11,13 +11,7 @@ const Menu = ({setShowMenu}) => {
   const handleLogout = async () => {
     try {
       await logout();
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("id");
-      localStorage.removeItem("username");
-      localStorage.removeItem("profilePicture");
-      localStorage.removeItem("isGoogleAcc")
-      localStorage.removeItem("errorExpireTime")
-      localStorage.removeItem("expiresAt")
+      localStorage.clear()
       dispatch(resetAuth());
       dispatch(resetTasks());
       dispatch(resetUser());

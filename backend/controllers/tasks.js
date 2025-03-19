@@ -78,7 +78,6 @@ tasksRouter.post(
       const lastTask = await Task.findOne({ userId: req.user.id }).sort(
         "-order"
       );
-      console.log(lastTask);
       const newOrder = lastTask ? lastTask.order + 1 : 0;
       const newTask = new Task({
         title,

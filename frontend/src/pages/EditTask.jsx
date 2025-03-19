@@ -5,21 +5,19 @@ import { useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearTasksMessage,
+  deleteTask,
   deleteTaskFailure,
   editTask,
   getTaskData,
-  resetTasks,
 } from "../redux/actions/taskActions";
 import SkeletonEdit from "../components/SkeletonEdit";
 import Button from "../components/Button";
 import TaskInput from "../components/TaskInput";
-import { removeTask } from "../services/tasks";
-import { clearMessages } from "../redux/actions/userActions";
+
 
 const EditTask = () => {
   let params = useParams();
   const [taskDetails, setTaskDetails] = useState(null);
-  // const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
   const task = useSelector((state) => state.tasks.task);
   const id = params.id;
@@ -70,7 +68,7 @@ const EditTask = () => {
   }, [task]);
   const handleDelete = async () => {
     try {
-      await removeTask(id);
+      await dispatch(deleteTask(id))
       navigate("/");
     } catch (error) {
       dispatch(deleteTaskFailure(error.response.data.message));
@@ -110,31 +108,8 @@ const EditTask = () => {
       dispatch(editTask(id, updatedFields));
     }
   };
-  // const taskMessage = useSelector((state) => state.tasks.message);
-  
-  // useEffect(() => {
-  //   if (taskMessage) {
-  //     console.log(message);
-  //     setMessage(taskMessage);
-      
-  //     // Clear any existing timeout
-  //     let timeoutId = setTimeout(() => {
-  //       setMessage(null);
-  //       dispatch(clearTasksMessage());
-  //     }, 5000);
-  
-  //     return () => clearTimeout(timeoutId); // Cleanup previous timeout
-  //   }
-  // }, [taskMessage]);
   return (
     <DashboardLayout>
-      {/* {message && (
-        <p
-          className={`absolute bottom-0 right-0 border-b-4 bg-teal-800 border-teal-400 text-white text-xs w-full md:w-sm rounded-xs p-4`}
-        >
-          {message}
-        </p>
-      )} */}
       <div className=" mt-2 sm:flex justify-between items-start gap-x-8">
         {!taskDetails ? (
           <SkeletonEdit />

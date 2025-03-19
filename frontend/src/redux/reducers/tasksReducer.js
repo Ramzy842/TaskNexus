@@ -106,6 +106,7 @@ const tasksReducer = (state = initialState, action) => {
     case DELETE_TASK_SUCCESS:
       return {
         ...state,
+        message: action.payload.message,
         loading: false,
         task: null,
       };

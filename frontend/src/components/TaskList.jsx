@@ -47,7 +47,7 @@ const TaskList = () => {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-  return tasksList ? (
+  return tasksList && tasksList.length ? (
     <DndContext
       modifiers={[restrictToVerticalAxis, restrictToParentElement]}
       sensors={sensors}
