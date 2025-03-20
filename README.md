@@ -20,9 +20,8 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
   - **Frontend**: Jest and React Testing Library for component testing.
   - **End-to-End (E2E)**: Cypress for simulating user flows and ensuring seamless functionality.
 - **Scalability**: Modular codebase designed to handle future feature extensions.
-- **File Storage & Delivery**:
+- **File Storage**:
   - **AWS S3**: Used for storing user-uploaded profile images.
-  - **AWS CloudFront**: Integrated for faster image delivery and optimized performance.
 
 ## Tech Stack
 
@@ -43,9 +42,8 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
   - **User Management**: Rate limited to 20 requests per hour.
   - **Task Management**: Rate limited to 30 requests per hour.
 
-### File Storage & Delivery
+### File Storage
 - **Amazon S3**: Stores profile images for users. Files are uploaded securely and retrieved using signed URLs or CloudFront caching.
-- **Amazon CloudFront**: Enhances image delivery speed and reduces latency by caching and distributing images globally.
 
 ## Testing Tools
 - **Jest**: Unit testing for both backend and frontend.
@@ -58,7 +56,7 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
 ### Prerequisites
 - **Node.js and npm** installed.
 - **MongoDB** on a cloud service (MongoDB Atlas).
-- **AWS S3 Bucket** and **CloudFront Distribution** configured for image storage and delivery.
+- **AWS S3 Bucket** configured for image storage.
 
 ### Steps to Run Locally
 
@@ -90,7 +88,6 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
    AWS_SECRET_ACCESS_KEY=<Your AWS Secret Access Key>
    AWS_REGION=<Your AWS Region>
    S3_BUCKET_NAME=<Your S3 Bucket Name>
-   CLOUDFRONT_URL=<Your CloudFront Distribution URL>
    ```
 5. Start the development servers:
    ```sh
@@ -122,7 +119,7 @@ The application is deployed using modern CI/CD workflows:
 
 - **Frontend**: Deployed on Vercel.
 - **Backend**: Deployed on AWS.
-- **File Storage & Delivery**: Profile images are stored on **Amazon S3**, and **CloudFront** serves them globally for better performance.
+- **File Storage & Delivery**: Profile images are stored on **Amazon S3**.
 
 ## API Documentation
 The backend API is documented using Swagger. Access the documentation locally at [http://localhost:4000/api-docs](http://localhost:4000/api-docs).
