@@ -36,6 +36,7 @@ const DashboardLayout = ({ children }) => {
     if (storageUsername) setUsername(storageUsername);
   }, []);
   useEffect(() => {
+    console.log(userMessage);
     if (taskCreationMessage)
       setMessage({ value: taskCreationMessage, success: true });
     else if (userMessage) setMessage({ value: userMessage, success });

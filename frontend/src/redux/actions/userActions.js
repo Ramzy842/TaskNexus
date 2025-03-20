@@ -74,7 +74,7 @@ const getUserData = (id) => {
         } else dispatch(getUserSuccess(res.data, profilePicture));
       }
     } catch (error) {
-      dispatch(getUserFailure(error, null));
+      dispatch(getUserFailure(error.response.data.error, null));
     }
   };
 };
@@ -96,11 +96,10 @@ const updateUserDataSuccess = (updateUser, message) => {
   };
 };
 
-const updateUserDataFailure = (error) => {
-  console.log(error);
+const updateUserDataFailure = (error, message) => {
   return {
     type: UPDATE_USER_FAILURE,
-    payload: error,
+    payload: { error, message},
   };
 };
 
@@ -110,14 +109,16 @@ const updateUserData = (data) => {
     try {
       const res = await updateUser(localStorage.getItem("id"), data);
       console.log(res);
-      // this is where it's failing
-      if (res.errors) dispatch(updateUserDataFailure(res.errors));
+      if (!res.success && res.error)
+        dispatch(updateUserDataFailure(null, res.error));
+      else if (res.errors) dispatch(updateUserDataFailure(res.errors, null));
       else if (!res.success && res.message)
-        dispatch(updateUserDataFailure([res.message]));
+        dispatch(updateUserDataFailure([res.message], null));
       else dispatch(updateUserDataSuccess(res.data, res.message));
       if (res.data) localStorage.setItem("username", res.data.username);
     } catch (error) {
-      dispatch(updateUserDataFailure(error));
+      console.log(error);
+      dispatch(updateUserDataFailure(error.response.data.error, null));
     }
   };
 };
@@ -157,7 +158,7 @@ const updateUserPassword = (oldPassword, newPassword) => {
         dispatch(updateUserPasswordSuccess(res.message));
       }
     } catch (error) {
-      dispatch(updateUserPasswordFailure(error));
+      dispatch(updateUserPasswordFailure(error.response.data.error));
     }
   };
 };
@@ -203,7 +204,7 @@ const removeUserData = () => {
         window.location.href = "/login";
       }
     } catch (error) {
-      dispatch(removeUserFailure(error));
+      dispatch(removeUserFailure(error.response.data.error));
     }
   };
 };
@@ -256,7 +257,7 @@ const updateProfilePicture = (formData) => {
         )
       );
     } catch (err) {
-      dispatch(updateProfilePictureFailure(err));
+      dispatch(updateProfilePictureFailure(err.response.data.error));
     }
   };
 };
@@ -301,7 +302,7 @@ const deleteProfilePic = () => {
       );
       localStorage.setItem("profilePicture", defaultPic);
     } catch (error) {
-      dispatch(deleteProfilePicFailure(error));
+      dispatch(deleteProfilePicFailure(error.response.data.error));
     }
   };
 };

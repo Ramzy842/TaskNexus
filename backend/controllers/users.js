@@ -26,7 +26,6 @@ const { limiter, client, s3_bucketName } = require("../utils/config");
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 usersRouter.post(
   "/",
-  limiter.users,
   [validateUsername, validateName, validateEmail, validatePassword],
   async (req, res, next) => {
     const result = validationResult(req);
@@ -82,7 +81,7 @@ usersRouter.get("/", limiter.users, async (req, res, next) => {
   }
 });
 
-usersRouter.get("/:id", limiter.users, verifyToken, async (req, res, next) => {
+usersRouter.get("/:id", verifyToken, async (req, res, next) => {
   try {
     if (req.params.id !== req.user.id)
       return res.status(403).json({
@@ -110,7 +109,6 @@ usersRouter.get("/:id", limiter.users, verifyToken, async (req, res, next) => {
 
 usersRouter.put(
   "/:id",
-  limiter.users,
   [validateUsernameUpdate, validateEmailUpdate, validateNameUpdate],
   verifyToken,
   async (req, res, next) => {
@@ -205,7 +203,6 @@ usersRouter.delete("/:id", verifyToken, async (req, res, next) => {
 
 usersRouter.put(
   "/:id/update-password",
-  // limiter.users,
   [validateOldPasswordUpdate, validateNewPasswordUpdate],
   verifyToken,
   async (req, res, next) => {
@@ -258,7 +255,6 @@ usersRouter.put(
 
 usersRouter.get(
   "/:id/tasks",
-  limiter.getTasksLimit,
   verifyToken,
   async (req, res, next) => {
     try {

@@ -64,8 +64,8 @@ const limiter = {
       error:
         "Too many requests for user-related requests. Please try again later.",
     },
-    windowMs: 1 * 60 * 1000, // 30min
-    limit: isTestEnv ? 1000 : 60,
+    windowMs: 1 * 60 * 1000, // 1 min
+    limit: isTestEnv ? 1000 : 5, // old value: 60
     standardHeaders: true,
     legacyHeaders: false,
   }),
@@ -75,7 +75,7 @@ const limiter = {
       error: "Too many requests for tasks retrieval. Please slow down!",
     },
     windowMs: 1 * 60 * 1000, // 1m
-    limit: isTestEnv ? 1000 : 30,
+    limit: isTestEnv ? 1000 : 5, // old value: 30
     standardHeaders: true,
     legacyHeaders: false,
   }),
@@ -85,7 +85,7 @@ const limiter = {
       error: "Too many task-related requests. Please try again later.",
     },
     windowMs: 15 * 60 * 1000, // 1h
-    limit: isTestEnv ? 1000 : 30,
+    limit: isTestEnv ? 1000 : 5, // old value: 30
     standardHeaders: true,
     legacyHeaders: false,
   }),

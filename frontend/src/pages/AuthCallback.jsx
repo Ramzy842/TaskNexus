@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import api from "../api/axiosInstance";
+import DashboardLayout from "../layouts/DashboardLayout";
 
 const AuthCallback = () => {
   const navigate = useNavigate();
@@ -38,7 +39,11 @@ const AuthCallback = () => {
     }
   }, [navigate]);
 
-  return <p>Logging you in...</p>;
+  return (
+    <DashboardLayout>
+      <p>Logging you in...</p>;
+    </DashboardLayout>
+  );
 };
 
 export default AuthCallback;

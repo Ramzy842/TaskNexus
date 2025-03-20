@@ -52,6 +52,7 @@ const userReducer = (state = initialState, action) => {
         loading: false,
         error: action.payload.error,
         user: null,
+        success: false,
         message: action.payload.message,
       };
     case RESET_USER:
@@ -70,16 +71,20 @@ const userReducer = (state = initialState, action) => {
     case UPDATE_USER_FAILURE:
       return {
         ...state,
+        loading: false,
         isEditingLoading: false,
-        error: action.payload,
-        message: null,
+        error: action.payload.error,
+        message: action.payload.message,
+        success: false
       };
     case UPDATE_USER_PASSWORD_FAILURE:
       return {
         ...state,
+        loading: false,
         isEditingLoading: false,
         error: action.payload,
         message: null,
+        success: false
       };
     case UPDATE_USER_PASSWORD_REQUEST:
       return {
@@ -93,6 +98,7 @@ const userReducer = (state = initialState, action) => {
         ...state,
         isEditingLoading: false,
         error: null,
+        success: true,
         passwordMessage: action.payload,
       };
     case RESET_PASSWORD_UPDATE:
@@ -123,6 +129,7 @@ const userReducer = (state = initialState, action) => {
     case UPDATE_PROFILE_PICTURE_FAILURE:
       return {
         ...state,
+        loading: false,
         isEditingImage: false,
         error: action.payload.error,
         message: null,
@@ -142,13 +149,14 @@ const userReducer = (state = initialState, action) => {
     case DELETE_PROFILE_PIC_FAILURE:
       return {
         ...state,
+        loading: false,
         isEditingImage: false,
         message: null,
         success: false,
         error: action.payload.error,
       };
     case CLEAR_MESSAGES:
-      return { ...state, message: null, passwordMessage: null };
+      return { ...state,erorr: null, message: null, passwordMessage: null };
     case SHOW_USER_ACC_DELETION_CONFIRMATION:
       return { ...state, showDeletionConfirmation: true };
     case HIDE_USER_ACC_DELETION_CONFIRMATION:
