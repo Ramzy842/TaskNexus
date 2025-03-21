@@ -131,8 +131,8 @@ const userReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         isEditingImage: false,
-        error: action.payload.error,
-        message: null,
+        error: null,
+        message: action.payload.error,
         profilePicture: state.profilePicture,
         success: false,
       };

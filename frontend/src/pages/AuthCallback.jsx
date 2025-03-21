@@ -12,6 +12,7 @@ const AuthCallback = () => {
     const id = params.get("id");
     const username = params.get("username");
     const profilePicture = params.get("profilePicture");
+    console.log(accessToken, id, username, profilePicture);
     if (accessToken && id && username) {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("username", username);
@@ -28,22 +29,15 @@ const AuthCallback = () => {
             "profilePicture",
             profilePicture.data.data.profilePictureUrl
           );
-          navigate("/");
         });
-      } else {
-        localStorage.setItem("profilePicture", defaultAvatar);
-        navigate("/");
-      }
+      } else localStorage.setItem("profilePicture", defaultAvatar);
+      navigate("/");
     } else {
       navigate("/login");
     }
   }, [navigate]);
 
-  return (
-    <DashboardLayout>
-      <p>Logging you in...</p>;
-    </DashboardLayout>
-  );
+  return <p>Logging you in...</p>;
 };
 
 export default AuthCallback;

@@ -21,8 +21,8 @@ const DashboardLayout = ({ children }) => {
   const { isCreating, message: taskCreationMessage } = useSelector(
     (state) => state.tasks
   );
+  const userId = localStorage.getItem("id")
   const dispatch = useDispatch();
-  const userId = localStorage.getItem("id");
   const navigate = useNavigate();
   useEffect(() => {
     if (!userId) {
@@ -30,13 +30,12 @@ const DashboardLayout = ({ children }) => {
       return navigate("/login");
     }
     dispatch(getUserData(userId));
-  }, [dispatch, userId]);
+  }, [dispatch]);
   useEffect(() => {
     const storageUsername = localStorage.getItem("username");
     if (storageUsername) setUsername(storageUsername);
   }, []);
   useEffect(() => {
-    console.log(userMessage);
     if (taskCreationMessage)
       setMessage({ value: taskCreationMessage, success: true });
     else if (userMessage) setMessage({ value: userMessage, success });

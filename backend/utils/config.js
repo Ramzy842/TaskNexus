@@ -34,7 +34,7 @@ const limiter = {
       error: "Too many login attempts. Please try again later.",
     },
     windowMs: 15 * 60 * 1000, // 15 minutes
-    limit: isTestEnv ? 1000 : 5, // each IP can make up to 5 requests per `windowsMs` (15 minutes)
+    limit: isTestEnv ? 1000 : 5, // each IP can make up to 20 requests per `windowsMs` (15 minutes)
     standardHeaders: true, // add the `RateLimit-*` headers to the response
     legacyHeaders: false, // remove the `X-RateLimit-*` headers from the response
   }),
@@ -44,7 +44,7 @@ const limiter = {
       error: "Too many refresh requests. Please try again later.",
     },
     windowMs: 15 * 60 * 1000, // 15 minutes
-    limit: isTestEnv ? 1000 : 10,
+    limit: isTestEnv ? 1000 : 5,
     standardHeaders: true,
     legacyHeaders: false,
   }),
@@ -54,7 +54,7 @@ const limiter = {
       error: "Too many logout attempts. Please try again later.",
     },
     windowMs: 30 * 60 * 1000, // 30 minutes
-    limit: isTestEnv ? 1000 : 10,
+    limit: isTestEnv ? 1000 : 20,
     standardHeaders: true,
     legacyHeaders: false,
   }),
@@ -64,8 +64,8 @@ const limiter = {
       error:
         "Too many requests for user-related requests. Please try again later.",
     },
-    windowMs: 1 * 60 * 1000, // 1 min
-    limit: isTestEnv ? 1000 : 5, // old value: 60
+    windowMs: 1 * 60 * 1000,
+    limit: isTestEnv ? 1000 : 60,
     standardHeaders: true,
     legacyHeaders: false,
   }),
@@ -74,8 +74,8 @@ const limiter = {
       success: false,
       error: "Too many requests for tasks retrieval. Please slow down!",
     },
-    windowMs: 1 * 60 * 1000, // 1m
-    limit: isTestEnv ? 1000 : 5, // old value: 30
+    windowMs: 1 * 60 * 1000,
+    limit: isTestEnv ? 1000 : 60,
     standardHeaders: true,
     legacyHeaders: false,
   }),
@@ -84,8 +84,8 @@ const limiter = {
       success: false,
       error: "Too many task-related requests. Please try again later.",
     },
-    windowMs: 15 * 60 * 1000, // 1h
-    limit: isTestEnv ? 1000 : 5, // old value: 30
+    windowMs: 15 * 60 * 1000,
+    limit: isTestEnv ? 1000 : 20,
     standardHeaders: true,
     legacyHeaders: false,
   }),
