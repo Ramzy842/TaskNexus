@@ -76,7 +76,7 @@ const getTasks = () => {
       const id = localStorage.getItem("id");
       const res = await retrieveTasks(id);
       console.log(res);
-      if (!res.success && res.error) dispatch(getTaskFailure(res.error));
+      if (!res.success && res.error) dispatch(getTasksFailure(res.error));
       else dispatch(getTasksSuccess(res.data));
     } catch (error) {
       dispatch(getTasksFailure(error));

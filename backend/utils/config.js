@@ -69,6 +69,17 @@ const limiter = {
     standardHeaders: true,
     legacyHeaders: false,
   }),
+  profilePicture: rateLimit({
+    message: {
+      success: false,
+      error:
+        "Too many requests for profile picture requests. Please try again later.",
+    },
+    windowMs: 1 * 60 * 1000,
+    limit: isTestEnv ? 1000 : 60,
+    standardHeaders: true,
+    legacyHeaders: false,
+  }),
   getTasksLimit: rateLimit({
     message: {
       success: false,
@@ -100,5 +111,5 @@ module.exports = {
   aws_secretAccessKey,
   aws_region,
   s3_bucketName,
-  client
+  client,
 };

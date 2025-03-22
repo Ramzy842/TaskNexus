@@ -60,7 +60,7 @@ const getUserData = (id) => {
       } else {
         const defaultAvatar =
           "https://emedia1.nhs.wales/HEIW2/cache/file/F4C33EF0-69EE-4445-94018B01ADCF6FD4.png";
-        const profilePicture = res.data.profilePicture;
+        const { profilePicture } = res.data;
         if (
           profilePicture !== defaultAvatar &&
           !profilePicture.startsWith("https://lh3.googleusercontent.com")
@@ -99,7 +99,7 @@ const updateUserDataSuccess = (updateUser, message) => {
 const updateUserDataFailure = (error, message) => {
   return {
     type: UPDATE_USER_FAILURE,
-    payload: { error, message},
+    payload: { error, message },
   };
 };
 
@@ -200,7 +200,7 @@ const removeUserData = () => {
         dispatch(removeUserFailure([res.message]));
       else {
         dispatch(removeUserSuccess(res.message));
-        localStorage.clear()
+        localStorage.clear();
         window.location.href = "/login";
       }
     } catch (error) {
