@@ -93,7 +93,7 @@ const TaskCard = ({ id, title, status }) => {
           {...attributes}
           {...listeners}
           role="button"
-            src="/src/assets/handle.svg"
+            src="/src/assets/drag-handle.svg"
             draggable="false"
             className="pointer-events-auto cursor-pointer"
             alt="handle"
