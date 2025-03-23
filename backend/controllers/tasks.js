@@ -75,17 +75,17 @@ tasksRouter.post(
           message: responseMessages.users.accessUnauthorized,
         });
       }
-      const lastTask = await Task.findOne({ userId: req.user.id }).sort(
-        "-order"
-      );
-      const newOrder = lastTask ? lastTask.order + 1 : 0;
+      // const lastTask = await Task.findOne({ userId: req.user.id }).sort({
+      //   order: -1,
+      // });
+      // const newOrder = lastTask ? lastTask.order + 1 : 0;
       const newTask = new Task({
         title,
-        description,
+        description, 
         status,
         dueDate,
         userId: user.id,
-        order: newOrder,
+        // order: newOrder,
       });
       const task = await newTask.save();
       user.tasks = user.tasks.concat(task.id);
@@ -157,23 +157,55 @@ tasksRouter.put(
 
 tasksRouter.delete("/:id", verifyToken, async (req, res, next) => {
   try {
-    const task = await Task.findByIdAndDelete(req.params.id);
-    if (!task)
+    // Find the task first
+    const task = await Task.findById(req.params.id);
+    if (!task) {
       return res.status(404).json({
         success: false,
         statusCode: 404,
         message: responseMessages.tasks.toDeleteNotFound,
       });
-    if (req.user.id === task.userId.toString()) return res.status(204).end();
-    else
+    }
+
+    // Check if the user is authorized to delete it
+    if (req.user.id !== task.userId.toString()) {
       return res.status(403).json({
         success: false,
         statusCode: 403,
         message: responseMessages.tasks.deletionUnauthorized,
       });
+    }
+
+    // Delete the task after confirming ownership
+    await Task.findByIdAndDelete(req.params.id);
+
+    // Find the user and update their tasks array
+    const user = await User.findById(req.user.id).populate("tasks");
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        statusCode: 404,
+        message: responseMessages.users.accessUnauthorized,
+      });
+    }
+
+    console.log("User tasks before deletion:", user.tasks);
+
+    // Filter out the deleted task and reorder remaining tasks
+    user.tasks = user.tasks
+      .filter((task) => task.id !== req.params.id)
+      .map((task, index, array) => ({
+        ...task.toObject(),
+        order: array.length - 1 - index, // Reorder
+      }));
+
+    await user.save();
+
+    return res.status(204).end();
   } catch (error) {
     next(error);
   }
 });
+
 
 module.exports = tasksRouter;

@@ -18,12 +18,14 @@ const {
   validateNameUpdate,
   validateOldPasswordUpdate,
   validateNewPasswordUpdate,
+  messages,
 } = require("../utils/usersValidators");
 const { getHashedPassword, createUser } = require("../utils/users");
 const { responseMessages } = require("../utils/responseMessages");
 const bcrypt = require("bcrypt");
 const { limiter, client, s3_bucketName } = require("../utils/config");
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
+const Task = require("../models/Task");
 usersRouter.post(
   "/",
   limiter.users,
@@ -82,7 +84,7 @@ usersRouter.get("/", limiter.users, async (req, res, next) => {
   }
 });
 
-usersRouter.get("/:id",limiter.users, verifyToken, async (req, res, next) => {
+usersRouter.get("/:id", limiter.users, verifyToken, async (req, res, next) => {
   try {
     if (req.params.id !== req.user.id)
       return res.status(403).json({
@@ -177,34 +179,40 @@ usersRouter.put(
   }
 );
 
-usersRouter.delete("/:id",limiter.users, verifyToken, async (req, res, next) => {
-  try {
-    if (req.params.id !== req.user.id)
-      return res.status(403).json({
-        success: false,
-        statusCode: 403,
-        message: responseMessages.users.deletionUnauthorized,
+usersRouter.delete(
+  "/:id",
+  limiter.users,
+  verifyToken,
+  async (req, res, next) => {
+    try {
+      if (req.params.id !== req.user.id)
+        return res.status(403).json({
+          success: false,
+          statusCode: 403,
+          message: responseMessages.users.deletionUnauthorized,
+        });
+      const user = await User.findByIdAndDelete(req.params.id);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          statusCode: 404,
+          message: responseMessages.users.toDeleteNotFound,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        statusCode: 200,
+        message: responseMessages.users.deletionSuccess,
       });
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        statusCode: 404,
-        message: responseMessages.users.toDeleteNotFound,
-      });
+    } catch (error) {
+      next(error);
     }
-    res.status(200).json({
-      success: true,
-      statusCode: 200,
-      message: responseMessages.users.deletionSuccess,
-    });
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 usersRouter.put(
-  "/:id/update-password",limiter.users,
+  "/:id/update-password",
+  limiter.users,
   [validateOldPasswordUpdate, validateNewPasswordUpdate],
   verifyToken,
   async (req, res, next) => {
@@ -269,7 +277,7 @@ usersRouter.get(
         });
       const user = await User.findById(req.params.id).populate({
         path: "tasks",
-        options: { sort: { createdAt: -1 } },
+        options: { sort: { order: -1 } },
       });
       if (!user) {
         return res.status(404).json({
@@ -278,10 +286,20 @@ usersRouter.get(
           message: responseMessages.users.toRetrieveNotFound,
         });
       }
+      console.log("tasks: ", user.tasks);
+      const orderedTasks = user.tasks.map((task, index) => ({
+        id: task.id,
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        dueDate: task.dueDate,
+        userId: task.userId,
+        order: user.tasks.length - index - 1,
+      }));
       res.status(200).json({
         success: true,
         statusCode: 200,
-        data: user.tasks,
+        data: orderedTasks,
       });
     } catch (error) {
       next(error);
@@ -371,37 +389,82 @@ usersRouter.delete(
   }
 );
 
-usersRouter.get("/:id/profile-picture", limiter.profilePicture, verifyToken, async (req, res, next) => {
-  if (req.params.id !== req.user.id)
+usersRouter.get(
+  "/:id/profile-picture",
+  limiter.profilePicture,
+  verifyToken,
+  async (req, res, next) => {
+    if (req.params.id !== req.user.id)
       return res.status(403).json({
         success: false,
         statusCode: 403,
         message:
           "You are not authorized to access this user's profile picture.",
       });
+    try {
+      const user = await User.findById(req.params.id);
+      if (!user || !user.profilePicture) {
+        return res.status(404).json({
+          success: false,
+          statusCode: 404,
+          message: "Profile picture not found.",
+        });
+      }
+
+      const getObjectParams = {
+        Bucket: s3_bucketName,
+        Key: user.profilePicture,
+      };
+      const expiresIn = 3600;
+      const getCommand = new GetObjectCommand(getObjectParams);
+      const url = await getSignedUrl(client, getCommand, { expiresIn });
+
+      res.status(200).json({
+        success: true,
+        statusCode: 200,
+        data: {
+          profilePictureUrl: url,
+          expiresAt: Date.now() + expiresIn * 1000,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+usersRouter.put("/:id/tasks/reorder", verifyToken, async (req, res, next) => {
+  if (req.params.id !== req.user.id)
+    return res.status(403).json({
+      success: false,
+      statusCode: 403,
+      message: "You are not authorized to reorder this user's tasks.",
+    });
+
   try {
+    const { reorderedTasks } = req.body; // Expect an array of task objects with updated orders
+    console.log(reorderedTasks);
+
+    if (!Array.isArray(reorderedTasks)) {
+      return res.status(400).json({ success: false, message: "Invalid input" });
+    }
+    
     const user = await User.findById(req.params.id);
-    if (!user || !user.profilePicture) {
+    if (!user) {
       return res.status(404).json({
         success: false,
         statusCode: 404,
-        message: "Profile picture not found.",
+        message: responseMessages.users.toRetrieveNotFound,
       });
     }
+    
+    const reorderedTaskIds = reorderedTasks.map((task) => task.id); // List of task IDs
+    // Update the `tasks` field in the User schema to reflect the new task order (using task IDs)
+    user.tasks = reorderedTaskIds;
+    await user.save();
 
-    const getObjectParams = {
-      Bucket: s3_bucketName,
-      Key: user.profilePicture,
-    };
-    const expiresIn = 3600;
-    const getCommand = new GetObjectCommand(getObjectParams);
-    const url = await getSignedUrl(client, getCommand, { expiresIn });
-
-    res.status(200).json({
-      success: true,
-      statusCode: 200,
-      data: { profilePictureUrl: url, expiresAt: Date.now() + expiresIn * 1000 },
-    });
+    // Step 4: Send success response
+    res.json({ success: true, data: user.tasks , message: "Tasks reordered successfully" });
   } catch (error) {
     next(error);
   }

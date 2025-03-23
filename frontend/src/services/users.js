@@ -39,6 +39,7 @@ const updatePassword = async (id, data) => {
 const retrieveTasks = async(id) => {
     try {
         const res = await api.get(`/users/${id}/tasks`);
+        console.log(res.data);
         return res.data
     } catch (error) {
         return error.response.data;

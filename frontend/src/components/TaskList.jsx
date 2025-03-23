@@ -20,25 +20,44 @@ import {
   restrictToVerticalAxis,
 } from "@dnd-kit/modifiers";
 import { useSelector } from "react-redux";
+import api from "../api/axiosInstance";
 
 const TaskList = () => {
-  const tasks = useSelector(state => state.tasks.tasks)
+  const tasks = useSelector((state) => state.tasks.tasks);
   const [tasksList, setTasksList] = useState(tasks);
   const getTaskPosition = (id) => tasksList.findIndex((el) => el.id === id);
   const handleDragEnd = async (event) => {
     const { active, over } = event;
-    if (active.id === over.id) return;
-    let orderedTasks = null;
-    setTasksList((tasks) => {
+    if (!over || active.id === over.id) return;
+
+    setTasksList((prevTasks) => {
       const originalPosition = getTaskPosition(active.id);
       const newPosition = getTaskPosition(over.id);
-      orderedTasks = arrayMove(tasks, originalPosition, newPosition);
-      return orderedTasks;
+      let updatedTasks = arrayMove(prevTasks, originalPosition, newPosition);
+      // console.log("before: ", updatedTasks);
+      updatedTasks = updatedTasks.map((task, index) => ({...task, order: updatedTasks.length - 1 - index}))
+      // console.log("After:", updatedTasks);
+      updateTaskOrder(updatedTasks);
+      return updatedTasks; // Update state with the new order values
     });
   };
+
+  const updateTaskOrder = async (reorderedTasks) => {
+    console.log("UPDATE:", reorderedTasks);
+    try {
+      const res = await api.put(`/users/${localStorage.getItem("id")}/tasks/reorder`, {
+        reorderedTasks,
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.error("Error updating order:", error);
+    }
+  };
+
   useEffect(() => {
-    if (tasks)
+    if (tasks) {
       setTasksList(tasks)
+    }
   }, [tasks]);
   const sensors = useSensors(
     useSensor(PointerSensor),
