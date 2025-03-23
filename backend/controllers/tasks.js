@@ -75,17 +75,13 @@ tasksRouter.post(
           message: responseMessages.users.accessUnauthorized,
         });
       }
-      // const lastTask = await Task.findOne({ userId: req.user.id }).sort({
-      //   order: -1,
-      // });
-      // const newOrder = lastTask ? lastTask.order + 1 : 0;
       const newTask = new Task({
         title,
         description, 
         status,
         dueDate,
         userId: user.id,
-        // order: newOrder,
+        order: user.tasks.length,
       });
       const task = await newTask.save();
       user.tasks = user.tasks.concat(task.id);
