@@ -275,10 +275,7 @@ usersRouter.get(
           statusCode: 403,
           message: responseMessages.users.accessUnauthorized,
         });
-      const user = await User.findById(req.params.id).populate({
-        path: "tasks",
-        // options: { sort: { order: -1 } },
-      });
+      const user = await User.findById(req.params.id).populate("tasks");
       if (!user) {
         return res.status(404).json({
           success: false,
@@ -442,11 +439,11 @@ usersRouter.put("/:id/tasks/reorder", verifyToken, async (req, res, next) => {
     });
 
   try {
-    const { reorderedTasks } = req.body; // Expect an array of task objects with updated orders
+    const { reorderedTasks } = req.body;
     if (!Array.isArray(reorderedTasks)) {
       return res.status(400).json({ success: false, message: "Invalid input" });
     }
-    
+
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({
@@ -455,15 +452,14 @@ usersRouter.put("/:id/tasks/reorder", verifyToken, async (req, res, next) => {
         message: responseMessages.users.toRetrieveNotFound,
       });
     }
-    
-    console.log(reorderedTasks);
-    const reorderedTaskIds = reorderedTasks.map((task) => task.id); // List of task IDs
-    // Update the `tasks` field in the User schema to reflect the new task order (using task IDs)
+    const reorderedTaskIds = reorderedTasks.map((task) => task.id);
     user.tasks = reorderedTaskIds;
     await user.save();
-    
-    // Step 4: Send success response
-    res.json({ success: true, data: user.tasks , message: "Tasks reordered successfully" });
+    res.json({
+      success: true,
+      data: user.tasks,
+      message: "Tasks reordered successfully",
+    });
   } catch (error) {
     next(error);
   }

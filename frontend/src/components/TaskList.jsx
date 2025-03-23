@@ -19,15 +19,13 @@ import {
   restrictToParentElement,
   restrictToVerticalAxis,
 } from "@dnd-kit/modifiers";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import api from "../api/axiosInstance";
-import { getTasks } from "../redux/actions/taskActions";
 
 const TaskList = () => {
   const tasks = useSelector((state) => state.tasks.tasks);
   const [tasksList, setTasksList] = useState(tasks);
   const getTaskPosition = (id) => tasksList.findIndex((el) => el.id === id);
-  // const dispatch = useDispatch()
   const handleDragEnd = async (event) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
@@ -36,27 +34,23 @@ const TaskList = () => {
       const originalPosition = getTaskPosition(active.id);
       const newPosition = getTaskPosition(over.id);
       let updatedTasks = arrayMove(prevTasks, originalPosition, newPosition);
-      // console.log("before: ", updatedTasks);
       updatedTasks = updatedTasks.map((task, index) => ({
         ...task,
         order: updatedTasks.length - 1 - index,
       }));
-      // console.log("After:", updatedTasks);
       updateTaskOrder(updatedTasks);
-      return updatedTasks; // Update state with the new order values
+      return updatedTasks;
     });
   };
 
   const updateTaskOrder = async (reorderedTasks) => {
-    console.log("UPDATE:", reorderedTasks);
     try {
-      const res = await api.put(
+      await api.put(
         `/users/${localStorage.getItem("id")}/tasks/reorder`,
         {
           reorderedTasks,
         }
       );
-      console.log(res);
     } catch (error) {
       console.error("Error updating order:", error);
     }

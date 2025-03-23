@@ -84,7 +84,7 @@ tasksRouter.post(
         order: user.tasks.length,
       });
       const task = await newTask.save();
-      user.tasks = user.tasks.concat(task.id);
+      user.tasks = [task.id, ...user.tasks]
       await user.save();
       res.status(201).json({
         success: true,
