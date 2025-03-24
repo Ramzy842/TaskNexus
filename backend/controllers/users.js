@@ -15,10 +15,9 @@ const {
   validatePassword,
   validateUsernameUpdate,
   validateEmailUpdate,
-  validateNameUpdate,
+  validateNameUpdate, 
   validateOldPasswordUpdate,
   validateNewPasswordUpdate,
-  messages,
 } = require("../utils/usersValidators");
 const { getHashedPassword, createUser } = require("../utils/users");
 const { responseMessages } = require("../utils/responseMessages");
