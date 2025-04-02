@@ -1,6 +1,6 @@
 # TaskNexus
 
-TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web application designed to help users efficiently manage their tasks. This project showcases robust testing and security practices, modern UI/UX design, and scalable architecture.
+TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web application designed to help users efficiently manage their tasks. This project showcases robust testing and security practices, modern UI/UX design, scalable architecture, and a strong focus on **Quality Assurance (QA) and automation testing**.
 
 ## Features
 
@@ -15,11 +15,18 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
 
 ### Advanced Features
 - **State Management**: Redux for efficient state handling.
-- **Testing**:
-  - **Backend**: Jest and Supertest for unit and integration testing.
-  - **Frontend**: Jest and React Testing Library for component testing.
-  - **End-to-End (E2E)**: Cypress for simulating user flows and ensuring seamless functionality.
-- **Scalability**: Modular codebase designed to handle future feature extensions.
+- **Testing & Quality Assurance**:
+  - **Backend**:
+    - **Unit & Integration Testing**: Jest and Supertest for API testing.
+    - **API Contract Testing**: Ensures backward compatibility and proper request/response handling.
+  - **Frontend**:
+    - **Component Testing**: Jest and React Testing Library.
+    - **Visual Regression Testing**: Ensures UI consistency across updates.
+  - **End-to-End (E2E) Testing**:
+    - **Playwright**: Automates browser testing to simulate real user interactions.
+    - **Cross-browser Testing**: Validates compatibility across different browsers.
+    - **Headless Mode**: Enables CI/CD pipeline automation.
+- **Scalability**: Modular codebase designed for future expansion.
 - **File Storage**:
   - **AWS S3**: Used for storing user-uploaded profile images.
 
@@ -45,11 +52,33 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
 ### File Storage
 - **Amazon S3**: Stores profile images for users. Files are uploaded securely and retrieved using signed URLs or CloudFront caching.
 
-## Testing Tools
-- **Jest**: Unit testing for both backend and frontend.
+## Testing & Automation
+
+### Testing Tools
+- **Jest**: Unit testing for backend and frontend.
 - **React Testing Library**: Frontend component testing.
 - **Supertest**: Integration testing for APIs.
-- **Cypress**: End-to-end testing for user workflows.
+- **Playwright**: E2E testing framework for automated browser testing.
+- **Mocking & Stubbing**:
+  - Mock API responses to isolate component behavior.
+  - Simulated user actions using Playwright.
+  - Database seeding for integration tests.
+
+### Running Tests
+#### Backend Tests:
+```sh
+cd backend && npm run test
+```
+
+#### Frontend Tests:
+```sh
+cd client && npm run test
+```
+
+#### End-to-End Tests:
+```sh
+npm run test:e2e
+```
 
 ## Installation and Setup
 
@@ -96,30 +125,15 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
    ```
 6. Access the application at [http://localhost:5173](http://localhost:5173).
 
-## Testing
-
-### Running Tests
-#### Backend Tests:
-```sh
-cd backend && npm run test
-```
-
-#### Frontend Tests:
-```sh
-cd client && npm run test
-```
-
-#### End-to-End Tests:
-```sh
-npm run cypress
-```
-
 ## Deployment
 The application is deployed using modern CI/CD workflows:
 
 - **Frontend**: Deployed on Vercel.
 - **Backend**: Deployed on AWS.
 - **File Storage & Delivery**: Profile images are stored on **Amazon S3**.
+- **CI/CD Pipeline**:
+  - **GitHub Actions**: Automates testing and deployment.
+  - **Playwright Tests in CI**: Ensures end-to-end functionality before deployment.
 
 ## API Documentation
 The backend API is documented using Swagger. Access the documentation locally at [http://localhost:4000/api-docs](http://localhost:4000/api-docs).
