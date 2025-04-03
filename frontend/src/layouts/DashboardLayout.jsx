@@ -30,7 +30,7 @@ const DashboardLayout = ({ children }) => {
       return navigate("/login");
     }
     dispatch(getUserData(userId));
-  }, [dispatch]);
+  }, [dispatch, navigate, userId]);
   useEffect(() => {
     const storageUsername = localStorage.getItem("username");
     if (storageUsername) setUsername(storageUsername);
@@ -45,7 +45,7 @@ const DashboardLayout = ({ children }) => {
       if (userMessage) dispatch(clearMessages());
     }, 5000);
     return () => clearTimeout(timeoutId);
-  }, [taskCreationMessage, userMessage, dispatch]);
+  }, [taskCreationMessage, userMessage, dispatch, success]);
 
   useEffect(() => {
     if (user && username !== user.username) {
@@ -54,7 +54,7 @@ const DashboardLayout = ({ children }) => {
   }, [user, username]);
 
   return (
-    <div className="grid grid-rows-[auto_1fr] min-h-screen bg-linear-to-bl from-[#E3EAE9] to-[#A3C4C4] p-4">
+    <div className="grid grid-rows-[auto_1fr] min-h-screen bg-linear-to-bl from-[#E3EAE9] to-[#A3C4C4] p-4 ">
       {(isEditingImage || isEditingLoading || loading || isCreating) && (
         <div className="absolute left-0 right-0 top-0 h-2 w-full bg-gradient-to-r from-teal-500 from-10% via-teal-500 via-50% to-emerald-500 to-90% animate-pulse"></div>
       )}

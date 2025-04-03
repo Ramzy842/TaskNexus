@@ -3,7 +3,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import { useDispatch, useSelector } from "react-redux";
 
 import SkeletonCard from "../components/SkeletonCard";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getTasks, resetTasks } from "../redux/actions/taskActions";
 
 const Home = () => {
@@ -14,7 +14,7 @@ const Home = () => {
     if (task)
       dispatch(resetTasks())
     dispatch(getTasks());
-  }, []);
+  }, [dispatch, task]);
   return (
     <DashboardLayout>
           <div className="flex items-center mb-2">

@@ -1,3 +1,4 @@
+import { LOGOUT_REQUEST } from "../types/authTypes";
 import {
   GET_USER_FAILURE,
   GET_USER_REQUEST,
@@ -155,6 +156,8 @@ const userReducer = (state = initialState, action) => {
         success: false,
         error: action.payload.error,
       };
+    case LOGOUT_REQUEST:
+      return {...state, loading: true}
     case CLEAR_MESSAGES:
       return { ...state,erorr: null, message: null, passwordMessage: null };
     case SHOW_USER_ACC_DELETION_CONFIRMATION:

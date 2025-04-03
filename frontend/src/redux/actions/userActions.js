@@ -5,6 +5,7 @@ import {
   updatePassword,
   updateUser,
 } from "../../services/users";
+import { LOGOUT_REQUEST } from "../types/authTypes";
 import {
   CLEAR_MESSAGES,
   DELETE_PROFILE_PIC_FAILURE,
@@ -182,6 +183,12 @@ const removeUserFailure = (error) => {
   };
 };
 
+const logoutRequest = () => {
+  return {
+    type: LOGOUT_REQUEST
+  }
+}
+
 const removeUserSuccess = (message) => {
   return {
     type: REMOVE_USER_SUCCESS,
@@ -342,4 +349,5 @@ export {
   deleteProfilePic,
   showDeletionConfirmation,
   hideDeletionConfirmation,
+  logoutRequest
 };

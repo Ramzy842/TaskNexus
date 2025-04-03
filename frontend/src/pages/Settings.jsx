@@ -51,7 +51,7 @@ const PasswordChange = ({ loading }) => {
         setEdit(false);
       }, 3000);
     }
-  }, [message]);
+  }, [message, dispatch]);
   return (
     !loading && (
       <div

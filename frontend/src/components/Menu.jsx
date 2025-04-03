@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router";
 import { resetAuth } from "../redux/actions/authActions";
 import { resetTasks } from "../redux/actions/taskActions";
-import { resetUser } from "../redux/actions/userActions";
+import { logoutRequest, resetUser } from "../redux/actions/userActions";
 import { logout } from "../services/auth";
 import { useDispatch } from "react-redux";
 
@@ -10,6 +10,7 @@ const Menu = ({setShowMenu}) => {
   const dispatch = useDispatch();
   const handleLogout = async () => {
     try {
+      dispatch(logoutRequest())
       await logout();
       localStorage.clear()
       dispatch(resetAuth());
