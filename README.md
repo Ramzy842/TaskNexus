@@ -18,7 +18,6 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
 - **Testing & Quality Assurance**:
   - **Backend**:
     - **Unit & Integration Testing**: Jest and Supertest for API testing.
-    - **API Contract Testing**: Ensures backward compatibility and proper request/response handling.
   - **Frontend**:
     - **Component Testing**: Jest and React Testing Library.
     - **Visual Regression Testing**: Ensures UI consistency across updates.
@@ -50,7 +49,7 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
   - **Task Management**: Rate limited to 30 requests per hour.
 
 ### File Storage
-- **Amazon S3**: Stores profile images for users. Files are uploaded securely and retrieved using signed URLs or CloudFront caching.
+- **Amazon S3**: Stores profile images for users. Files are uploaded securely and retrieved using signed URLs.
 
 ## Testing & Automation
 
