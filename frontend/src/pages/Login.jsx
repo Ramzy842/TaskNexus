@@ -20,11 +20,11 @@ const Login = () => {
   const id = localStorage.getItem("id");
   useEffect(() => {
     dispatch(resetAuth());
-  }, []);
+  }, [dispatch]);
   useEffect(() => {
     console.log(id);
     if (id) navigate("/");
-  }, [id]);
+  }, [id, navigate]);
   useEffect(() => {
     if (errors) handleErrors(errors);
     else {
@@ -49,7 +49,7 @@ const Login = () => {
   };
   return (
     <AuthLayout>
-      <form action="#" className="flex flex-col w-4/5 sm:max-w-xs sm:w-full">
+      <form onSubmit={(e) => e.preventDefault()} className="flex flex-col w-4/5 sm:max-w-xs sm:w-full">
         <h1 className="font-semibold text-4xl self-start text-[#0A2D29] mb-4 self-start py-2">
           Log in
         </h1>
@@ -128,7 +128,7 @@ const Login = () => {
                 </p> */}
         <Button
           onClick={handleLogin}
-          type="button"
+          type="submit"
           text="Log in"
           classNames="text-white bg-[#124242] w-full py-2 rounded-sm cursor-pointer font-medium text-base hover:bg-teal-900"
         />

@@ -75,7 +75,7 @@ const AccountInfoCard = ({ title, value, placeholder, info, setInfo }) => {
       setInfo(newInfo);
       setEditedCount(0);
     }
-  }, [cred]);
+  }, [cred, info, setInfo, title, value]);
 
   useEffect(() => {
     if (!error) return;

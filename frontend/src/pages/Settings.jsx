@@ -94,7 +94,7 @@ const PasswordChange = ({ loading }) => {
                 {message}
               </p>
             )}
-            <form action="#" className="px-4 py-2 w-full">
+            <form onSubmit={e => e.preventDefault()} className="px-4 py-2 w-full">
               <Input
                 maxlength="32"
                 src="/src/assets/lock.svg"
@@ -172,7 +172,7 @@ const PasswordChange = ({ loading }) => {
                 className="flex justify-center items-center bg-cyan-600 hover:bg-cyan-700 rounded-sm py-2 px-4 cursor-pointer w-full md:w-sm mb-2"
               >
                 <Button
-                  type="button"
+                  type="submit"
                   text="Save"
                   classNames="text-white font-semibold text-sm  select-none cursor-pointer"
                 />

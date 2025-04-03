@@ -68,7 +68,7 @@ const Signup = () => {
 
   return (
     <AuthLayout>
-      <form action="#" className="flex flex-col w-4/5 sm:max-w-xs sm:w-full">
+      <form onSubmit={e => e.preventDefault()} className="flex flex-col w-4/5 sm:max-w-xs sm:w-full">
         <h1 className="font-semibold text-4xl self-start text-[#0A2D29] mb-4 self-start py-2">
           Sign up
         </h1>
@@ -225,7 +225,7 @@ const Signup = () => {
         )}
         <Button
           onClick={handleSignup}
-          type="button"
+          type="submit"
           text="Sign up"
           classNames="text-white bg-[#124242] w-full py-2 rounded-sm cursor-pointer font-medium text-base hover:bg-teal-900 mb-5"
         />
