@@ -1,7 +1,3 @@
-import React, { useEffect, useState } from "react";
-import Button from "./Button";
-import { useSelector } from "react-redux";
-
 export const SkeletonAccInfoCard = () => {
   return (
     <div className="flex items-center mb-2 justify-between animate-pulse">
