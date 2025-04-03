@@ -3,6 +3,7 @@ import Button from "./Button";
 import { NavLink } from "react-router";
 import Menu from "./Menu";
 import { useSelector } from "react-redux";
+import decodeHtmlEntities from "../utils/decodeHtmlEntities";
 const DashboardHeader = ({ username }) => {
   const [showMenu, setShowMenu] = useState(false);
   const profilePicture = useSelector((state) => state.user.profilePicture);
@@ -70,7 +71,7 @@ const DashboardHeader = ({ username }) => {
         <div className="relative">
           <div className="flex items-center">
             <h1 className="hidden sm:text-normal sm:flex font-semibold text-teal-900 mr-2">
-              {username}
+              {decodeHtmlEntities(username)}
             </h1>
             <div
               style={{

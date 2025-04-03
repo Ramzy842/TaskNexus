@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import AccountInfoCard from "./AccountInfoCard";
+import decodeHtmlEntities from "../utils/decodeHtmlEntities";
 
 const AccountInfo = () => {
     const user = useSelector((state) => state.user.user);
@@ -44,7 +45,7 @@ const AccountInfo = () => {
                         key={id}
                         placeholder={placeholder}
                         title={title}
-                        value={value}
+                        value={decodeHtmlEntities(value)}
                     />
                 );
             })}

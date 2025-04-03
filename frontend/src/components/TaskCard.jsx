@@ -1,8 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { NavLink } from "react-router";
 import { deleteTask, editTask, getTasks } from "../redux/actions/taskActions";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import decodeHtmlEntities from "../utils/decodeHtmlEntities";
 const TaskCard = ({ id, title, status }) => {
   const {
     listeners,
@@ -49,7 +50,7 @@ const TaskCard = ({ id, title, status }) => {
         <p
           className={`text-sm font-medium text-teal-900 truncate w-11/12 lg:w-full`}
         >
-          {title}
+          {decodeHtmlEntities(title)}
         </p>
       </div>
       <div className="flex items-center justify-center">

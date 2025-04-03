@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import StatusSelection from "./StatusSelection";
 import { useEffect, useState } from "react";
+import decodeHtmlEntities from "../utils/decodeHtmlEntities";
 
 const TaskInput = ({
   target,
@@ -45,7 +46,7 @@ const TaskInput = ({
           <StatusSelection value={value} handler={editMode ? statusHandler : handleStatusChange} />
         ) : (
           <input
-            value={value}
+            value={decodeHtmlEntities(value)}
             type={type}
             onChange={!editMode && handler}
             placeholder={placeholder}
