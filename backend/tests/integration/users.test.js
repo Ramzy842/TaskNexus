@@ -130,6 +130,7 @@ describe("POST /api/users", () => {
             email: "email123@gmail.com",
             password: "password123456",
         });
+        expect(res.status).toBe(201);
         expect(res.body.data).toHaveProperty("name", "Random name");
         expect(res.body.data).toHaveProperty("username", "Random User");
         expect(res.body.data).toHaveProperty("id");
