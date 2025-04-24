@@ -90,7 +90,7 @@ describe("POST /api/users", () => {
             username: "Random User",
             name: "Random name",
             email: "email@gmail.com",
-            password: "password123456789123456789",
+            password: "password12345678912345678",
         });
         expect(res.body.statusCode).toBe(400);
         expect(res.body.statusCode).toBe(res.status);
