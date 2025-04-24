@@ -9,6 +9,7 @@ import {
   deleteTaskFailure,
   editTask,
   getTaskData,
+  resetTasks,
 } from "../redux/actions/taskActions";
 import SkeletonEdit from "../components/SkeletonEdit";
 import Button from "../components/Button";
@@ -22,6 +23,10 @@ const EditTask = () => {
   const task = useSelector((state) => state.tasks.task);
   const id = params.id;
   const navigate = useNavigate();
+  useEffect(() => {
+    dispatch(resetTasks())
+  }, [dispatch])
+  
   useEffect(() => {
     dispatch(getTaskData(id));
   }, [dispatch, id]);
