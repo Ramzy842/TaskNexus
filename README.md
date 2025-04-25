@@ -55,7 +55,6 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
 
 ### Testing Tools
 - **Jest**: Unit testing for backend and frontend.
-- **React Testing Library**: Frontend component testing.
 - **Supertest**: Integration testing for APIs.
 - **Playwright**: E2E testing framework for automated browser testing.
 - **Mocking & Stubbing**:
