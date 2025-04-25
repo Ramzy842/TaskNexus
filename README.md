@@ -43,10 +43,10 @@ TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web applicatio
 - **Express Validator**: Middleware for validating user input.
 - **Rate Limiting**: Protects the API from abuse by limiting the number of requests from a single IP address in a given time window. Implemented using `express-rate-limit` for sensitive endpoints such as login, logout, user, and task management.
   - **Login**: Rate limited to 5 requests per 15 minutes.
-  - **Logout**: Rate limited to 5 requests per 30 minutes.
-  - **Refresh Token**: Rate limited to 10 requests per 15 minutes.
-  - **User Management**: Rate limited to 20 requests per hour.
-  - **Task Management**: Rate limited to 30 requests per hour.
+  - **Logout**: Rate limited to 20 requests per 30 minutes.
+  - **Refresh Token**: Rate limited to 5 requests per 15 minutes.
+  - **User Management**: Rate limited to 60 requests per minute.
+  - **Task Management**: Rate limited to 20 requests per 15 minutes.
 
 ### File Storage
 - **Amazon S3**: Stores profile images for users. Files are uploaded securely and retrieved using signed URLs.
