@@ -34,7 +34,7 @@ const limiter = {
       error: "Too many login attempts. Please try again later.",
     },
     windowMs: 15 * 60 * 1000, // 15 minutes
-    limit: isTestEnv ? 1000 : 5, // each IP can make up to 20 requests per `windowsMs` (15 minutes)
+    limit: isTestEnv ? 1000 : 5, // each IP can make up to 5 requests per `windowsMs` (15 minutes)
     standardHeaders: true, // add the `RateLimit-*` headers to the response
     legacyHeaders: false, // remove the `X-RateLimit-*` headers from the response
   }),
