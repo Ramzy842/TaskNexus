@@ -134,14 +134,6 @@ The application is deployed using modern CI/CD workflows:
   - **GitHub Actions**: Automates testing and deployment.
   - **Playwright Tests in CI**: Ensures end-to-end functionality before deployment.
 
-## API Documentation
-The backend API is documented using Swagger. Access the documentation locally at [http://localhost:4000/api-docs](http://localhost:4000/api-docs).
-
-### Example Endpoints
-- **POST** `/api/auth/login`: User login.
-- **GET** `/api/tasks`: Retrieve all tasks.
-- **PUT** `/api/tasks/:id`: Update a task.
-
 ## Screenshots
 ### Dashboard
 (Dashboard Screenshot Placeholder)
