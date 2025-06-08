@@ -12,7 +12,7 @@ const { limiter } = require("./utils/config");
 const tasksRouter = require("./controllers/tasks");
 const usersRouter = require("./controllers/users");
 const googleRouter = require("./controllers/google");
-const authRouter = require("./controllers/auth");
+const authRouter = require("./controllers/auth");  
 
 app.use(cookieParser());
 app.use(express.json());
