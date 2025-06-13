@@ -1,8 +1,11 @@
-import React from "react";
+import { useEffect } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
 import AuthLayout from "../layouts/AuthLayout";
 
 const NotFound = () => {
+  useEffect(() => {
+    document.title = "TaskNexus | 404";
+}, []);
   return localStorage.getItem("accessToken") ? (
     <DashboardLayout>
       <h1 className=" text-center h-4/5 flex justify-center items-center text-3xl font-bold text-teal-900">

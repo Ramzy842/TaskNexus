@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "playwright test",
-    "test:report": "playwright show-report"
+    "test:report": "playwright show-report",
+    "test:ui": "npm test -- --ui"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

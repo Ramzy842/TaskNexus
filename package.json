@@ -4,10 +4,13 @@
   "description": "TaskNexus is a full-stack MERN (MongoDB, Express, React, Node.js) web application designed to help users efficiently manage their tasks. This project showcases robust testing and security practices, modern UI/UX design, scalable architecture, and a strong focus on **Quality Assurance (QA) and automation testing**.",
   "main": "index.js",
   "scripts": {
-  "dev:backend": "cd backend && npm run dev",
-  "dev:frontend": "cd frontend && npm run dev",
-  "dev": "run-p dev:*"
-},
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev": "run-p dev:*",
+    "test:backend": "cd backend && npm run start:test",
+    "test:frontend": "cd frontend && npm run dev",
+    "test": "run-p test:*"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
