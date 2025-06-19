@@ -1,6 +1,5 @@
 import { test, expect } from "@playwright/test";
 import { signupWith } from "./helper";
-import { describe } from "node:test";
 
 test.beforeEach(async ({ page, request }) => {
     await request.post("/api/testing/reset");
@@ -18,7 +17,7 @@ test.afterAll(async ({ request }) => {
     });
 });
 
-describe("Validate signup with valid credentials", () => {
+test.describe("Validate signup with valid credentials", () => {
     test("has title: TaskNexus | Signup", async ({ page }) => {
         await expect(page).toHaveTitle("TaskNexus | Signup");
     });
@@ -64,7 +63,7 @@ describe("Validate signup with valid credentials", () => {
     });
 });
 
-describe("Validate signup with invalid credentials", () => {
+test.describe("Validate signup with invalid credentials", () => {
     test("Signup with random invalid credential via signup form", async ({
         page,
     }) => {
